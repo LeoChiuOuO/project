@@ -1,0 +1,35 @@
+.target-report-on {
+    position: relative;
+    display: flex;
+}
+
+.target-report-off {
+    position: relative;
+    display: none;
+}
+
+.target-report-main {
+    width: 800px;
+    height:800px;
+    background: aliceblue;
+    margin-left: 20%; 
+    border: 2px solid;
+}
+
+.target-report-body {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.target-report-row {
+    display: flex;
+}
+
+.target-report-row-label {
+    width: 250px
+}
+
+.target-report-input {
+    display: flex;
+    margin-top: 10px;
+}

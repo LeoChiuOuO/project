@@ -1,0 +1,35 @@
+.target-report-on[b-7ataa6jb2o] {
+    position: relative;
+    display: flex;
+}
+
+.target-report-off[b-7ataa6jb2o] {
+    position: relative;
+    display: none;
+}
+
+.target-report-main[b-7ataa6jb2o] {
+    width: 800px;
+    height:800px;
+    background: aliceblue;
+    margin-left: 20%; 
+    border: 2px solid;
+}
+
+.target-report-body[b-7ataa6jb2o] {
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.target-report-row[b-7ataa6jb2o] {
+    display: flex;
+}
+
+.target-report-row-label[b-7ataa6jb2o] {
+    width: 250px
+}
+
+.target-report-input[b-7ataa6jb2o] {
+    display: flex;
+    margin-top: 10px;
+}

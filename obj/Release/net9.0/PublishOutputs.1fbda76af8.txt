@@ -1,0 +1,7 @@
+C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.exe
+C:\Users\D\Desktop\project\publish\appsettings.Development.json
+C:\Users\D\Desktop\project\publish\appsettings.json
+C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.dll
+C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.deps.json
+C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.runtimeconfig.json
+C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.pdb
