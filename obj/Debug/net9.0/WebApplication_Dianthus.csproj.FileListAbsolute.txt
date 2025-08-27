@@ -183,8 +183,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\2
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\yb45x81ty8-muycvpuwrr.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\dagyf20fhu-87fc7y1x7t.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\xk26wvj7ik-mlv21k5csn.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-fgcccejkdl.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-fgcccejkdl.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.development.json
@@ -218,3 +216,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\runtimes\win
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\runtimes\win\lib\net8.0\System.Windows.Extensions.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\WebApplication_Dianthus.csproj.AssemblyReference.cache
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\WebAppli.F3348105.Up2Date
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\WebApplication_Dianthus.sourcelink.json
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-03lawhkv4z.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-03lawhkv4z.gz

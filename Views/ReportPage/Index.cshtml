@@ -55,8 +55,40 @@
                             <td>@Model[i].ReportDate.ToString("yyyy/MM/dd")</td>
                             <td>@Model[i].DetectionDepartment</td>
                             <td>@Model[i].DetectionDoctor</td>
-                            <td>@Model[i].Notify</td>
-                            <td>@Model[i].Track</td>
+                            @{
+                                string notifyText = Model[i].Notify switch
+                                {
+                                    0 => "待通知",
+                                    1 => "已通知",
+                                    2 => "不需通知",
+                                    _ => "未知"
+                                };
+                                string notifyClass = Model[i].Notify switch
+                                {
+                                    0 => "notify-warn",   // 紅底
+                                    1 => "notify-success",// 綠底
+                                    2 => "notify-block",  // 黑底
+                                    _ => ""
+                                };
+                            }
+                            <td><label class="@notifyClass">@notifyText</label></td>
+                            @{
+                                string trackText = Model[i].Track switch
+                                {
+                                    0 => "待追蹤",
+                                    1 => "已追蹤",
+                                    2 => "不需通知",
+                                    _ => "未知"
+                                };
+                                string trackClass = Model[i].Track switch
+                                {
+                                    0 => "notify-warn",
+                                    1 => "notify-success",
+                                    2 => "notify-block",
+                                    _ => ""
+                                };
+                            }
+                            <td><label  class="@trackClass">@trackText</label></td>
                             <td><button id=@Model[i].Edit class="btn btn-outline-primary" onclick="clickTargetReport()">編輯</button></td>
                             <td><button id=@Model[i].Review class="btn btn-outline-primary" onclick="clickTargetReport()">檢視</button></td>
                             @* <td><button id=@Model[i].Describe class="btn btn-outline-primary" onclick="clickTargetReport()">說明建議單</button></td>
