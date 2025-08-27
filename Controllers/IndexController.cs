@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApplication_Dianthus.Models.Service;
+using WebApplication_Dianthus.Models.Service.Interface;
 
 namespace WebApplication_Dianthus.Controllers
 {
@@ -28,7 +30,7 @@ namespace WebApplication_Dianthus.Controllers
             return View();
         }
 
-        public IActionResult Welcome()
+        public async Task<IActionResult> WelcomeAsync()
         {
             return View();
         }

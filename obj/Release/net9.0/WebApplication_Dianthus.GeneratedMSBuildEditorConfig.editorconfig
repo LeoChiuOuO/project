@@ -1,11 +1,19 @@
 is_global = true
 build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WebApplication_Dianthus
 build_property.RootNamespace = WebApplication_Dianthus
@@ -22,6 +30,10 @@ build_property.EnableCodeStyleSeverity =
 
 [C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Index/Welcome.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kZXhcV2VsY29tZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/OBPatient/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT0JQYXRpZW50XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/ReportPage/ReportReviewPage.cshtml]

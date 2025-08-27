@@ -4,19 +4,20 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication_Dianthus.Models.Interface;
 using WebApplication_Dianthus.Models.Repository;
 using WebApplication_Dianthus.Models.Service;
+using WebApplication_Dianthus.Models.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
 // 註冊你的服務
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
-    
+builder.Services.AddScoped<IOBPatientService, OBPatientService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
