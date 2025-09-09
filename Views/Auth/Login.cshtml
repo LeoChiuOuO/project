@@ -1,0 +1,51 @@
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewData["Title"] = "登入";
+}
+
+<div class="login-container">
+    <div class="logo-placeholder">LOGO</div>
+
+    <form id="loginForm" class="login-form">
+        <input type="text" name="account" placeholder="帳號" required />
+        <input type="password" name="password" placeholder="密碼" required />
+        <div class="btn-row">
+            <button type="submit">登入</button>
+        </div>
+    </form>
+
+    <div id="loginResult" class="error-msg"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '@Url.Action("Login", "Auth")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (res) {
+                    if (res.success) {
+                        window.location.href = '/Home/Index';
+                    } else {
+                        $('#loginResult').text(res.message);
+                        // 加上抖動動畫
+                        $('.login-form').addClass('shake');
+                        setTimeout(function () {
+                            $('.login-form').removeClass('shake');
+                        }, 500);
+                    }
+                },
+                error: function () {
+                    $('#loginResult').text('伺服器錯誤，請稍後再試');
+                    $('.login-form').addClass('shake');
+                    setTimeout(function () {
+                        $('.login-form').removeClass('shake');
+                    }, 500);
+                }
+            });
+        });
+    });
+</script>

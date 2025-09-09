@@ -8,17 +8,10 @@ namespace WebApplication_Dianthus.Models.Interface
 {
     public interface IRoleRepository
     {
-        void Create(Role instance);
- 
-        void Update(Role instance);
- 
-        void Delete(Role instance);
- 
-        Role GetRoleByID(int RoleID);
- 
-        IQueryable<Role> GetAll();
- 
-        void SaveChanges();
- 
+        IEnumerable<Role> GetAll();
+        Role GetById(int id);
+        void Add(Role role);
+        void Update(Role role);
+        void Delete(int id);
     }
 }

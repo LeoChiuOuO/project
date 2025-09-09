@@ -1,0 +1,76 @@
+@model IEnumerable<Role>
+
+@{
+    ViewData["Title"] = "角色管理";
+}
+
+<h2>角色管理</h2>
+<button class="btn btn-primary mb-3" id="btnAdd">新增角色</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>角色名稱</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody id="roleTable">
+    @foreach (var role in Model)
+    {
+        <tr data-id="@role.Id">
+            <td>@role.Name</td>
+            <td>@role.Description</td>
+            <td>
+                <button class="btn btn-sm btn-warning btnEdit" data-id="@role.Id">編輯</button>
+                <button class="btn btn-sm btn-danger btnDelete" data-id="@role.Id">刪除</button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="roleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">角色編輯</h5>
+                <button type="button" class="close" data-dismiss="modal" style="margin-left: 358px;">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- AJAX 載入表單 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(function () {
+        $('#btnAdd').click(function () {
+            $.get('/Roles/Create', function (html) {
+                $('#modalBody').html(html);
+                $('#roleModal').modal('show');
+            });
+        });
+
+        $('.btnEdit').click(function () {
+            const id = $(this).data('id');
+            $.get('/Roles/Edit/' + id, function (html) {
+                $('#modalBody').html(html);
+                $('#roleModal').modal('show');
+            });
+        });
+
+        $('.btnDelete').click(function () {
+            const id = $(this).data('id');
+            if (confirm('確定刪除？')) {
+                $.post('/Roles/Delete/' + id, function () {
+                    $('tr[data-id="' + id + '"]').remove();
+                });
+            }
+        });
+    });
+</script>
+}

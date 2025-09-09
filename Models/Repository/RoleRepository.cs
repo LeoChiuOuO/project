@@ -1,42 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
 
-namespace WebApplication_Dianthus.Models
+public class RoleRepository : IRoleRepository
 {
-    public class RoleRepository : IRoleRepository
+    private readonly AppDbContext _context;
+    public RoleRepository(AppDbContext context) => _context = context;
+
+    public IEnumerable<Role> GetAll() => _context.Roles.ToList();
+    public Role GetById(int id) => _context.Roles.Find(id);
+    public void Add(Role role) { _context.Roles.Add(role); _context.SaveChanges(); }
+    public void Update(Role role) { _context.Roles.Update(role); _context.SaveChanges(); }
+    public void Delete(int id)
     {
-        public void Create(Role instance)
+        var role = _context.Roles.Find(id);
+        if (role != null)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Role instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable<Role> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Role GetRoleByID(int RoleID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Role instance)
-        {
-            throw new NotImplementedException();
+            _context.Roles.Remove(role);
+            _context.SaveChanges();
         }
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApplication_Dianthus</title>
     <script type="importmap"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebApplication_Dianthus.styles.css" asp-append-version="true" />
@@ -21,16 +22,25 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Index" asp-action="Index">登入畫面</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">首頁</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ReportPage" asp-action="Index">檢驗報告</a>
                         </li>
                         <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">會員管理</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">基本資料設定</a>
                         </li>
                         <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Index" asp-action="Welcome">角色管理</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">帳號管理</a>
+                        </li>
+                        <li class="nav-item"></li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">角色管理</a>
+                        </li>
+                        <li class="nav-item"></li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Permissions" asp-action="Index">權限管理</a>
+                        </li>
+                        <li class="nav-item"></li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="RolePermission" asp-action="Index">場域管理</a>
                         </li>
                         <li class="nav-item"></li>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Index" asp-action="Welcome">統計圖表</a>

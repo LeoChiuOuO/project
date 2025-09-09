@@ -1,0 +1,22 @@
+@model Role
+
+<form id="createForm">
+    <div class="form-group">
+        <label>角色名稱</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success"style="margin-top: 20px;">儲存</button>
+</form>
+
+<script>
+    $('#createForm').submit(function (e) {
+        e.preventDefault();
+        $.post('/Roles/Create', $(this).serialize(), function (res) {
+            location.reload(); // 或用 AJAX 更新表格
+        });
+    });
+</script>

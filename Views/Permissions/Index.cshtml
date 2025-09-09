@@ -1,0 +1,81 @@
+@model IEnumerable<Permission>
+
+@{
+    ViewData["Title"] = "權限管理";
+}
+
+<h2>權限管理</h2>
+<a class="btn btn-primary mb-3" href="@Url.Action("Create")">新增權限</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>檢視</th>
+            <th>新增</th>
+            <th>編輯</th>
+            <th>刪除</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.ReviewPermissions</td>
+            <td>@p.CreatePermissions</td>
+            <td>@p.EditPermissions</td>
+            <td>@p.DeletePermissions</td>
+            <td>
+                <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", new { id = p.Id })">編輯</a>
+                <form method="post" action="@Url.Action("Delete", new { id = p.Id })" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確定刪除?')">刪除</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<!-- Modal -->
+<div class="modal fade" id="permModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">權限編輯</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- AJAX 載入表單 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    $(function () {
+        $('#btnAdd').click(function () {
+            $.get('/Permissions/Create', function (html) {
+                $('#modalBody').html(html);
+                $('#permModal').modal('show');
+            });
+        });
+
+        $('.btnEdit').click(function () {
+            const id = $(this).data('id');
+            $.get('/Permissions/Edit/' + id, function (html) {
+                $('#modalBody').html(html);
+                $('#permModal').modal('show');
+            });
+        });
+
+        $('.btnDelete').click(function () {
+            const id = $(this).data('id');
+            if (confirm('確定刪除？')) {
+                $.post('/Permissions/Delete/' + id, function () {
+                    $('tr[data-id="' + id + '"]').remove();
+                });
+            }
+        });
+    });
+</script>
+}

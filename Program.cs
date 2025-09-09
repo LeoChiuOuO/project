@@ -1,6 +1,7 @@
 
 
 using Microsoft.EntityFrameworkCore;
+using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
 using WebApplication_Dianthus.Models.Repository;
 using WebApplication_Dianthus.Models.Service;
@@ -8,38 +9,58 @@ using WebApplication_Dianthus.Models.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 加入 MVC
 builder.Services.AddControllersWithViews();
 
+// 加入 DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-    
-// 註冊你的服務
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    new MySqlServerVersion(new Version(8, 0, 36))));
+
+// 加入 Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// 註冊服務
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IOBPatientService, OBPatientService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 中介軟體順序
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // 這行很重要，讓 CSS/JS/圖片能被載入
+
 app.UseRouting();
 
-app.UseAuthorization();// 啟用身份驗證
-app.UseAuthorization(); // 啟用授權，指的是Controller、Action可加上驗證 [Authorize] 屬性
+app.UseSession();
 
-app.MapStaticAssets();
+// 如果有登入驗證，這裡要加 app.UseAuthentication();
+app.UseAuthorization();
 
+// 路由設定
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Index}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
 
 app.Run();

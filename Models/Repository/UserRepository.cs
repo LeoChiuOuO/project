@@ -1,42 +1,49 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
 
-namespace WebApplication_Dianthus.Models
+public class UserRepository : IUserRepository
 {
-    public class UserRepository : IUserRepository
+    private readonly AppDbContext _context;
+
+    public UserRepository(AppDbContext context)
     {
-        public void Create(User instance)
-        {
-            throw new NotImplementedException();
-        }
+        _context = context;
+    }
 
-        public void Delete(User instance)
-        {
-            throw new NotImplementedException();
-        }
+    public IEnumerable<User> GetAll()
+    {
+        throw new NotImplementedException();
+    }
 
-        public IQueryable<User> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+    public User GetByAccount(string account)
+    {
+        return _context.Users.FirstOrDefault(u => u.Account == account);
+    }
 
-        public User GetUserByID(int UserID)
-        {
-            throw new NotImplementedException();
-        }
+    public User GetById(int id)
+    {
+        return _context.Users.FirstOrDefault(u => u.Id == id);
+    }
 
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
+    public void Add(User user)
+    {
+        _context.Users.Add(user);
+        _context.SaveChanges();
+    }
 
-        public void Update(User instance)
+    public void Update(User user)
+    {
+        _context.Users.Update(user);
+        _context.SaveChanges();
+    }
+
+    public void Delete(int id)
+    {
+        var user = _context.Users.Find(id);
+        if (user != null)
         {
-            throw new NotImplementedException();
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
     }
 }
