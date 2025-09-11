@@ -9,29 +9,29 @@
 }
 
 .target-report-main {
-    width: 800px;
-    height:800px;
-    background: aliceblue;
-    margin-left: 20%; 
-    border: 2px solid;
+
 }
 
 .target-report-body {
-    margin-top: 10px;
-    margin-left: 20px;
+
 }
 
 .target-report-row {
     display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
 }
 
 .target-report-row-label {
-    width: 250px
+
 }
 
 .target-report-input {
     display: flex;
-    margin-top: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
 }
 
 .notify-warn { 

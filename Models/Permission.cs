@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication_Dianthus.Models;
+
 [Table("permissions")]
 public class Permission
 {
@@ -37,5 +38,6 @@ public class Permission
     public DateTime? DeletedAt { get; set; }
 
     public ICollection<RolePermission> RolePermissions { get; set; }
+    public string Name { get; set; }
 
 }

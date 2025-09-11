@@ -1,71 +1,287 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
+using System.Data;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
+using Dapper;
+using Org.BouncyCastle.Crypto.Utilities;
 using WebApplication_Dianthus.Models.Interface;
 
-namespace WebApplication_Dianthus.Models.Repository
+namespace WebApplication_Dianthus.Models.Repository;
+
+public class ReportRepository : IReportRepository
 {
-    public class ReportRepository : IReportRepository
+    private readonly IDbConnection _db;
+
+    public ReportRepository(IDbConnection db)
     {
-        
-        // 範例模擬DB
-        private static readonly List<Report> _reposts = new List<Report>
+        _db = db;
+    }
+
+    public Report GetReportById(int id)
+    {
+        var sql = @"
+        SELECT
+            id AS Id,
+            report_id AS ReportId,
+            medical_order AS MedicalOrder,
+            consent_form_state AS ConsentFormState,
+            specimen_dely_state AS SpecimenDelyState,
+            send_email_state AS SendEmailState,
+            product_name AS ProductName,
+            tracking_status AS TrackingStatus,
+            notification_status AS NotificationStatus,
+            partition_id AS PartitionId,
+            department_id AS DepartmentId,
+            submission_date AS SubmissionDate,
+            name AS Name,
+            id_number AS IdNumber,
+            mr_number AS MrNumber,
+            test_item AS TestItem,
+            cost AS Cost,
+            return_date AS ReturnDate,
+            sending_physician_name AS SendingPhysicianName,
+            remark AS Remark,
+            report_date AS ReportDate,
+            report_results AS ReportResults,
+            create_id AS CreateId,
+            modify_id AS ModifyId,
+            specimen_number AS SpecimenNumber,
+            testing_date AS TestingDate,
+            weeks_of_pregnancy AS WeeksOfPregnancy,
+            due_date AS DueDate,
+            inspection_institution AS InspectionInstitution,
+            inspection_institution_phone AS InspectionInstitutionPhone,
+            responsible_business_person AS ResponsibleBusinessPerson,
+            responsible_business_phone AS ResponsibleBusinessPhone,
+            responsible_business_email AS ResponsibleBusinessEmail,
+            business_manager AS BusinessManager,
+            business_manager_phone AS BusinessManagerPhone,
+            business_manager_email AS BusinessManagerEmail,
+            abnormal_report_delivery_method AS AbnormalReportDeliveryMethod,
+            abnormal_report_notification_method AS AbnormalReportNotificationMethod,
+            inspection_group AS InspectionGroup,
+            notification_circumstances AS NotificationCircumstances,
+            prenatal_testing_project_tracking_time AS PrenatalTestingProjectTrackingTime,
+            confirm_specimen_submission_time AS ConfirmSpecimenSubmissionTime,
+            confirm_specimen_type AS ConfirmSpecimenType,
+            confirm_the_test_report_results AS ConfirmTheTestReportResults,
+            tracking_time AS TrackingTime,
+            tracking AS Tracking,
+            tracking_results AS TrackingResults,
+            tracking_the_followup_status_of_NIPS_cases AS TrackingTheFollowupStatusOfNIPS_Cases,
+            referral_institution AS ReferralInstitution,
+            referring_physician AS ReferringPhysician,
+            written_report_processing_methood AS WrittenReportProcessingMethood,
+            fmr1_report_results AS Fmr1ReportResults,
+            chr_report_date AS ChrReportDate,
+            chr_report_results AS ChrReportResults,
+            wafer_report_date AS WaferReportDate,
+            wafer_report_results AS WaferReportResults,
+            v2_v3_testing_results AS V2V3TestingResults,
+            gene_report_date AS GeneReportDate,
+            gene_report_results AS GeneReportResults,
+            other_report_date AS OtherReportDate,
+            other_report_results AS OtherReportResults,
+            created_at AS CreatedAt,
+            updated_at AS UpdatedAt,
+            deleted_at AS DeletedAt
+            FROM reports
+            WHERE id = @Id
+            LIMIT 1;
+        ";
+
+        return _db.QueryFirstOrDefault<Report>(sql, new { Id = id });
+    }
+
+    public PagedResult<Report> GetReports(ReportFilter filter)
+    {
+        filter ??= new ReportFilter();
+        filter.DateFrom ??= DateTime.Today.AddMonths(-1);
+        filter.DateTo ??= DateTime.Today;
+
+        var sqlBuilder = new StringBuilder(@"
+            SELECT id AS Id,
+            report_id AS ReportId,
+            medical_order AS MedicalOrder,
+            consent_form_state AS ConsentFormState,
+            specimen_dely_state AS SpecimenDelyState,
+            send_email_state AS SendEmailState,
+            product_name AS ProductName,
+            tracking_status AS TrackingStatus,
+            notification_status AS NotificationStatus,
+            partition_id AS PartitionId,
+            department_id AS DepartmentId,
+            submission_date AS SubmissionDate,
+            name AS Name,
+            id_number AS IdNumber,
+            mr_number AS MrNumber,
+            test_item AS TestItem,
+            cost AS Cost,
+            return_date AS ReturnDate,
+            sending_physician_name AS SendingPhysicianName,
+            remark AS Remark,
+            report_date AS ReportDate,
+            report_results AS ReportResults,
+            create_id AS CreateId,
+            modify_id AS ModifyId,
+            specimen_number AS SpecimenNumber,
+            testing_date AS TestingDate,
+            weeks_of_pregnancy AS WeeksOfPregnancy,
+            due_date AS DueDate,
+            inspection_institution AS InspectionInstitution,
+            inspection_institution_phone AS InspectionInstitutionPhone,
+            responsible_business_person AS ResponsibleBusinessPerson,
+            responsible_business_phone AS ResponsibleBusinessPhone,
+            responsible_business_email AS ResponsibleBusinessEmail,
+            business_manager AS BusinessManager,
+            business_manager_phone AS BusinessManagerPhone,
+            business_manager_email AS BusinessManagerEmail,
+            abnormal_report_delivery_method AS AbnormalReportDeliveryMethod,
+            abnormal_report_notification_method AS AbnormalReportNotificationMethod,
+            inspection_group AS InspectionGroup,
+            notification_circumstances AS NotificationCircumstances,
+            prenatal_testing_project_tracking_time AS PrenatalTestingProjectTrackingTime,
+            confirm_specimen_submission_time AS ConfirmSpecimenSubmissionTime,
+            confirm_specimen_type AS ConfirmSpecimenType,
+            confirm_the_test_report_results AS ConfirmTheTestReportResults,
+            tracking_time AS TrackingTime,
+            tracking AS Tracking,
+            tracking_results AS TrackingResults,
+            tracking_the_followup_status_of_NIPS_cases AS TrackingTheFollowupStatusOfNIPS_Cases,
+            referral_institution AS ReferralInstitution,
+            referring_physician AS ReferringPhysician,
+            written_report_processing_methood AS WrittenReportProcessingMethood,
+            fmr1_report_results AS Fmr1ReportResults,
+            chr_report_date AS ChrReportDate,
+            chr_report_results AS ChrReportResults,
+            wafer_report_date AS WaferReportDate,
+            wafer_report_results AS WaferReportResults,
+            v2_v3_testing_results AS V2V3TestingResults,
+            gene_report_date AS GeneReportDate,
+            gene_report_results AS GeneReportResults,
+            other_report_date AS OtherReportDate,
+            other_report_results AS OtherReportResults,
+            created_at AS CreatedAt,
+            updated_at AS UpdatedAt,
+            deleted_at AS DeletedAt
+            FROM reports
+            WHERE testing_date BETWEEN @DateFrom AND @DateTo
+        ");
+
+        var countBuilder = new StringBuilder(@"
+            SELECT COUNT(*)
+            FROM reports
+            WHERE testing_date BETWEEN @DateFrom AND @DateTo
+        ");
+
+        var parameters = new DynamicParameters();
+        parameters.Add("DateFrom", filter.DateFrom);
+        parameters.Add("DateTo", filter.DateTo);
+
+        // 單值篩選：TestItem
+        if (!string.IsNullOrWhiteSpace(filter.TestItem))
         {
-            new Report { Number = 001, TestID=123456, CustName = "客戶01" , Item = "item01", DetectionDate = new DateTime(2025,01,04), ReportDate = new DateTime(2025,01,04), DetectionDepartment="院所01", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 1, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 002, TestID=654321, CustName = "客戶02" , Item = "item02", DetectionDate = new DateTime(2025,02,13), ReportDate = new DateTime(2025,02,13), DetectionDepartment="院所02", DetectionDoctor = "XXX醫師", Notify = 2 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 003, TestID=132465, CustName = "客戶03" , Item = "item03", DetectionDate = new DateTime(2025,05,24), ReportDate = new DateTime(2025,05,24), DetectionDepartment="院所03", DetectionDoctor = "XXX醫師", Notify = 0 , Track = 0, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 004, TestID=142356, CustName = "客戶04" , Item = "item04", DetectionDate = new DateTime(2025,02,06), ReportDate = new DateTime(2025,02,06), DetectionDepartment="院所04", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 005, TestID=512436, CustName = "客戶05" , Item = "item05", DetectionDate = new DateTime(2025,03,09), ReportDate = new DateTime(2025,03,09), DetectionDepartment="院所05", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 006, TestID=645321, CustName = "客戶06" , Item = "item06", DetectionDate = new DateTime(2025,08,22), ReportDate = new DateTime(2025,08,22), DetectionDepartment="院所06", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 007, TestID=124356, CustName = "客戶07" , Item = "item07", DetectionDate = new DateTime(2025,07,18), ReportDate = new DateTime(2025,07,18), DetectionDepartment="院所07", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 008, TestID=213465, CustName = "客戶08" , Item = "item08", DetectionDate = new DateTime(2025,02,26), ReportDate = new DateTime(2025,02,26), DetectionDepartment="院所08", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 009, TestID=314265, CustName = "客戶09" , Item = "item09", DetectionDate = new DateTime(2025,04,11), ReportDate = new DateTime(2025,04,11), DetectionDepartment="院所09", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 010, TestID=162534, CustName = "客戶10" , Item = "item10", DetectionDate = new DateTime(2025,09,19), ReportDate = new DateTime(2025,09,19), DetectionDepartment="院所10", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
-            new Report { Number = 011, TestID=342516, CustName = "客戶11" , Item = "item11", DetectionDate = new DateTime(2025,11,30), ReportDate = new DateTime(2025,11,30), DetectionDepartment="院所11", DetectionDoctor = "XXX醫師", Notify = 1 , Track = 2, Edit = 3, Review = 4, Describe = 5, Document = 6},
+            sqlBuilder.Append(" AND test_item = @TestItem");
+            countBuilder.Append(" AND test_item = @TestItem");
+            parameters.Add("TestItem", filter.TestItem);
+        }
+
+        // 多值篩選：NotificationStatus
+        if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
+        {
+            sqlBuilder.Append(" AND notification_status IN @NotifyStatus");
+            countBuilder.Append(" AND notification_status IN @NotifyStatus");
+            parameters.Add("NotifyStatus", filter.NotifyStatus);
+        }
+
+        // 多值篩選：TrackingStatus
+        if (filter.TrackStatus != null && filter.TrackStatus.Any())
+        {
+            sqlBuilder.Append(" AND tracking_status IN @TrackStatus");
+            countBuilder.Append(" AND tracking_status IN @TrackStatus");
+            parameters.Add("TrackStatus", filter.TrackStatus);
+        }
+
+        // 關鍵字模糊查詢
+        if (!string.IsNullOrWhiteSpace(filter.Keyword))
+        {
+            sqlBuilder.Append(@"
+                AND (
+                    specimen_number LIKE CONCAT('%', @Keyword, '%') OR
+                    inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
+                    sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
+                    name LIKE CONCAT('%', @Keyword, '%')
+                )
+            ");
+            countBuilder.Append(@"
+                AND (
+                    specimen_number LIKE CONCAT('%', @Keyword, '%') OR
+                    inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
+                    sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
+                    name LIKE CONCAT('%', @Keyword, '%')
+                )
+            ");
+            parameters.Add("Keyword", filter.Keyword);
+        }
+
+        // 分頁條件
+        sqlBuilder.Append(" ORDER BY testing_date DESC LIMIT @PageSize OFFSET @Offset");
+        parameters.Add("PageSize", filter.PageSize);
+        parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
+
+        // 執行查詢
+        var data = _db.Query<Report>(sqlBuilder.ToString(), parameters).ToList();
+        var total = _db.ExecuteScalar<int>(countBuilder.ToString(), parameters);
+
+        return new PagedResult<Report>
+        {
+            Data = data,
+            Total = total,
+            Page = filter.Page,
+            PageSize = filter.PageSize
+        };
+    }
+    public bool UpdateReport(ReportUpdateDto report)
+    {
+        var sql = @"
+        UPDATE reports SET
+            notification_status = @NotificationStatus,
+            tracking_status = @TrackingStatus,
+            notification_circumstances = @NotificationCircumstances,
+            confirm_specimen_submission_time = @ConfirmSpecimenSubmissionTime,
+            confirm_specimen_type = @ConfirmSpecimenType,
+            confirm_the_test_report_results = @ConfirmTheTestReportResults,
+            referral_institution = @ReferralInstitution,
+            referring_physician = @ReferringPhysician,
+            remark = @Remark,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = @Id;
+        ";
+
+        var affected = _db.Execute(sql, report);
+        return affected > 0;
+    }
+
+    public List<string> GetDistinctSpecimenTypes(string columnName)
+    {
+        // 安全性防呆：只允許特定欄位
+        var allowedColumns = new[] {
+            "confirm_specimen_type",
+            "test_item",
+            "notification_status",
+            "tracking_status"
         };
 
-        public void Create(Report instance)
-        {
-            throw new NotImplementedException();
-        }
+        if (!allowedColumns.Contains(columnName))
+            throw new ArgumentException("不允許查詢此欄位");
 
-        public void Edit(Report instance)
-        {
-            throw new NotImplementedException();
-        }
+        var sql = $@"
+            SELECT DISTINCT {columnName}
+            FROM reports
+            WHERE {columnName} IS NOT NULL AND {columnName} != ''
+            ORDER BY {columnName};
+        ";
 
-        public void Delete(Report instance)
-        {
-            throw new NotImplementedException();
-        }
+        return _db.Query<string>(sql).ToList();
 
-        public void GetReportByID(Report instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Report> GetAll()
-        {
-            return _reposts;
-        }
-
-        public void Update(Report instance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Report GetReportByID(int ReportID)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveChanges()
-        {
-            throw new NotImplementedException();
-        }
     }
+
 }

@@ -47,7 +47,9 @@ public class User
 
     [Column("deleted_at")]
     public DateTime? DeletedAt { get; set; }
-
+    [NotMapped]
     public ICollection<UserRole> UserRoles { get; set; }
+    [NotMapped]
+    public List<Role> Roles { get; set; } = new();
 
 }

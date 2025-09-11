@@ -1,16 +1,32 @@
 
 
+using System.Data;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
 using WebApplication_Dianthus.Models.Repository;
 using WebApplication_Dianthus.Models.Service;
 using WebApplication_Dianthus.Models.Service.Interface;
+using WebApplication_Dianthus.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 加入 MVC
 builder.Services.AddControllersWithViews();
+
+// MySQL 連線字串（appsettings.json）
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// 每個 HTTP 請求建立新的 MySQL 連線並開啟
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var conn = new MySqlConnection(cs);
+    conn.Open();
+    return conn;
+});
+
 
 // 加入 DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -38,6 +54,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -50,13 +68,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // 這行很重要，讓 CSS/JS/圖片能被載入
-
 app.UseRouting();
-
 app.UseSession();
 
 // 如果有登入驗證，這裡要加 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers(); // 包含 /api/report
 
 // 路由設定
 app.MapControllerRoute(

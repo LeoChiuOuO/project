@@ -1,0 +1,273 @@
+<div id="targetReport" class="target-report-off">
+    <div class="target-report-main">
+        <h1>報告編輯頁面</h1>
+        <div class="target-report-body">
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>個案姓名：</label><label id="nameLabel"></label></div>
+                <div class="target-report-row-label"><label>個案生日：</label><label id="birthDateLabel"></label></div>
+                <div><label>性別：</label><label id="genderLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>身分證號：</label><label id="idNumberLabel"></label></div>
+                <div class="target-report-row-label"><label>連絡電話：</label><label id="phoneLabel"></label></div>
+                <div><label>Indcation：</label><label id="indicationLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>檢體編號：</label><label id="specimenNumberLabel"></label></div>
+                <div class="target-report-row-label"><label>採檢日期：</label><label id="testingDateLabel"></label></div>
+                <div><label>報告日期：</label><label id="reportDateLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>檢體類別：</label><label id="confirmSpecimenTypeLabel"></label></div>
+                <div class="target-report-row-label"><label>懷孕週數：</label><label id="weeksOfPregnancyLabel"></label></div>
+                <div><label>預產期：</label><label id="dueDateLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>送檢院所：</label><label id="inspectionInstitutionLabel"></label></div>
+                <div class="target-report-row-label"><label>負責業務：</label><label id="responsibleBusinessPersonLabel"></label></div>
+                <div><label>業務主管：</label><label id="businessManagerLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>送檢醫師：</label><label id="sendingPhysicianNameLabel"></label></div>
+                <div class="target-report-row-label"><label>負責業務電話：</label><label id="responsibleBusinessPhoneLabel"></label></div>
+                <div><label>業務主管電話：</label><label id="businessManagerPhoneLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>送檢院所電話：</label><label id="inspectionInstitutionPhoneLabel"></label></div>
+                <div class="target-report-row-label"><label>負責業務Email：</label><label id="responsibleBusinessEmailLabel"></label></div>
+                <div><label>業務主管Email：</label><label id="businessManagerEmailLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>異常報告寄送方式：</label><label id="abnormalReportDeliveryMethodLabel"></label></div>
+                <div><label>異常報告通知方式：</label><label id="abnormalReportNotificationMethodLabel"></label></div>
+            </div>
+            <div><label>檢驗組別：</label><label id="inspectionGroupLabel"></label></div>
+            <div><label>報告結果：</label><label id="reportResultsLabel"></label></div>
+
+            <div class="target-report-input">
+                <div style="width: 300px;">
+                    <label for="notificationStatusSelect">通知狀態：</label>
+                    <select id="notificationStatusSelect" name="notificationStatus">
+                        <option value="" disabled selected>請選擇</option>
+                        <option value="已通知">已通知</option>
+                        <option value="待通知">待通知</option>
+                        <option value="不需通知">不需通知</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="notificationCircumstancesInput">通知情形：</label>
+                    <input type="text" id="notificationCircumstancesInput" name="notificationCircumstances">
+                </div>
+            </div>
+
+            <div class="target-report-input">
+                <div style="width: 300px;">
+                    <label for="trackingStatusSelect">追蹤狀態：</label>
+                    <select id="trackingStatusSelect" name="trackingStatus">
+                        <option value="" disabled selected>請選擇</option>
+                        <option value="已追蹤">已追蹤</option>
+                        <option value="待追蹤">待追蹤</option>
+                        <option value="不需追蹤">不需追蹤</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="prenatalTrackingTimeLabel">產前檢測項目追蹤時間：</label>
+                    <label id="prenatalTrackingTimeLabel"></label>
+                    <button>發送郵件</button>
+                </div>
+            </div>
+
+
+            <div class="target-report-input">
+                <div class="target-report-row-label">
+                    <label for="confirmSubmissionTimeInput">Confirm檢體進件時間：</label>
+                    <input type="text" id="confirmSubmissionTimeInput" name="confirmSpecimenSubmissionTime">
+                </div>
+                <div class="target-report-row-label">
+                    <label for="confirmSpecimenTypeSelect">Confirm檢體類別：</label>
+                    <select id="confirmSpecimenTypeSelect" name="confirmSpecimenType">
+                        <option value="" disabled selected>請選擇</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="confirmReportResultInput">Confirm檢體報告結果：</label>
+                    <input type="text" id="confirmReportResultInput" name="confirmTheTestReportResults">
+                </div>
+            </div>
+
+
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>追蹤時間：</label><label id="trackingTimeLabel"></label></div>
+                <div><label>追蹤NIPS個案後續狀況時間：</label><label id="nipsFollowupTimeLabel"></label></div>
+            </div>
+            <div class="target-report-row">
+                <div class="target-report-row-label"><label>追蹤情形：</label><label id="trackingLabel"></label></div>
+                <div><label>追蹤結果：</label><label id="trackingResultsLabel"></label></div>
+            </div>
+
+            <div class="target-report-input">
+
+            <div style="width: 300px;">
+                <label for="referralInstitutionInput">轉介院所：</label>
+                <input type="text" id="referralInstitutionInput" name="referralInstitution">
+            </div>
+            <div>
+                <label for="referringPhysicianInput">轉介醫師：</label>
+                <input type="text" id="referringPhysicianInput" name="referringPhysician">
+            </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <label for="remarkInput">備註：</label>
+                <input id="remarkInput" name="remark" style="width: 500px; height: 120px" type="text">
+            </div>
+
+        </div>
+
+        <div>
+            <button id="saveBtn" style="width: 80px; height: 40px; margin-top: 10px; margin-right: 20px;" class="btn btn-primary">儲存</button>
+            <button onclick="cancelTargetReport()" style="width: 80px; height: 40px; margin-top: 10px;" class="btn btn-secondary">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const reportId = getReportIdFromUrl();
+
+        $.ajax({
+            url: `/api/report/${reportId}`,
+            type: 'GET',
+            success: function (report) {
+                fillReportDetails(report);
+            },
+            error: function () {
+                alert("載入報告資料失敗");
+            }
+        });
+        
+        function getReportIdFromUrl() {
+            const parts = window.location.pathname.split('/');
+            return parts[parts.length - 1];
+        }
+
+        function formatDate(dateStr) {
+            return dateStr ? dateStr.substring(0, 10) : '';
+        }
+        //產生Confirm檢體類別Select=>option
+        await loadSpecimenTypeOptions("confirm_specimen_type");
+        
+        function fillReportDetails(r) {
+            $('#nameLabel').text(r.name || '');
+            $('#birthDateLabel').text(formatDate(r.birthDate));
+            $('#genderLabel').text(r.gender || '');
+            $('#idNumberLabel').text(r.idNumber || '');
+            $('#phoneLabel').text(r.phone || '');
+            $('#indicationLabel').text(r.indication || '');
+            $('#specimenNumberLabel').text(r.specimenNumber || '');
+            $('#testingDateLabel').text(formatDate(r.testingDate));
+            $('#reportDateLabel').text(formatDate(r.reportDate));
+            $('#confirmSpecimenTypeLabel').text(r.confirmSpecimenType || '');
+            $('#weeksOfPregnancyLabel').text(r.weeksOfPregnancy || '');
+            $('#dueDateLabel').text(formatDate(r.dueDate));
+            $('#inspectionInstitutionLabel').text(r.inspectionInstitution || '');
+            $('#responsibleBusinessPersonLabel').text(r.responsibleBusinessPerson || '');
+            $('#businessManagerLabel').text(r.businessManager || '');
+            $('#sendingPhysicianNameLabel').text(r.sendingPhysicianName || '');
+            $('#responsibleBusinessPhoneLabel').text(r.responsibleBusinessPhone || '');
+            $('#businessManagerPhoneLabel').text(r.businessManagerPhone || '');
+            $('#inspectionInstitutionPhoneLabel').text(r.inspectionInstitutionPhone || '');
+            $('#responsibleBusinessEmailLabel').text(r.responsibleBusinessEmail || '');
+            $('#businessManagerEmailLabel').text(r.businessManagerEmail || '');
+            $('#abnormalReportDeliveryMethodLabel').text(r.abnormalReportDeliveryMethod || '');
+            $('#abnormalReportNotificationMethodLabel').text(r.abnormalReportNotificationMethod || '');
+            $('#inspectionGroupLabel').text(r.inspectionGroup || '');
+            $('#reportResultsLabel').text(r.reportResults || '');
+            $('#notificationStatusSelect').val(r.notificationStatus || '');
+            $('#notificationCircumstancesInput').val(r.notificationCircumstances || '');
+            $('#trackingStatusSelect').val(r.trackingStatus || '');
+            $('#prenatalTrackingTimeLabel').text(formatDate(r.prenatalTestingProjectTrackingTime));
+            $('#confirmSubmissionTimeInput').val(formatDate(r.confirmSpecimenSubmissionTime));
+            $('#confirmSpecimenTypeSelect').val(r.confirmSpecimenType || '');
+            $('#confirmReportResultInput').val(r.confirmTheTestReportResults || '');
+            $('#trackingTimeLabel').text(formatDate(r.trackingTime));
+            $('#nipsFollowupTimeLabel').text(formatDate(r.trackingTheFollowupStatusOfNIPS_Cases));
+            $('#trackingLabel').text(r.tracking || '');
+            $('#trackingResultsLabel').text(r.trackingResults || '');
+            $('#referralInstitutionInput').val(r.referralInstitution || '');
+            $('#referringPhysicianInput').val(r.referringPhysician || '');
+            $('#remarkInput').val(r.remark || '');
+            if (!$('#notificationStatusSelect').val() || !$('#trackingStatusSelect').val()) {
+                alert("請選擇通知狀態與追蹤狀態");
+                return;
+            }
+        }
+
+        $('#saveBtn').on('click', function () {
+            const $btn = $(this);
+            $btn.prop('disabled', true).text('儲存中...');
+
+            //調整存入日期格式
+            const dateStr = $('#confirmSubmissionTimeInput').val(); // '2025-10-20'
+            const fullDate = dateStr ? dateStr + 'T00:00:00' : null;
+            const updated = {
+                id: reportId,
+                notificationStatus: $('#notificationStatusSelect').val(),
+                trackingStatus: $('#trackingStatusSelect').val(),
+                notificationCircumstances: $('#notificationCircumstancesInput').val(),
+                confirmSpecimenSubmissionTime: fullDate,
+                confirmSpecimenType: $('#confirmSpecimenTypeSelect').val(),
+                confirmTheTestReportResults: $('#confirmReportResultInput').val(),
+                referralInstitution: $('#referralInstitutionInput').val(),
+                referringPhysician: $('#referringPhysicianInput').val(),
+                remark: $('#remarkInput').val()
+            };
+            $.ajax({
+                url: `/api/report/${reportId}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updated),
+                success: function () {
+                    alert("儲存成功，即將返回報表列表");
+                    // 通知主頁刷新，關閉分頁
+                    if (window.opener && !window.opener.closed) {
+                        window.opener.postMessage({ type: 'refreshReportList' }, '*');
+                    }
+                    window.close();
+                    @* window.location.href = "/Report/Index"; // ← 跳轉回列表路徑 *@
+                },
+                error: function () {
+                    alert("儲存失敗，請稍後再試");
+                    $btn.prop('disabled', false).text('儲存');
+                }
+            });
+        });
+    });
+
+    function loadSpecimenTypeOptions(columnName) {
+        $.ajax({
+            url: '/api/report/specimen-types/confirm_specimen_type',
+            type: 'GET',
+            success: function (types) {
+                const $select = $('#confirmSpecimenTypeSelect');
+                $select.empty();
+                $select.append('<option value=""  disabled selected>請選擇</option>');
+                types.forEach(t => {
+                    $select.append(`<option value="${t}">${t}</option>`);
+                });
+            },
+            error: function () {
+                console.warn("項目載入失敗");
+            }
+        });
+    }
+
+    function cancelTargetReport(){
+        if (confirm("確定要取消編輯並關閉分頁？")) {
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage({ type: 'refreshReportList' }, '*');
+            }
+            window.close();
+        }
+    }
+</script>

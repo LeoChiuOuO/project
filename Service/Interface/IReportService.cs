@@ -1,9 +1,14 @@
-using WebApplication_Dianthus.Models;
+using WebApplication_Dianthus.Models.ViewMosels;
 
-namespace WebApplication_Dianthus.Models.Interface
+namespace WebApplication_Dianthus.Models.Service.Interface
 {
     public interface IReportService
     {
-        List<Report> GetAll();
+        PagedResult<Report> GetReports(ReportFilter filter);
+        Report? GetReportById(int id);
+        List<string> GetSpecimenTypeOptions(string columnName);
+        void CreateReport(Report report);
+        bool UpdateReport(ReportUpdateDto report);
+        void DeleteReport(int id);
     }
 }

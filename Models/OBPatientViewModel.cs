@@ -1,5 +1,3 @@
-
-// Models/OBPatientViewModel.cs
 namespace WebApplication_Dianthus.Models
 {
     public class OBPatientViewModel

@@ -8,16 +8,9 @@ namespace WebApplication_Dianthus.Models.Interface
 {
     public interface IReportRepository
     {
-        void Create(Report instance);
- 
-        void Update(Report instance);
- 
-        void Delete(Report instance);
- 
-        Report GetReportByID(int ReportID);
- 
-        List<Report> GetAll();
- 
-        void SaveChanges();
+        PagedResult<Report> GetReports(ReportFilter filter);
+        Report GetReportById(int id);
+        bool UpdateReport(ReportUpdateDto report);
+        List<string> GetDistinctSpecimenTypes(string columnName);
     }
 }

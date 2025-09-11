@@ -1,9 +1,3 @@
-
-// ==========================================
-// 1. Model/ViewModel
-// ==========================================
-
-// Models/OBPatientRecord.cs
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;

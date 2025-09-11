@@ -52,8 +52,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVybWlzc2lvbnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/ReportPage/ReportReviewPage.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0UGFnZVxSZXBvcnRSZXZpZXdQYWdlLmNzaHRtbA==
+[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/ReportReviewPage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFJlcG9ydFJldmlld1BhZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/RolePermission/Create.cshtml]
@@ -112,9 +116,9 @@ build_metadata.AdditionalFiles.CssScope = b-moq9deg8gi
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kZXhcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-su3qoipxt7
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/ReportPage/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0UGFnZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = b-7ataa6jb2o
+[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-48x5ve6fy4
 
 [C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s

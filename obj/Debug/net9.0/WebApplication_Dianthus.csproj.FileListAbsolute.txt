@@ -117,7 +117,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\rjimswa.dswa
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Index\Index.cshtml.rz.scp.css
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\ReportPage\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\bundle\WebApplication_Dianthus.styles.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\projectbundle\WebApplication_Dianthus.bundle.scp.css
@@ -345,5 +344,7 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\BCrypt.Net-N
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\MySqlConnector.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Auth\Login.cshtml.rz.scp.css
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-w2u9v6jrce.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-w2u9v6jrce.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\Dapper.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Report\Index.cshtml.rz.scp.css
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-wrnqq938xu.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-wrnqq938xu.gz
