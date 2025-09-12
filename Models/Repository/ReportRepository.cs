@@ -284,4 +284,118 @@ public class ReportRepository : IReportRepository
 
     }
 
+    public IEnumerable<Report> GetReportsForExport(ReportFilter filter)
+    {
+        // 可重用 GetReports 的 SQL 組裝，但不要加 LIMIT/OFFSET
+        var sqlBuilder = new StringBuilder(@"
+            SELECT
+            id AS Id,
+            report_id AS ReportId,
+            medical_order AS MedicalOrder,
+            consent_form_state AS ConsentFormState,
+            specimen_dely_state AS SpecimenDelyState,
+            send_email_state AS SendEmailState,
+            product_name AS ProductName,
+            tracking_status AS TrackingStatus,
+            notification_status AS NotificationStatus,
+            partition_id AS PartitionId,
+            department_id AS DepartmentId,
+            submission_date AS SubmissionDate,
+            name AS Name,
+            id_number AS IdNumber,
+            mr_number AS MrNumber,
+            test_item AS TestItem,
+            cost AS Cost,
+            return_date AS ReturnDate,
+            sending_physician_name AS SendingPhysicianName,
+            remark AS Remark,
+            report_date AS ReportDate,
+            report_results AS ReportResults,
+            create_id AS CreateId,
+            modify_id AS ModifyId,
+            specimen_number AS SpecimenNumber,
+            testing_date AS TestingDate,
+            weeks_of_pregnancy AS WeeksOfPregnancy,
+            due_date AS DueDate,
+            inspection_institution AS InspectionInstitution,
+            inspection_institution_phone AS InspectionInstitutionPhone,
+            responsible_business_person AS ResponsibleBusinessPerson,
+            responsible_business_phone AS ResponsibleBusinessPhone,
+            responsible_business_email AS ResponsibleBusinessEmail,
+            business_manager AS BusinessManager,
+            business_manager_phone AS BusinessManagerPhone,
+            business_manager_email AS BusinessManagerEmail,
+            abnormal_report_delivery_method AS AbnormalReportDeliveryMethod,
+            abnormal_report_notification_method AS AbnormalReportNotificationMethod,
+            inspection_group AS InspectionGroup,
+            notification_circumstances AS NotificationCircumstances,
+            prenatal_testing_project_tracking_time AS PrenatalTestingProjectTrackingTime,
+            confirm_specimen_submission_time AS ConfirmSpecimenSubmissionTime,
+            confirm_specimen_type AS ConfirmSpecimenType,
+            confirm_the_test_report_results AS ConfirmTheTestReportResults,
+            tracking_time AS TrackingTime,
+            tracking AS Tracking,
+            tracking_results AS TrackingResults,
+            tracking_the_followup_status_of_NIPS_cases AS TrackingTheFollowupStatusOfNIPS_Cases,
+            referral_institution AS ReferralInstitution,
+            referring_physician AS ReferringPhysician,
+            written_report_processing_methood AS WrittenReportProcessingMethood,
+            fmr1_report_results AS Fmr1ReportResults,
+            chr_report_date AS ChrReportDate,
+            chr_report_results AS ChrReportResults,
+            wafer_report_date AS WaferReportDate,
+            wafer_report_results AS WaferReportResults,
+            v2_v3_testing_results AS V2V3TestingResults,
+            gene_report_date AS GeneReportDate,
+            gene_report_results AS GeneReportResults,
+            other_report_date AS OtherReportDate,
+            other_report_results AS OtherReportResults,
+            created_at AS CreatedAt,
+            updated_at AS UpdatedAt,
+            deleted_at AS DeletedAt
+            FROM reports
+            WHERE testing_date BETWEEN @DateFrom AND @DateTo
+        ");
+
+        var countBuilder = new StringBuilder("SELECT 1"); // 佔位，避免多餘
+
+        var parameters = new DynamicParameters();
+        parameters.Add("DateFrom", filter.DateFrom ?? DateTime.Today.AddMonths(-1));
+        parameters.Add("DateTo", filter.DateTo ?? DateTime.Today);
+
+        if (!string.IsNullOrWhiteSpace(filter.TestItem))
+        {
+            sqlBuilder.Append(" AND test_item = @TestItem");
+            parameters.Add("TestItem", filter.TestItem);
+        }
+
+        if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
+        {
+            sqlBuilder.Append(" AND notification_status IN @NotifyStatus");
+            parameters.Add("NotifyStatus", filter.NotifyStatus);
+        }
+
+        if (filter.TrackStatus != null && filter.TrackStatus.Any())
+        {
+            sqlBuilder.Append(" AND tracking_status IN @TrackStatus");
+            parameters.Add("TrackStatus", filter.TrackStatus);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Keyword))
+        {
+            sqlBuilder.Append(@"
+                AND (
+                    specimen_number LIKE CONCAT('%', @Keyword, '%') OR
+                    inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
+                    sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
+                    name LIKE CONCAT('%', @Keyword, '%')
+                )
+            ");
+            parameters.Add("Keyword", filter.Keyword);
+        }
+
+        sqlBuilder.Append(" ORDER BY testing_date DESC");
+
+        return _db.Query<Report>(sqlBuilder.ToString(), parameters);
+    }
 }

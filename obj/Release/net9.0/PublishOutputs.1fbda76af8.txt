@@ -6,9 +6,11 @@ C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.runtimeconfig.json
 C:\Users\D\Desktop\project\publish\WebApplication_Dianthus.pdb
 C:\Users\D\Desktop\project\publish\Azure.Core.dll
 C:\Users\D\Desktop\project\publish\Azure.Identity.dll
+C:\Users\D\Desktop\project\publish\BCrypt.Net-Next.dll
 C:\Users\D\Desktop\project\publish\BouncyCastle.Cryptography.dll
 C:\Users\D\Desktop\project\publish\ClosedXML.dll
 C:\Users\D\Desktop\project\publish\ClosedXML.Parser.dll
+C:\Users\D\Desktop\project\publish\Dapper.dll
 C:\Users\D\Desktop\project\publish\DocumentFormat.OpenXml.dll
 C:\Users\D\Desktop\project\publish\DocumentFormat.OpenXml.Framework.dll
 C:\Users\D\Desktop\project\publish\ExcelNumberFormat.dll
@@ -41,6 +43,8 @@ C:\Users\D\Desktop\project\publish\Microsoft.IdentityModel.Protocols.OpenIdConne
 C:\Users\D\Desktop\project\publish\Microsoft.IdentityModel.Tokens.dll
 C:\Users\D\Desktop\project\publish\Microsoft.SqlServer.Server.dll
 C:\Users\D\Desktop\project\publish\MySql.Data.dll
+C:\Users\D\Desktop\project\publish\MySqlConnector.dll
+C:\Users\D\Desktop\project\publish\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\D\Desktop\project\publish\RBush.dll
 C:\Users\D\Desktop\project\publish\SixLabors.Fonts.dll
 C:\Users\D\Desktop\project\publish\System.ClientModel.dll

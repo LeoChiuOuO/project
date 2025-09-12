@@ -48,6 +48,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
 
+builder.Services.AddTransient<ExcelExporter>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IOBPatientService, OBPatientService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

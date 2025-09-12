@@ -154,8 +154,6 @@
         function formatDate(dateStr) {
             return dateStr ? dateStr.substring(0, 10) : '';
         }
-        //產生Confirm檢體類別Select=>option
-        await loadSpecimenTypeOptions("confirm_specimen_type");
         
         function fillReportDetails(r) {
             $('#nameLabel').text(r.name || '');
@@ -202,6 +200,9 @@
                 return;
             }
         }
+
+        //產生Confirm檢體類別Select=>option
+        loadSpecimenTypeOptions("confirm_specimen_type");
 
         $('#saveBtn').on('click', function () {
             const $btn = $(this);
@@ -255,6 +256,10 @@
                 types.forEach(t => {
                     $select.append(`<option value="${t}">${t}</option>`);
                 });
+                // 成功載入後再設定選取值
+                if (selectedValue) {
+                    $select.val(selectedValue);
+                }
             },
             error: function () {
                 console.warn("項目載入失敗");

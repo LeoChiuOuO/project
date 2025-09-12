@@ -10,6 +10,7 @@ namespace WebApplication_Dianthus.Controllers.api
     {
         private readonly IReportService _reportService;
 
+
         public ReportController(IReportService reportService)
         {
             _reportService = reportService;
@@ -87,12 +88,44 @@ namespace WebApplication_Dianthus.Controllers.api
             var report = _reportService.GetReportById(id);
             return View(report); // 傳給 Razor View
         }
-        
+
         [HttpGet("/api/report/specimen-types/{columnName}")]
         public IActionResult GetSpecimenTypes(string columnName)
         {
             var types = _reportService.GetSpecimenTypeOptions(columnName);
             return Ok(types);
+        }
+        
+        [HttpGet("/api/report/export")]
+        public IActionResult Export([FromQuery] ReportFilter filter)
+        {
+            try
+            {
+               var filters = new ReportFilter
+                {
+                    TestItem = filter.TestItem,
+                    DateFrom = filter.DateFrom,
+                    DateTo = filter.DateTo,
+                    Keyword = filter.Keyword,
+                    NotifyStatus = filter.NotifyList ?? new List<string>(),
+                    TrackStatus = filter.TrackList ?? new List<string>(),
+                    Page = 1,
+                    PageSize = int.MaxValue
+                };
+
+                var fileBytes = _reportService.ExportReports(filters);
+                var filename = $"reports_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+                return File(fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    filename);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"匯出失敗: {ex.Message}");
+            }
+
         }
     }
 }

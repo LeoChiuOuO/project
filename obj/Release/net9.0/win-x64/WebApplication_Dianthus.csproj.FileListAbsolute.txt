@@ -40,7 +40,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\rj
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\rjsmrazor.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\rjsmcshtml.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\Index\Index.cshtml.rz.scp.css
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\ReportPage\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\bundle\WebApplication_Dianthus.styles.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\projectbundle\WebApplication_Dianthus.bundle.scp.css
@@ -106,8 +105,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\co
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\yb45x81ty8-muycvpuwrr.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\dagyf20fhu-87fc7y1x7t.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\xk26wvj7ik-mlv21k5csn.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\qne5z9dfll-yqyhfe1vts.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\o1bvyw7p40-yqyhfe1vts.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\staticwebassets.build.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\staticwebassets.build.json.cache
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\staticwebassets.development.json
@@ -238,3 +235,11 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\Ex
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\RBush.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\SixLabors.Fonts.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\System.IO.Packaging.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\BCrypt.Net-Next.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\Dapper.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\MySqlConnector.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\Auth\Login.cshtml.rz.scp.css
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\Report\Index.cshtml.rz.scp.css
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\qne5z9dfll-wrnqq938xu.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\o1bvyw7p40-wrnqq938xu.gz

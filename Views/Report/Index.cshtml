@@ -34,7 +34,7 @@
             <div class="target-report-row-label"><label>關鍵字</label></div>
             <div class="target-report-input">
                 <input type="text" id="keyword" placeholder="輸入姓名/檢體編號...">
-                <button id="exportExcel">匯出Excel檔案</button>
+                <button id="exportExcel" class="btn btn-success">匯出Excel檔案</button>
             </div>
         </div>
 
@@ -72,6 +72,60 @@
 @section Scripts {
 <script>
     $(document).ready(function () {
+        $('#exportExcel').on('click', function () {
+            // 1. 蒐集篩選條件
+           // 讀取 checkbox 勾選值
+            const notifyStatusFilters = $('input[name="notifyStatus"]:checked')
+                .map(function () { return $(this).val(); })
+                .get();
+
+            const trackStatusFilters = $('input[name="trackStatus"]:checked')
+                .map(function () { return $(this).val(); })
+                .get();
+
+            const params = {
+                testItem: $('#testItemSelect').val(),
+                dateFrom: $('#dateFrom').val(),
+                dateTo: $('#dateTo').val(),
+                keyword: $('#keyword').val(),
+                notifyStatus: notifyStatusFilters,
+                trackStatus: trackStatusFilters
+            };
+            console.log(params);
+
+            // 2. 呼叫 API 下載檔案
+            $('#exportExcel').prop('disabled', true).text('匯出中...');
+            $.ajax({
+                url: '/api/report/export',
+                type: 'GET',
+                data: params,
+                traditional: true, // 讓陣列序列化成 notifyStatus=a&notifyStatus=b
+                xhrFields: { responseType: 'blob' },
+                success: function (blob, status, xhr) {
+                    // 從 Content-Disposition 取得檔名
+                    const dispo = xhr.getResponseHeader('Content-Disposition') || '';
+                    const match = dispo.match(/filename\*=UTF-8''([^;]+)|filename="?([^"]+)"?/);
+                    const filename = decodeURIComponent((match && (match[1] || match[2])) || 'reports.xlsx');
+
+                    // 建立下載連結
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                },
+                error: function () {
+                    alert('匯出失敗，請稍後再試');
+                },
+                complete: function () {
+                    $('#exportExcel').prop('disabled', false).text('匯出 Excel 檔案');
+                }
+            });
+        });
+
         loadReports(1);
         window.addEventListener('message', function (event) {
             if (event.data && event.data.type === 'refreshReportList') {
@@ -125,7 +179,7 @@
             url: '/api/report',
             type: 'GET',
             data: params,
-            traditional: true, // ✅ 讓陣列參數正確序列化為 notifyStatus=0&notifyStatus=1
+            traditional: true, // 讓陣列參數正確序列化為 notifyStatus=0&notifyStatus=1
             success: function (res) {
                 renderTable(res.data);
                 renderPagination(res.page, res.pageSize, res.total);
