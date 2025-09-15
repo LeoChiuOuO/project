@@ -1,5 +1,3 @@
-using WebApplication_Dianthus.Models.ViewMosels;
-
 namespace WebApplication_Dianthus.Models.Service.Interface
 {
     public interface IReportService

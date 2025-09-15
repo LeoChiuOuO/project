@@ -12,7 +12,9 @@ public class UserRepository : IUserRepository
 
     public IEnumerable<User> GetAll()
     {
-        throw new NotImplementedException();
+        return _context.Users
+        .Where(u => u.DeletedAt == null) // 如果有軟刪除欄位
+        .ToList();
     }
 
     public User GetByAccount(string account)

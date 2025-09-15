@@ -29,10 +29,6 @@ public class User
     [MaxLength(100)]
     public string? Email { get; set; }
 
-    [Column("department")]
-    [MaxLength(50)]
-    public string Department { get; set; }
-
     [Column("last_login_date")]
     public DateTime? LastLoginDate { get; set; }
 

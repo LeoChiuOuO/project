@@ -1,39 +1,46 @@
-<body>
-    <div>
-        <div style="display: flex">
-            <div>
-                <a>會員名字：</a>
-                <textarea style="resize: none; weight:20px; height:31px; line-height: 25px;" name="" id=""></textarea>
-            </div>
-            <div style="margin-left:30px;">
-                <a>所屬單位：</a>
-                <textarea style="resize: none; weight:20px; height:31px; line-height: 25px;" name="" id=""></textarea>
-            </div>
-            <div style="margin-left:30px;">
-                <a class="btn">建立新會員</a>
-            </div>
-        </div>
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>序列號</th>
-                        <th>客戶名稱</th>
-                        <th>單位</th>
-                        <th>帳號</th>
-                        <th>角色</th>
-                        <th>建立者</th>
-                        <th>更新時間</th>
-                        <th>編輯</th>
-                        <th>刪除</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</body>
+@model IEnumerable<WebApplication_Dianthus.Models.User>
+@{
+    ViewData["Title"] = "帳號管理";
+}
+
+<h2>帳號管理</h2>
+
+@await Html.PartialAsync("_AlertMessages")
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>帳號</th>
+            <th>姓名</th>
+            <th>Email</th>
+            <th>新密碼</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <form asp-action="Edit" method="post">
+                <td>
+                    @user.Account
+                    <input type="hidden" name="Id" value="@user.Id" />
+                </td>
+                <td>
+                    <input type="text" name="Name" value="@user.Name" class="form-control" />
+                </td>
+                <td>
+                    <input type="email" name="Email" value="@user.Email" class="form-control" />
+                </td>
+                <td>
+                    <input type="password" name="Password" class="form-control" />
+                    <small class="form-text text-muted">留空則不修改</small>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-sm btn-success">儲存</button>
+                </td>
+            </form>
+        </tr>
+    }
+    </tbody>
+</table>

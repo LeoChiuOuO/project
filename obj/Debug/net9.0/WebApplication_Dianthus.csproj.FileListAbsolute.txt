@@ -346,5 +346,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\Pomelo.Entit
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Auth\Login.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\Dapper.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Report\Index.cshtml.rz.scp.css
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-wrnqq938xu.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-wrnqq938xu.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\User\Index.cshtml.rz.scp.css
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-nydoj0ckrp.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-nydoj0ckrp.gz
