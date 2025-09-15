@@ -122,7 +122,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\bu
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\projectbundle\WebApplication_Dianthus.bundle.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\v45402jh6t-b9sayid5wm.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\z55brdm7ep-61n19gt1b8.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\yxbo6amnzv-xtxxf3hu2r.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\spfx0seljc-bqjiyaj88i.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\82ck45p34r-c2jlpeoesf.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\bab6b6cox1-erw9l3u2r3.gz
@@ -349,3 +348,4 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Vi
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\User\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-nydoj0ckrp.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-nydoj0ckrp.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\yxbo6amnzv-2lyaa6ibwf.gz

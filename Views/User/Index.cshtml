@@ -4,9 +4,11 @@
 }
 
 <h2>帳號管理</h2>
+<div id="alert-container"></div>
 
-@await Html.PartialAsync("_AlertMessages")
-
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">新增帳號</a>
+</div>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -20,8 +22,8 @@
     <tbody>
     @foreach (var user in Model)
     {
-        <tr>
-            <form asp-action="Edit" method="post">
+        <tr id="row-@user.Id">
+            <form onsubmit="return editUser(this)" class="d-inline">
                 <td>
                     @user.Account
                     <input type="hidden" name="Id" value="@user.Id" />
@@ -38,9 +40,42 @@
                 </td>
                 <td>
                     <button type="submit" class="btn btn-sm btn-success">儲存</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="deleteUser(@user.Id)">刪除</button>
                 </td>
             </form>
         </tr>
     }
     </tbody>
 </table>
+
+@section Scripts {
+<script>
+function editUser(form) {
+    $.ajax({
+        url: '/User/Edit',
+        type: 'POST',
+        data: $(form).serialize(),
+        success: function (res) {
+            if (res.success) {
+                showAlert("資料已更新", "success");
+            } else {
+                showAlert("更新失敗", "danger");
+            }
+        }
+    });
+    return false;
+}
+
+function deleteUser(id) {
+    if (!confirm('確定要刪除這個帳號嗎？')) return;
+    $.post('/User/Delete', { id: id }, function (res) {
+        if (res.success) {
+            $('#row-' + id).remove();
+            showAlert("資料已刪除", "success");
+        } else {
+            showAlert("刪除失敗", "danger");
+        }
+    });
+}
+</script>
+}

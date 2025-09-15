@@ -50,14 +50,12 @@ namespace WebApplication_Dianthus.Controllers
             try
             {
                 _userService.UpdateUser(model);
-                TempData["Message"] = "基本資料已更新";
+                return Json(new { success = true });
             }
             catch (ArgumentException ex)
             {
-                TempData["Error"] = ex.Message;
+                return Json(new { success = false, ErrorMessage = ex.Message });
             }
-
-            return RedirectToAction("Profile");
         }
 
         // 管理員功能（帳號管理）
@@ -72,15 +70,22 @@ namespace WebApplication_Dianthus.Controllers
         public IActionResult Create()
         {
             if (!IsAdmin()) return Forbid();
-            return PartialView("Create", new User());
+            return View(new User());
         }
 
         [HttpPost]
         public IActionResult Create(User user)
         {
             if (!IsAdmin()) return Forbid();
-            _userService.CreateUser(user);
-            return Json(new { success = true });
+            try
+            {
+                _userService.CreateUser(user);
+                return Json(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new { success = false, ErrorMessage = ex.Message});
+            }
         }
 
         [HttpGet]
@@ -96,16 +101,32 @@ namespace WebApplication_Dianthus.Controllers
         public IActionResult Edit(User user)
         {
             if (!IsAdmin()) return Forbid();
-            _userService.UpdateUser(user);
-            return Json(new { success = true });
+            try
+            {
+                _userService.UpdateUser(user);
+                return Json(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                return Json(new { success = false, ErrorMessage = ex.Message});
+            }
+
         }
 
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            if (!IsAdmin()) return Forbid();
-            _userService.DeleteUser(id);
-            return Json(new { success = true });
+            if (!IsAdmin()) return Json(new { success = false, message = "沒有權限" });
+            try
+            {
+                _userService.DeleteUser(id); //軟刪除
+                return Json(new { success = true});
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, ErrorMessage = ex.Message});
+            }
+
         }
     }
 }

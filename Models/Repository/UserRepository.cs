@@ -44,8 +44,9 @@ public class UserRepository : IUserRepository
         var user = _context.Users.Find(id);
         if (user != null)
         {
-            _context.Users.Remove(user);
+            user.DeletedAt = DateTime.UtcNow;
             _context.SaveChanges();
         }
     }
+
 }

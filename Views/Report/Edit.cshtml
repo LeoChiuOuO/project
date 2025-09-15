@@ -2,126 +2,118 @@
     <div class="target-report-main">
         <h1>報告編輯頁面</h1>
         <div class="target-report-body">
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>個案姓名：</label><label id="nameLabel"></label></div>
-                <div class="target-report-row-label"><label>個案生日：</label><label id="birthDateLabel"></label></div>
-                <div><label>性別：</label><label id="genderLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>身分證號：</label><label id="idNumberLabel"></label></div>
-                <div class="target-report-row-label"><label>連絡電話：</label><label id="phoneLabel"></label></div>
-                <div><label>Indcation：</label><label id="indicationLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>檢體編號：</label><label id="specimenNumberLabel"></label></div>
-                <div class="target-report-row-label"><label>採檢日期：</label><label id="testingDateLabel"></label></div>
-                <div><label>報告日期：</label><label id="reportDateLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>檢體類別：</label><label id="confirmSpecimenTypeLabel"></label></div>
-                <div class="target-report-row-label"><label>懷孕週數：</label><label id="weeksOfPregnancyLabel"></label></div>
-                <div><label>預產期：</label><label id="dueDateLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>送檢院所：</label><label id="inspectionInstitutionLabel"></label></div>
-                <div class="target-report-row-label"><label>負責業務：</label><label id="responsibleBusinessPersonLabel"></label></div>
-                <div><label>業務主管：</label><label id="businessManagerLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>送檢醫師：</label><label id="sendingPhysicianNameLabel"></label></div>
-                <div class="target-report-row-label"><label>負責業務電話：</label><label id="responsibleBusinessPhoneLabel"></label></div>
-                <div><label>業務主管電話：</label><label id="businessManagerPhoneLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>送檢院所電話：</label><label id="inspectionInstitutionPhoneLabel"></label></div>
-                <div class="target-report-row-label"><label>負責業務Email：</label><label id="responsibleBusinessEmailLabel"></label></div>
-                <div><label>業務主管Email：</label><label id="businessManagerEmailLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>異常報告寄送方式：</label><label id="abnormalReportDeliveryMethodLabel"></label></div>
-                <div><label>異常報告通知方式：</label><label id="abnormalReportNotificationMethodLabel"></label></div>
-            </div>
-            <div><label>檢驗組別：</label><label id="inspectionGroupLabel"></label></div>
-            <div><label>報告結果：</label><label id="reportResultsLabel"></label></div>
 
-            <div class="target-report-input">
-                <div style="width: 300px;">
-                    <label for="notificationStatusSelect">通知狀態：</label>
-                    <select id="notificationStatusSelect" name="notificationStatus">
-                        <option value="" disabled selected>請選擇</option>
-                        <option value="已通知">已通知</option>
-                        <option value="待通知">待通知</option>
-                        <option value="不需通知">不需通知</option>
-                    </select>
+            <div style="display: flex;gap: 10px;">
+                <div class="target-report-row" style="width: 300px;">
+                    <div class="target-report-row-label"><label>個案姓名：</label><label id="nameLabel"></label></div>
+                    <div class="target-report-row-label"><label>身分證號：</label><label id="idNumberLabel"></label></div>
+                    <div class="target-report-row-label"><label>檢體編號：</label><label id="specimenNumberLabel"></label></div>
+                    <div class="target-report-row-label"><label>檢體類別：</label><label id="confirmSpecimenTypeLabel"></label></div>
                 </div>
-                <div>
-                    <label for="notificationCircumstancesInput">通知情形：</label>
-                    <input type="text" id="notificationCircumstancesInput" name="notificationCircumstances">
+                <div class="target-report-row" style="width: 300px;">
+                    <div class="target-report-row-label"><label>個案生日：</label><label id="birthDateLabel"></label></div>
+                    <div class="target-report-row-label"><label>連絡電話：</label><label id="phoneLabel"></label></div>
+                    <div class="target-report-row-label"><label>採檢日期：</label><label id="testingDateLabel"></label></div>
+                    <div class="target-report-row-label"><label>懷孕週數：</label><label id="weeksOfPregnancyLabel"></label></div>
+                </div>
+                <div class="target-report-row" style="width: 300px;">
+                    <div><label>性別：</label><label id="genderLabel"></label></div>
+                    <div><label>Indcation：</label><label id="indicationLabel"></label></div>
+                    <div><label>報告日期：</label><label id="reportDateLabel"></label></div>
+                    <div><label>預產期：</label><label id="dueDateLabel"></label></div>
                 </div>
             </div>
 
-            <div class="target-report-input">
-                <div style="width: 300px;">
-                    <label for="trackingStatusSelect">追蹤狀態：</label>
-                    <select id="trackingStatusSelect" name="trackingStatus">
-                        <option value="" disabled selected>請選擇</option>
-                        <option value="已追蹤">已追蹤</option>
-                        <option value="待追蹤">待追蹤</option>
-                        <option value="不需追蹤">不需追蹤</option>
-                    </select>
+            <div style="display: flex;gap: 10px;margin-top: 15px;">
+                <div class="target-report-row" style="width: 300px;">
+                    <div class="target-report-row-label"><label>送檢院所：</label><label id="inspectionInstitutionLabel"></label></div>
+                    <div class="target-report-row-label"><label>送檢醫師：</label><label id="sendingPhysicianNameLabel"></label></div>
+                    <div class="target-report-row-label"><label>送檢院所電話：</label><label id="inspectionInstitutionPhoneLabel"></label></div>
+                    <div class="target-report-row-label"><label>異常報告寄送方式：</label><label id="abnormalReportDeliveryMethodLabel"></label></div>
+                    <div><label>檢驗組別：</label><label id="inspectionGroupLabel"></label></div>
+                    <div><label>報告結果：</label><label id="reportResultsLabel"></label></div>
                 </div>
-                <div>
-                    <label for="prenatalTrackingTimeLabel">產前檢測項目追蹤時間：</label>
-                    <label id="prenatalTrackingTimeLabel"></label>
+                <div class="target-report-row" style="width: 300px;">
+                    <div class="target-report-row-label"><label>負責業務：</label><label id="responsibleBusinessPersonLabel"></label></div>
+                    <div class="target-report-row-label"><label>負責業務電話：</label><label id="responsibleBusinessPhoneLabel"></label></div>
+                    <div class="target-report-row-label"><label>負責業務Email：</label><label id="responsibleBusinessEmailLabel"></label></div>
+                    <div><label>異常報告通知方式：</label><label id="abnormalReportNotificationMethodLabel"></label></div>
+                </div>
+                <div class="target-report-row" style="width: 300px;">
+                    <div><label>業務主管：</label><label id="businessManagerLabel"></label></div>
+                    <div><label>業務主管電話：</label><label id="businessManagerPhoneLabel"></label></div>
+                    <div><label>業務主管Email：</label><label id="businessManagerEmailLabel"></label>
+                        <button>發送郵件</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex;gap: 10px;margin-top: 15px;width: 300px;">
+                <div class="target-report-input" style="width: 300px;">
+                    <div>
+                        <label for="notificationStatusSelect">通知狀態：</label>
+                        <select id="notificationStatusSelect" name="notificationStatus">
+                            <option value="" disabled selected>請選擇</option>
+                            <option value="已通知">已通知</option>
+                            <option value="待通知">待通知</option>
+                            <option value="不需通知">不需通知</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="trackingStatusSelect">追蹤狀態：</label>
+                        <select id="trackingStatusSelect" name="trackingStatus">
+                            <option value="" disabled selected>請選擇</option>
+                            <option value="已追蹤">已追蹤</option>
+                            <option value="待追蹤">待追蹤</option>
+                            <option value="不需追蹤">不需追蹤</option>
+                        </select>
+                    </div>
+                    <div class="target-report-row-label">
+                        <label for="confirmSubmissionTimeInput">Confirm檢體進件時間：</label>
+                        <input type="text" id="confirmSubmissionTimeInput" name="confirmSpecimenSubmissionTime">
+                    </div>
+                    <div class="target-report-row-label"><label>追蹤時間：</label><label id="trackingTimeLabel"></label></div>
+                    <div class="target-report-row-label"><label>追蹤情形：</label><label id="trackingLabel"></label></div>
+                    <div style="width: 300px;">
+                        <input type="text" id="referralInstitutionInput" name="referralInstitution">
+                        <label for="referralInstitutionInput">轉介院所：</label>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <label for="remarkInput">備註：</label>
+                        <input id="remarkInput" name="remark" style="width: 300px; height: 120px" type="text">
+                    </div>
+                </div>
+
+                <div class="target-report-input" style="width: 300px;">
+                    <div>
+                        <label for="notificationCircumstancesInput">通知情形：</label>
+                        <input type="text" id="notificationCircumstancesInput" name="notificationCircumstances">
+                    </div>
+                    <div>
+                        <label for="prenatalTrackingTimeLabel">產前檢測項目追蹤時間：</label>
+                        <label id="prenatalTrackingTimeLabel"></label>
+                    </div>
+                    <div class="target-report-row-label">
+                        <label for="confirmSpecimenTypeSelect">Confirm檢體類別：</label>
+                        <select id="confirmSpecimenTypeSelect" name="confirmSpecimenType">
+                            <option value="" disabled selected>請選擇</option>
+                        </select>
+                    </div>
+                    <div><label>追蹤NIPS個案後續狀況時間：</label><label id="nipsFollowupTimeLabel"></label></div>
+                    <div><label>追蹤結果：</label><label id="trackingResultsLabel"></label></div>
+                    <div>
+                        <label for="referringPhysicianInput">轉介醫師：</label>
+                        <input type="text" id="referringPhysicianInput" name="referringPhysician">
+                    </div>
+                </div>
+                <div class="target-report-input" style="width: 300px;">
                     <button>發送郵件</button>
+                    <div>
+                        <label for="confirmReportResultInput">Confirm檢體報告結果：</label>
+                        <input type="text" id="confirmReportResultInput" name="confirmTheTestReportResults">
+                    </div>
                 </div>
             </div>
-
-
-            <div class="target-report-input">
-                <div class="target-report-row-label">
-                    <label for="confirmSubmissionTimeInput">Confirm檢體進件時間：</label>
-                    <input type="text" id="confirmSubmissionTimeInput" name="confirmSpecimenSubmissionTime">
-                </div>
-                <div class="target-report-row-label">
-                    <label for="confirmSpecimenTypeSelect">Confirm檢體類別：</label>
-                    <select id="confirmSpecimenTypeSelect" name="confirmSpecimenType">
-                        <option value="" disabled selected>請選擇</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="confirmReportResultInput">Confirm檢體報告結果：</label>
-                    <input type="text" id="confirmReportResultInput" name="confirmTheTestReportResults">
-                </div>
-            </div>
-
-
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>追蹤時間：</label><label id="trackingTimeLabel"></label></div>
-                <div><label>追蹤NIPS個案後續狀況時間：</label><label id="nipsFollowupTimeLabel"></label></div>
-            </div>
-            <div class="target-report-row">
-                <div class="target-report-row-label"><label>追蹤情形：</label><label id="trackingLabel"></label></div>
-                <div><label>追蹤結果：</label><label id="trackingResultsLabel"></label></div>
-            </div>
-
-            <div class="target-report-input">
-
-            <div style="width: 300px;">
-                <label for="referralInstitutionInput">轉介院所：</label>
-                <input type="text" id="referralInstitutionInput" name="referralInstitution">
-            </div>
-            <div>
-                <label for="referringPhysicianInput">轉介醫師：</label>
-                <input type="text" id="referringPhysicianInput" name="referringPhysician">
-            </div>
-            </div>
-
-            <div style="margin-top: 10px;">
-                <label for="remarkInput">備註：</label>
-                <input id="remarkInput" name="remark" style="width: 500px; height: 120px" type="text">
-            </div>
-
         </div>
 
         <div>
@@ -256,10 +248,6 @@
                 types.forEach(t => {
                     $select.append(`<option value="${t}">${t}</option>`);
                 });
-                // 成功載入後再設定選取值
-                if (selectedValue) {
-                    $select.val(selectedValue);
-                }
             },
             error: function () {
                 console.warn("項目載入失敗");

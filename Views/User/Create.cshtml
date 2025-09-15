@@ -1,0 +1,71 @@
+@model WebApplication_Dianthus.Models.User
+@{
+    ViewData["Title"] = "新增帳號";
+}
+
+<h2>新增帳號</h2>
+
+<form id="createForm" onsubmit="return submitCreateForm(this)">
+    <div class="form-group">
+        <label>帳號</label>
+        <input type="text" name="Account" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>姓名</label>
+        <input type="text" name="Name" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>密碼</label>
+        <input type="password" name="Password" class="form-control" required />
+        <small class="form-text text-muted">必須至少6位，且包含大小寫字母與數字</small>
+    </div>
+    <button type="submit" class="btn btn-primary">新增</button>
+    <a asp-action="Index" class="btn btn-secondary">取消</a>
+</form>
+<script>
+function validatePassword(password) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    return regex.test(password);
+}
+
+function submitCreateForm(form) {
+    const pwd = form.Password.value;
+    if (!validatePassword(pwd)) {
+        showAlert("密碼格式不正確，請重新輸入", "danger");
+        return false;
+    }
+
+    $.ajax({
+        url: '/User/Create',
+        type: 'POST',
+        data: $(form).serialize(),
+        success: function (res) {
+            if (res.success) {
+                showAlert("帳號已新增", "success");
+                form.reset(); // 清空表單
+                window.location.href = '/User/Index';
+            } else {
+                showAlert("新增失敗", "danger");
+            }
+        },
+        error: function () {
+            showAlert("伺服器錯誤", "danger");
+        }
+    });
+
+    return false;
+}
+
+function showAlert(message, type) {
+    const html = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>`;
+    $('#alert-container').html(html);
+    setTimeout(() => $('.alert').alert('close'), 3000);
+}
+</script>

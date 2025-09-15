@@ -1,0 +1,26 @@
+@using WebApplication_Dianthus.Models.Interface
+@inject IUserRepository UserRepo
+
+@{
+    string? userName = null;
+    var userId = Context.Session.GetString("UserId");
+    if (!string.IsNullOrEmpty(userId))
+    {
+        var user = UserRepo.GetById(int.Parse(userId));
+        if (user != null)
+        {
+            userName = user.Name;
+        }
+    }
+}
+
+@if (!string.IsNullOrEmpty(userName))
+{
+    <div class="d-flex align-items-center">
+        <span class="me-3">歡迎 @userName </span>
+        <form asp-controller="Auth" asp-action="Logout" method="post" class="mb-0">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-danger btn-sm">登出</button>
+        </form>
+    </div>
+}

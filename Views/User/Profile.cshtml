@@ -4,18 +4,17 @@
 }
 
 <h2>我的基本資料</h2>
+<div id="alert-container"></div>
 
-@await Html.PartialAsync("_AlertMessages")
-
-<form asp-action="Profile" method="post">
+<form id="profileForm" onsubmit="return submitProfileForm(this)">
     <div class="form-group">
         <label>帳號</label>
-        <input type="text" class="form-control" value="@Model.Account" readonly />
+        <input type="text" class="form-control-plaintext" value="@Model.Account" readonly/>
     </div>
 
     <div class="form-group">
         <label>姓名</label>
-        <input type="text" class="form-control" value="@Model.Name" readonly />
+        <input type="text" class="form-control-plaintext" value="@Model.Name" readonly/>
     </div>
 
     <div class="form-group">
@@ -26,8 +25,41 @@
     <div class="form-group">
         <label>新密碼</label>
         <input type="password" name="Password" class="form-control" />
-        <small class="form-text text-muted">留空則不修改密碼</small>
+        <small class="form-text text-muted">留空則不修改密碼(必須至少6位，且包含大小寫字母與數字)</small>
     </div>
 
     <button type="submit" class="btn btn-primary">更新</button>
 </form>
+
+@section Scripts {
+<script>
+    function submitProfileForm(form) {
+        $.ajax({
+            url: '/User/Profile',
+            type: 'POST',
+            data: $(form).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    showAlert("資料已更新", "success");
+                    form.Password.value = ""; // 清空密碼欄位
+                } else {
+                    showAlert("更新失敗", "danger");
+                }
+            },
+            error: function () {
+                showAlert("伺服器錯誤", "danger");
+            }
+        });
+        return false;
+    }
+
+    function showAlert(message, type) {
+        const html = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+        $('#alert-container').html(html);
+        setTimeout(() => $('.alert').alert('close'), 3000);
+    }
+</script>
+}

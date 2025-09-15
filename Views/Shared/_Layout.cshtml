@@ -1,4 +1,21 @@
-﻿<!DOCTYPE html>
+﻿@using Azure.Identity
+@using WebApplication_Dianthus.Models.Interface
+@inject IUserRepository UserRepo
+
+@{
+    bool isAdmin = false;
+    var userId = Context.Session.GetString("UserId");
+    if (!string.IsNullOrEmpty(userId))
+    {
+        var user = UserRepo.GetById(int.Parse(userId));
+        if (user != null && user.Account == "admin")
+        {
+            isAdmin = true;
+        } 
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,36 +43,45 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Report" asp-action="Index">檢驗報告</a>
+                             @* <button class="nav-link text-dark" onclick="loadPage('/Report/Index')">檢驗報告</button> *@
                         </li>
-                        <li class="nav-item"></li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">基本資料設定</a>
+                            @* <a class="nav-link text-dark" onclick="loadPage('/User/Profile')">基本資料設定</a> *@
                         </li>
-                        <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">帳號管理</a>
-                        </li>
-                        <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">角色管理</a>
-                        </li>
-                        <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Permissions" asp-action="Index">權限管理</a>
-                        </li>
-                        <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="RolePermission" asp-action="Index">場域管理</a>
-                        </li>
-                        <li class="nav-item"></li>
+                        @if(isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">帳號管理</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">角色管理</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="RolePermission" asp-action="Index">場域管理</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Permissions" asp-action="Index">權限管理</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="OBPatient" asp-action="Index">民權入住(測)</a>
+                            </li>
+                        }
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Index" asp-action="Welcome">統計圖表</a>
-                        </li>
-                        <li class="nav-item"></li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OBPatient" asp-action="Index">民權入住(測)</a>
                         </li>
                     </ul>
                 </div>
+                @await Html.PartialAsync("_UserInfo")
+            </div>
+
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+            @* <div id="main-content"></div> *@
         </main>
     </div>
 
@@ -67,6 +93,15 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @* 局部載入方式避免呈現網址 *@
+    <script>
+        function loadPage(url) {
+            $.get(url, function (html) {
+                $('#main-content').html(html);
+            });
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

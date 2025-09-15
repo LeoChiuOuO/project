@@ -35,4 +35,11 @@ public class AuthController : Controller
             return Json(new { success = false, message = "伺服器錯誤：" + ex.Message });
         }
     }
+
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear(); //清除所有Session
+        return RedirectToAction("Login", "Auth"); //倒回登入頁
+    }
 }
