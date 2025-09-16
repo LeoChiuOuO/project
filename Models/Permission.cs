@@ -10,6 +10,9 @@ public class Permission
     [Column("id")]
     public int Id { get; set; }
 
+    [Column("name")]
+    public string? Name { get; set; }
+
     [Column("review_permissions")]
     public bool ReviewPermissions { get; set; }
 
@@ -38,6 +41,5 @@ public class Permission
     public DateTime? DeletedAt { get; set; }
 
     public ICollection<RolePermission> RolePermissions { get; set; }
-    public string Name { get; set; }
 
 }

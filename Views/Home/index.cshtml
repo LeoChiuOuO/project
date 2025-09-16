@@ -1,17 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-@{
-    ViewData["Title"] = "歡迎頁";
-}
-
 <div class="container-fluid">
-    <h2>Welcome歡迎頁</h2>
+    <h2>Welcome 歡迎頁</h2>
+    <button class="btn btn-primary" onclick="TestOne()">新增今日1筆測試用資料</button>
+    <button class="btn btn-primary" onclick="Test100()">新增100筆測試用資料</button>
 </div>
-</body>
-</html>
+
+@section Scripts {
+<script>
+    function TestOne() {
+        $.get('/Home/TestOne', function (res) {
+            showAlert(res.success ? "資料已更新" : "更新失敗", res.success ? "success" : "danger");
+        }).fail(function () {
+            showAlert("伺服器錯誤", "danger");
+        });
+    }
+
+    function Test100() {
+        $.get('/Home/Test100', function (res) {
+            showAlert(res.success ? "資料已更新" : "更新失敗", res.success ? "success" : "danger");
+        }).fail(function () {
+            showAlert("伺服器錯誤", "danger");
+        });
+    }
+
+    function showAlert(message, type) {
+        const html = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+        $('body').append(html);
+        setTimeout(() => $('.alert').alert('close'), 3000);
+    }
+</script>
+}

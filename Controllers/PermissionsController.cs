@@ -41,7 +41,40 @@ namespace WebApplication_Dianthus.Controllers
         public IActionResult Create(Permission permission)
         {
             if (!IsAdmin()) return Forbid();
+
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            permission.CreateId = int.Parse(userId);
+            permission.CreatedAt = DateTime.Now;
+            permission.UpdatedAt = DateTime.Now;
+
             _permissionService.CreatePermission(permission);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult UpdateField(int id, string field, bool value)
+        {
+            if (!IsAdmin()) return Forbid();
+
+            var permission = _permissionService.GetPermission(id);
+            if (permission == null) return Json(new { success = false, message = "找不到資料" });
+
+            switch (field)
+            {
+                case "ReviewPermissions": permission.ReviewPermissions = value; break;
+                case "CreatePermissions": permission.CreatePermissions = value; break;
+                case "EditPermissions": permission.EditPermissions = value; break;
+                case "DeletePermissions": permission.DeletePermissions = value; break;
+                default: return Json(new { success = false, message = "欄位無效" });
+            }
+
+            permission.UpdatedAt = DateTime.Now;
+            var userId = HttpContext.Session.GetString("UserId");
+            if (!string.IsNullOrEmpty(userId)) permission.ModifyId = int.Parse(userId);
+
+            _permissionService.UpdatePermission(permission);
             return Json(new { success = true });
         }
 
@@ -58,6 +91,13 @@ namespace WebApplication_Dianthus.Controllers
         public IActionResult Edit(Permission permission)
         {
             if (!IsAdmin()) return Forbid();
+
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            permission.ModifyId = int.Parse(userId);
+            permission.UpdatedAt = DateTime.Now;
+
             _permissionService.UpdatePermission(permission);
             return Json(new { success = true });
         }

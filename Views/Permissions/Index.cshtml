@@ -1,15 +1,43 @@
 @model IEnumerable<Permission>
-
 @{
     ViewData["Title"] = "權限管理";
 }
 
 <h2>權限管理</h2>
-<a class="btn btn-primary mb-3" href="@Url.Action("Create")">新增權限</a>
 
+<!-- 🔹 新增權限表單 -->
+<form id="createForm" class="border rounded p-3 mb-4 bg-light" onsubmit="return submitCreateForm(this)">
+    <div class="row g-2 align-items-center">
+        <div class="col-md-3">
+            <input type="text" name="Name" class="form-control" placeholder="權限名稱" required />
+        </div>
+        @* <div class="col-auto form-check">
+            <input type="checkbox" name="ReviewPermissions" class="form-check-input" id="reviewNew" checked />
+            <label class="form-check-label" for="reviewNew">檢視</label>
+        </div>
+        <div class="col-auto form-check">
+            <input type="checkbox" name="CreatePermissions" class="form-check-input" id="createNew" />
+            <label class="form-check-label" for="createNew">新增</label>
+        </div>
+        <div class="col-auto form-check">
+            <input type="checkbox" name="EditPermissions" class="form-check-input" id="editNew" />
+            <label class="form-check-label" for="editNew">編輯</label>
+        </div>
+        <div class="col-auto form-check">
+            <input type="checkbox" name="DeletePermissions" class="form-check-input" id="deleteNew" />
+            <label class="form-check-label" for="deleteNew">刪除</label>
+        </div> *@
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">新增</button>
+        </div>
+    </div>
+</form>
+
+<!-- 🔹 權限表格 -->
 <table class="table table-bordered">
     <thead>
         <tr>
+            <th>名稱</th>
             <th>檢視</th>
             <th>新增</th>
             <th>編輯</th>
@@ -17,65 +45,98 @@
             <th>操作</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="permTableBody">
     @foreach (var p in Model)
     {
-        <tr>
-            <td>@p.ReviewPermissions</td>
-            <td>@p.CreatePermissions</td>
-            <td>@p.EditPermissions</td>
-            <td>@p.DeletePermissions</td>
+        <tr data-id="@p.Id">
+            <td>@p.Name</td>
+            <td><input type="checkbox" class="perm-toggle" data-id="@p.Id" data-field="ReviewPermissions" @(p.ReviewPermissions ? "checked" : "") /></td>
+            <td><input type="checkbox" class="perm-toggle" data-id="@p.Id" data-field="CreatePermissions" @(p.CreatePermissions ? "checked" : "") /></td>
+            <td><input type="checkbox" class="perm-toggle" data-id="@p.Id" data-field="EditPermissions" @(p.EditPermissions ? "checked" : "") /></td>
+            <td><input type="checkbox" class="perm-toggle" data-id="@p.Id" data-field="DeletePermissions" @(p.DeletePermissions ? "checked" : "") /></td>
             <td>
-                <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", new { id = p.Id })">編輯</a>
-                <form method="post" action="@Url.Action("Delete", new { id = p.Id })" style="display:inline;">
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確定刪除?')">刪除</button>
-                </form>
+                <button class="btn btn-sm btn-danger btnDelete" data-id="@p.Id">刪除</button>
             </td>
         </tr>
     }
     </tbody>
 </table>
-<!-- Modal -->
-<div class="modal fade" id="permModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">權限編輯</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- AJAX 載入表單 -->
-            </div>
+
+<!-- 🔹 Toast 提示 -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+    <div id="toastSuccess" class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">操作成功</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
 </div>
 
 @section Scripts {
 <script>
-    $(function () {
-        $('#btnAdd').click(function () {
-            $.get('/Permissions/Create', function (html) {
-                $('#modalBody').html(html);
-                $('#permModal').modal('show');
-            });
+    // 🔹 新增權限
+    function submitCreateForm(form) {
+        $.ajax({
+            url: '/Permissions/Create',
+            type: 'POST',
+            data: $(form).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    showToast("新增成功");
+                    location.reload(); // 或改成 append 新列
+                } else {
+                    alert("新增失敗");
+                }
+            },
+            error: function () {
+                alert("伺服器錯誤");
+            }
         });
+        return false;
+    }
 
-        $('.btnEdit').click(function () {
-            const id = $(this).data('id');
-            $.get('/Permissions/Edit/' + id, function (html) {
-                $('#modalBody').html(html);
-                $('#permModal').modal('show');
-            });
-        });
+    // 🔹 即時更新 checkbox 權限
+    $('.perm-toggle').change(function () {
+        const id = $(this).data('id');
+        const field = $(this).data('field');
+        const value = $(this).is(':checked');
 
-        $('.btnDelete').click(function () {
-            const id = $(this).data('id');
-            if (confirm('確定刪除？')) {
-                $.post('/Permissions/Delete/' + id, function () {
-                    $('tr[data-id="' + id + '"]').remove();
-                });
+        $.ajax({
+            url: '/Permissions/UpdateField',
+            type: 'POST',
+            data: { id, field, value },
+            success: function (res) {
+                if (res.success) {
+                    showToast("已更新 ");
+                } else {
+                    alert("更新失敗：" + res.message);
+                }
+            },
+            error: function () {
+                alert("伺服器錯誤");
             }
         });
     });
+
+    // 🔹 刪除權限
+    $('.btnDelete').click(function () {
+        const id = $(this).data('id');
+        if (confirm('確定刪除？')) {
+            $.post('/Permissions/Delete/' + id, function (res) {
+                if (res.success) {
+                    $('tr[data-id="' + id + '"]').remove();
+                    showToast("已刪除");
+                } else {
+                    alert("刪除失敗");
+                }
+            });
+        }
+    });
+
+    // 🔹 Toast 顯示
+    function showToast(message) {
+        $('#toastSuccess .toast-body').text(message);
+        new bootstrap.Toast(document.getElementById('toastSuccess')).show();
+    }
 </script>
 }
