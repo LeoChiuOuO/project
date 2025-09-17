@@ -126,7 +126,7 @@
 <script>
     $(document).ready(function () {
         const reportId = getReportIdFromUrl();
-
+        
         $.ajax({
             url: `/api/report/${reportId}`,
             type: 'GET',
@@ -147,6 +147,9 @@
             return dateStr ? dateStr.substring(0, 10) : '';
         }
         
+        //產生Confirm檢體類別Select=>option
+        loadSpecimenTypeOptions("confirm_specimen_type");
+
         function fillReportDetails(r) {
             $('#nameLabel').text(r.name || '');
             $('#birthDateLabel').text(formatDate(r.birthDate));
@@ -192,9 +195,6 @@
                 return;
             }
         }
-
-        //產生Confirm檢體類別Select=>option
-        loadSpecimenTypeOptions("confirm_specimen_type");
 
         $('#saveBtn').on('click', function () {
             const $btn = $(this);
