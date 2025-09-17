@@ -4,12 +4,19 @@
 }
 
 <div class="login-container">
-    <div class="logo-placeholder">LOGO</div>
+    @* <div class="logo-placeholder">LOGO</div> *@
+    <img src="~/images/logo.png" alt="LOGO" class="logo-img" />
 
     <form id="loginForm" class="login-form">
-        <input type="text" name="account" placeholder="帳號" required />
-        <input type="password" name="password" placeholder="密碼" required />
-        <div class="btn-row">
+    <div>
+        <div><label>帳號</label></div>
+        <div><input type="text" name="account" placeholder="請輸入帳號" required /></div>
+    </div>
+    <div style="margin-top: 10px;">
+        <div><label>密碼</label></div>
+        <div><input type="password" name="password" placeholder="請輸入密碼" required /></div>
+    </div >
+        <div class="btn-row" style="margin-top: 10px;">
             <button type="submit">登入</button>
         </div>
     </form>

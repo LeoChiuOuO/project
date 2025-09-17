@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebApplication_Dianthus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4003c71ccf857f4832dd937aeef2a17f0c1dad6b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3fd4c2de2b948d40e374cf64d7d69d853fe119d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebApplication_Dianthus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebApplication_Dianthus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -69,13 +69,6 @@ html[b-moq9deg8gi], body[b-moq9deg8gi] {
 .shake[b-moq9deg8gi] {
     animation: shake-b-moq9deg8gi 0.5s;
 }
-/* _content/WebApplication_Dianthus/Views/Index/Index.cshtml.rz.scp.css */
-.login-textarea[b-su3qoipxt7] {
-    resize: none; 
-    weight:20px;
-    height:31px;
-    line-height: 25px;
-}
 /* _content/WebApplication_Dianthus/Views/Report/Index.cshtml.rz.scp.css */
 .target-report-on[b-48x5ve6fy4] {
     position: relative;
@@ -186,3 +179,4 @@ button.accept-policy[b-zbm04d3yxb] {
   white-space: nowrap;
   line-height: 60px;
 }
+/* _content/WebApplication_Dianthus/Views/User/Index.cshtml.rz.scp.css */

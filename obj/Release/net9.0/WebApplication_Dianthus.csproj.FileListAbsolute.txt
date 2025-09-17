@@ -18,13 +18,11 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\WebApplica
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\rjimswa.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\rjsmcshtml.dswa.cache.json
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\Views\Index\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\bundle\WebApplication_Dianthus.styles.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\projectbundle\WebApplication_Dianthus.bundle.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\v45402jh6t-b9sayid5wm.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\z55brdm7ep-61n19gt1b8.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\yxbo6amnzv-xtxxf3hu2r.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\spfx0seljc-bqjiyaj88i.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\82ck45p34r-c2jlpeoesf.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\bab6b6cox1-erw9l3u2r3.gz
@@ -248,5 +246,7 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\MySqlConne
 C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\Views\Auth\Login.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\Views\Report\Index.cshtml.rz.scp.css
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\qne5z9dfll-wrnqq938xu.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\o1bvyw7p40-wrnqq938xu.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\scopedcss\Views\User\Index.cshtml.rz.scp.css
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\yxbo6amnzv-2lyaa6ibwf.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\qne5z9dfll-h5pizc7i8k.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\compressed\o1bvyw7p40-h5pizc7i8k.gz
