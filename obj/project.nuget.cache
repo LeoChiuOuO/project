@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "l18PIUhzvUk=",
+  "dgSpecHash": "DwD5FDjV6fM=",
   "success": true,
   "projectFilePath": "C:\\Users\\D\\Desktop\\project\\WebApplication_Dianthus\\WebApplication_Dianthus.csproj",
   "expectedPackageFiles": [
@@ -64,6 +64,12 @@
     "C:\\Users\\D\\.nuget\\packages\\mysqlconnector\\2.4.0\\mysqlconnector.2.4.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\9.0.0\\pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\rbush.signed\\4.0.0\\rbush.signed.4.0.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.io\\4.3.0\\runtime.any.system.io.4.3.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.reflection\\4.3.0\\runtime.any.system.reflection.4.3.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.reflection.primitives\\4.3.0\\runtime.any.system.reflection.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.runtime\\4.3.0\\runtime.any.system.runtime.4.3.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.text.encoding\\4.3.0\\runtime.any.system.text.encoding.4.3.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\runtime.any.system.threading.tasks\\4.3.0\\runtime.any.system.threading.tasks.4.3.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\sixlabors.fonts\\1.0.0\\sixlabors.fonts.1.0.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
@@ -86,6 +92,7 @@
     "C:\\Users\\D\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\D\\.nuget\\packages\\system.private.uri\\4.3.0\\system.private.uri.4.3.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.reflection.metadata\\7.0.0\\system.reflection.metadata.7.0.0.nupkg.sha512",
     "C:\\Users\\D\\.nuget\\packages\\system.reflection.primitives\\4.3.0\\system.reflection.primitives.4.3.0.nupkg.sha512",
