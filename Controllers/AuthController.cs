@@ -22,6 +22,12 @@ public class AuthController : Controller
         {
             if (_authService.ValidateUser(account, password, out var user))
             {
+                // 判斷是否已軟刪除
+                if (user.DeletedAt != null)
+                {
+                    return Json(new { success = false, message = "此帳號已停用，請聯絡管理員" });
+                }
+
                 _authService.UpdateLastLoginDate(user);
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 return Json(new { success = true, message = "登入成功" });
