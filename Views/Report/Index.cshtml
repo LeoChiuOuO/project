@@ -39,29 +39,33 @@
         </div>
 
         <!-- 報表列表 -->
-        <div style="height: 530px;">
-
-        <table class="table" style="margin-top: 20px;">
-            <thead>
-                <tr>
-                    <th>序號</th>
-                    <th>檢體編號</th>
-                    <th>客戶姓名</th>
-                    <th>檢測項目</th>
-                    <th>採檢日期</th>
-                    <th>報告日期</th>
-                    <th>送檢院所</th>
-                    <th>送檢醫師</th>
-                    <th>通知狀態</th>
-                    <th>追蹤狀態</th>
-                    <th>編輯</th>
-                    <th>檢視</th>
-                </tr>
-            </thead>
-            <tbody id="reportTableBody">
-                <!-- JS 動態生成 -->
-            </tbody>
-        </table>
+        <div style="height: 530px;margin-top: 20px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>序號</th>
+                        <th>檢體編號</th>
+                        <th>檢體類別</th>
+                        <th>檢驗進度</th>
+                        <th>病歷號</th>
+                        <th>客戶姓名</th>
+                        <th>檢測項目</th>
+                        <th>收件日期</th>
+                        <th>採檢日期</th>
+                        <th>報告日期</th>
+                        <th>送檢院所</th>
+                        <th>送檢醫師</th>
+                        <th>評估狀態</th>
+                        <th>通知狀態</th>
+                        <th>追蹤狀態</th>
+                        <th>編輯</th>
+                        <th>檢視</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    <!-- JS 動態生成 -->
+                </tbody>
+            </table>
         </div>
 
         <!-- 分頁 -->
@@ -225,12 +229,17 @@
                 <tr>
                     <td>${i + 1}</td>
                     <td>${r.specimenNumber || ''}</td>
+                    <td>${r.specimenType || ''}</td>
+                    <td>${r.inspectionProgress || ''}</td>
+                    <td>${r.mrNumber || ''}</td>
                     <td>${r.name || ''}</td>
                     <td>${r.testItem || ''}</td>
+                    <td>${r.receivedDate ? r.receivedDate.substring(0, 10) : ''}</td>
                     <td>${r.testingDate ? r.testingDate.substring(0, 10) : ''}</td>
                     <td>${r.reportDate ? r.reportDate.substring(0, 10) : ''}</td>
                     <td>${r.inspectionInstitution || ''}</td>
                     <td>${r.sendingPhysicianName || ''}</td>
+                    <td>${r.assessmentStatus || ''}</td>
                     <td><div style="background-color: ${notifyColor}; color: white;border-radius: 15px;text-align: center;">${r.notificationStatus || ''}</div></td>
                     <td><div style="background-color: ${trackColor}; color: white;border-radius: 15px;text-align: center;">${r.trackingStatus || ''}</div></td>
                     @* <td><button onclick="editReport(${r.id})" target="_blank">編輯</button></td> *@

@@ -9,10 +9,12 @@ namespace WebApplication_Dianthus.Models.Repository;
 public class ReportRepository : IReportRepository
 {
     private readonly IDbConnection _db;
+    private readonly AppDbContext _context;
 
-    public ReportRepository(IDbConnection db)
+    public ReportRepository(IDbConnection db, AppDbContext context)
     {
         _db = db;
+        _context = context;
     }
 
     public Report GetReportById(int id)
@@ -97,139 +99,42 @@ public class ReportRepository : IReportRepository
         filter.DateFrom ??= DateTime.Today.AddMonths(-1);
         filter.DateTo ??= DateTime.Today;
 
-        var sqlBuilder = new StringBuilder(@"
-            SELECT id AS Id,
-            report_id AS ReportId,
-            medical_order AS MedicalOrder,
-            consent_form_state AS ConsentFormState,
-            specimen_dely_state AS SpecimenDelyState,
-            send_email_state AS SendEmailState,
-            product_name AS ProductName,
-            tracking_status AS TrackingStatus,
-            notification_status AS NotificationStatus,
-            partition_id AS PartitionId,
-            department_id AS DepartmentId,
-            submission_date AS SubmissionDate,
-            name AS Name,
-            id_number AS IdNumber,
-            mr_number AS MrNumber,
-            test_item AS TestItem,
-            cost AS Cost,
-            return_date AS ReturnDate,
-            sending_physician_name AS SendingPhysicianName,
-            remark AS Remark,
-            report_date AS ReportDate,
-            report_results AS ReportResults,
-            create_id AS CreateId,
-            modify_id AS ModifyId,
-            specimen_number AS SpecimenNumber,
-            testing_date AS TestingDate,
-            weeks_of_pregnancy AS WeeksOfPregnancy,
-            due_date AS DueDate,
-            inspection_institution AS InspectionInstitution,
-            inspection_institution_phone AS InspectionInstitutionPhone,
-            responsible_business_person AS ResponsibleBusinessPerson,
-            responsible_business_phone AS ResponsibleBusinessPhone,
-            responsible_business_email AS ResponsibleBusinessEmail,
-            business_manager AS BusinessManager,
-            business_manager_phone AS BusinessManagerPhone,
-            business_manager_email AS BusinessManagerEmail,
-            abnormal_report_delivery_method AS AbnormalReportDeliveryMethod,
-            abnormal_report_notification_method AS AbnormalReportNotificationMethod,
-            inspection_group AS InspectionGroup,
-            notification_circumstances AS NotificationCircumstances,
-            prenatal_testing_project_tracking_time AS PrenatalTestingProjectTrackingTime,
-            confirm_specimen_submission_time AS ConfirmSpecimenSubmissionTime,
-            confirm_specimen_type AS ConfirmSpecimenType,
-            confirm_the_test_report_results AS ConfirmTheTestReportResults,
-            tracking_time AS TrackingTime,
-            tracking AS Tracking,
-            tracking_results AS TrackingResults,
-            tracking_the_followup_status_of_NIPS_cases AS TrackingTheFollowupStatusOfNIPS_Cases,
-            referral_institution AS ReferralInstitution,
-            referring_physician AS ReferringPhysician,
-            written_report_processing_methood AS WrittenReportProcessingMethood,
-            fmr1_report_results AS Fmr1ReportResults,
-            chr_report_date AS ChrReportDate,
-            chr_report_results AS ChrReportResults,
-            wafer_report_date AS WaferReportDate,
-            wafer_report_results AS WaferReportResults,
-            v2_v3_testing_results AS V2V3TestingResults,
-            gene_report_date AS GeneReportDate,
-            gene_report_results AS GeneReportResults,
-            other_report_date AS OtherReportDate,
-            other_report_results AS OtherReportResults,
-            created_at AS CreatedAt,
-            updated_at AS UpdatedAt,
-            deleted_at AS DeletedAt
-            FROM reports
-            WHERE testing_date BETWEEN @DateFrom AND @DateTo
-        ");
+        // 基礎查詢
+        var query = _context.Reports
+            .Where(r => r.TestingDate >= filter.DateFrom && r.TestingDate <= filter.DateTo);
 
-        var countBuilder = new StringBuilder(@"
-            SELECT COUNT(*)
-            FROM reports
-            WHERE testing_date BETWEEN @DateFrom AND @DateTo
-        ");
-
-        var parameters = new DynamicParameters();
-        parameters.Add("DateFrom", filter.DateFrom);
-        parameters.Add("DateTo", filter.DateTo);
-
-        // 單值篩選：TestItem
+        // 單值篩選
         if (!string.IsNullOrWhiteSpace(filter.TestItem))
-        {
-            sqlBuilder.Append(" AND test_item = @TestItem");
-            countBuilder.Append(" AND test_item = @TestItem");
-            parameters.Add("TestItem", filter.TestItem);
-        }
+            query = query.Where(r => r.TestItem == filter.TestItem);
 
         // 多值篩選：NotificationStatus
         if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
-        {
-            sqlBuilder.Append(" AND notification_status IN @NotifyStatus");
-            countBuilder.Append(" AND notification_status IN @NotifyStatus");
-            parameters.Add("NotifyStatus", filter.NotifyStatus);
-        }
+            query = query.Where(r => filter.NotifyStatus.Contains(r.NotificationStatus));
 
         // 多值篩選：TrackingStatus
         if (filter.TrackStatus != null && filter.TrackStatus.Any())
-        {
-            sqlBuilder.Append(" AND tracking_status IN @TrackStatus");
-            countBuilder.Append(" AND tracking_status IN @TrackStatus");
-            parameters.Add("TrackStatus", filter.TrackStatus);
-        }
+            query = query.Where(r => filter.TrackStatus.Contains(r.TrackingStatus));
 
         // 關鍵字模糊查詢
         if (!string.IsNullOrWhiteSpace(filter.Keyword))
         {
-            sqlBuilder.Append(@"
-                AND (
-                    specimen_number LIKE CONCAT('%', @Keyword, '%') OR
-                    inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
-                    sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
-                    name LIKE CONCAT('%', @Keyword, '%')
-                )
-            ");
-            countBuilder.Append(@"
-                AND (
-                    specimen_number LIKE CONCAT('%', @Keyword, '%') OR
-                    inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
-                    sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
-                    name LIKE CONCAT('%', @Keyword, '%')
-                )
-            ");
-            parameters.Add("Keyword", filter.Keyword);
+            query = query.Where(r =>
+                r.SpecimenNumber.Contains(filter.Keyword) ||
+                r.InspectionInstitution.Contains(filter.Keyword) ||
+                r.SendingPhysicianName.Contains(filter.Keyword) ||
+                r.Name.Contains(filter.Keyword)
+            );
         }
 
-        // 分頁條件
-        sqlBuilder.Append(" ORDER BY testing_date DESC LIMIT @PageSize OFFSET @Offset");
-        parameters.Add("PageSize", filter.PageSize);
-        parameters.Add("Offset", (filter.Page - 1) * filter.PageSize);
+        // 總筆數
+        var total = query.Count();
 
-        // 執行查詢
-        var data = _db.Query<Report>(sqlBuilder.ToString(), parameters).ToList();
-        var total = _db.ExecuteScalar<int>(countBuilder.ToString(), parameters);
+        // 分頁 + 排序
+        var data = query
+            .OrderByDescending(r => r.TestingDate)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .ToList();
 
         return new PagedResult<Report>
         {
@@ -238,6 +143,7 @@ public class ReportRepository : IReportRepository
             Page = filter.Page,
             PageSize = filter.PageSize
         };
+
     }
     public bool UpdateReport(ReportUpdateDto report)
     {

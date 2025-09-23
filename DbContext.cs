@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<Partition> Partitions { get; set; }
     public DbSet<Department> Departments { get; set; }
     public DbSet<Group> Groups { get; set; }
+    public DbSet<Report> Reports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
