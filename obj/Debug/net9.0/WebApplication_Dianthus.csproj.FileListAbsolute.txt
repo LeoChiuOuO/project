@@ -346,5 +346,5 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Debug\net9.0\Dapper.dll
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\Report\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\scopedcss\Views\User\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\yxbo6amnzv-2lyaa6ibwf.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-8grzghjuof.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-8grzghjuof.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-g3jpwi9hoe.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-g3jpwi9hoe.gz

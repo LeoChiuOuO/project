@@ -30,12 +30,18 @@
             </div>
         </div>
 
-        <div class="target-report-row">
+        <div class="target-report-row" style="position: relative;">
             <div class="target-report-row-label"><label>關鍵字</label></div>
             <div class="target-report-input">
                 <input type="text" id="keyword" placeholder="輸入姓名/檢體編號...">
-                <button id="exportExcel" class="btn btn-success">匯出Excel檔案</button>
             </div>
+            <div style="position: absolute; right: 10px;">
+                <button id="exportExcel" class="btn btn-success">匯出Excel檔案</button>
+            </div>    
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="">搜尋</button>
+            <label style="font-size: smaller;">系統不會自動帶出資料，請輸入上方篩選條件並點選[搜尋]按鈕，謝謝</label>
         </div>
 
         <!-- 報表列表 -->
@@ -148,7 +154,7 @@
             });
         });
 
-        loadReports(1);
+        @* loadReports(1);
         window.addEventListener('message', function (event) {
             if (event.data && event.data.type === 'refreshReportList') {
                 loadReports(1);
@@ -167,8 +173,13 @@
         $('input[name="notifyStatus"], input[name="trackStatus"]').on('change', function () {
             loadReports(1);
         });
-        loadDistinctOptions();
+        loadDistinctOptions(); *@
+        renderTable(0);
     });
+
+    function searchClick(){
+        
+    }
 
     function getSelectedValues(name) {
         return $('input[name="' + name + '"]:checked').map(function () {
@@ -217,7 +228,7 @@
         tbody.empty();
 
         if (!reports || reports.length === 0) {
-            tbody.append('<tr><td colspan="12" class="text-center">查無資料</td></tr>');
+            tbody.append('<tr><td colspan="17" class="text-center">查無資料</td></tr>');
             return;
         }
 
@@ -317,3 +328,8 @@
 
 </script>
 }
+<style>
+    .table tbody tr:hover td {
+        background-color: #e6f7ff; /* 淺藍色高亮 */
+    }
+</style>

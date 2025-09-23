@@ -82,6 +82,6 @@ app.MapControllers(); // 包含 /api/report
 // 路由設定
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}");
+    pattern: "{controller=Report}/{action=Index}/{id?}");
 
 app.Run();
