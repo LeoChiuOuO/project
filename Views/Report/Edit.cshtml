@@ -76,7 +76,15 @@
                     <div class="target-report-row-label"><label>追蹤情形：</label><label id="trackingLabel"></label></div>
                     <div style="width: 300px;">
                         <label for="referralInstitutionInput">轉介院所：</label>
-                        <input type="text" id="referralInstitutionInput" name="referralInstitution">
+                        @* <input type="text" id="referralInstitutionInput" name="referralInstitution"> *@
+                        <select id="referralInstitutionInput"  name="referralInstitution">    
+                            <option value="" disabled selected>請選擇</option>
+                            <option value="台北醫院" >台北醫院</option>
+                            <option value="榮總" >榮總</option>
+                            <option value="長庚" >長庚</option>
+                            <option value="馬偕醫院" >馬偕醫院</option>
+                            <option value="新光醫院" >新光醫院</option>
+                        </select>
                     </div>
                     <div style="margin-top: 10px;">
                         <label for="remarkInput">備註：</label>

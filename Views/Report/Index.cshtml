@@ -49,16 +49,16 @@
                 <thead>
                     <tr>
                         <th>序號</th>
-                        <th>檢體編號</th>
-                        <th>檢體類別</th>
-                        <th>檢驗進度</th>
-                        <th>病歷號</th>
-                        <th>客戶姓名</th>
-                        <th>檢測項目</th>
-                        <th>收件日期</th>
-                        <th>採檢日期</th>
-                        <th>報告日期</th>
-                        <th>送檢院所</th>
+                        <th data-sort="specimenNumber"><span class="sort-icon">↑↓</span>檢體編號</th>
+                        <th data-sort="specimenType"><span class="sort-icon">↑↓</span>檢體類別</th>
+                        <th data-sort="inspectionProgress"><span class="sort-icon">↑↓</span>檢驗進度</th>
+                        <th data-sort="mrNumber"><span class="sort-icon">↑↓</span>病歷號</th>
+                        <th data-sort="name"><span class="sort-icon">↑↓</span>客戶姓名</th>
+                        <th data-sort="testItemName"><span class="sort-icon">↑↓</span>檢測項目</th>
+                        <th data-sort="receivedDate"><span class="sort-icon">↑↓</span>收件日期</th>
+                        <th data-sort="testingDate"><span class="sort-icon">↑↓</span>採檢日期</th>
+                        <th data-sort="reportDate"><span class="sort-icon">↑↓</span>報告日期</th>
+                        <th data-sort="inspectionInstitution"><span class="sort-icon">↑↓</span>送檢院所</th>
                         <th>送檢醫師</th>
                         <th>評估狀態</th>
                         <th>通知狀態</th>
@@ -108,7 +108,11 @@
 </div>
 @section Scripts {
 <script>
-    
+    let originalTestItems = [];
+    let currentReports = []; // 放後端撈回來的資料，給關鍵字即時篩選
+    let sortField = null;
+    let sortAsc = true;
+
     $(document).ready(function () {
         // 取得今天日期
         const today = new Date();
@@ -186,8 +190,6 @@
 
         renderTable(0);
     });
-    let originalTestItems = [];
-    let currentReports = []; // 放後端撈回來的資料，給關鍵字即時篩選
 
     document.addEventListener("DOMContentLoaded", function () {
         const topContainer = document.getElementById("testItemContainer");
@@ -428,10 +430,6 @@
         }
     }
 
-    function editReport(id) {
-        window.location.href = `/Report/Edit/${id}`;
-    }
-
     function viewReport(type,id) {
         console.log(type);
         const url = `/pdf/${type}.pdf`;
@@ -464,6 +462,52 @@
                 return 'transparent'; // 無色
         }
     }
+    
+    $('th[data-sort]').on('click', function () {
+        const field = $(this).data('sort');
+
+        if (sortField === field) {
+            sortAsc = !sortAsc; // 反轉排序方向
+        } else {
+            sortField = field;
+            sortAsc = true;
+        }
+
+        // 排序資料
+        currentReports.data.sort((a, b) => {
+            let valA = a[field] || '';
+            let valB = b[field] || '';
+
+            // 日期欄位處理
+            if (field.toLowerCase().includes('date')) {
+                valA = new Date(valA);
+                valB = new Date(valB);
+            }
+
+            if (valA < valB) return sortAsc ? -1 : 1;
+            if (valA > valB) return sortAsc ? 1 : -1;
+            return 0;
+        });
+
+        // 重繪畫面
+        renderTable(currentReports.data);
+        renderPagination(currentReports.page, currentReports.pageSize, currentReports.total);
+        updateSortIcons();
+
+    });
+
+    function updateSortIcons() {
+        $('th[data-sort]').each(function () {
+            const field = $(this).data('sort');
+            const icon = $(this).find('.sort-icon');
+
+            if (field === sortField) {
+                icon.text(sortAsc ? '↑' : '↓');
+            } else {
+                icon.text('↑↓');
+            }
+        });
+    }
 
 
 </script>
@@ -485,6 +529,17 @@
     .test-item:hover {
         background-color: #e0f7ff; /* ✅ 高亮背景 */
         border-color: #3399ff;     /* ✅ 高亮邊框 */
+    }
+
+    th[data-sort] {
+        cursor: pointer;
+    }
+    .sort-icon {
+        margin-right: 4px;
+        color: #888;
+    }
+    th[data-sort]:hover .sort-icon {
+        color: #000;
     }
 
 </style>

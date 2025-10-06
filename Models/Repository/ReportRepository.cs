@@ -37,7 +37,6 @@ public class ReportRepository : IReportRepository
             name AS Name,
             id_number AS IdNumber,
             mr_number AS MrNumber,
-            test_item AS TestItem,
             cost AS Cost,
             return_date AS ReturnDate,
             sending_physician_name AS SendingPhysicianName,
@@ -90,8 +89,14 @@ public class ReportRepository : IReportRepository
             WHERE id = @Id
             LIMIT 1;
         ";
+        var report = _db.QueryFirstOrDefault<Report>(sql, new { Id = id });
 
-        return _db.QueryFirstOrDefault<Report>(sql, new { Id = id });
+        if (report != null && report.TestItemId > 0)
+        {
+            report.TestItem = _context.TestItems.Find(report.TestItemId);
+        }
+
+        return report;
     }
 
     public PagedResult<Report> GetReports(ReportFilter filter)

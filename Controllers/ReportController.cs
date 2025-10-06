@@ -18,7 +18,7 @@ namespace WebApplication_Dianthus.Controllers
         }
 
         // Controllers/ReportController.cs
-        [HttpGet("Edit/{id}")]
+        [HttpGet("/Report/Edit/{id}")]
         public IActionResult Edit(int id)
         {
             var report = _report.GetReportById(id);
