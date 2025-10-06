@@ -338,8 +338,6 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\2
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\yb45x81ty8-muycvpuwrr.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\dagyf20fhu-87fc7y1x7t.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\xk26wvj7ik-mlv21k5csn.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-g3jpwi9hoe.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-g3jpwi9hoe.gz
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.build.json.cache
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\staticwebassets.development.json
@@ -350,3 +348,5 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\refint\WebAp
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\WebApplication_Dianthus.pdb
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\WebApplication_Dianthus.genruntimeconfig.cache
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\ref\WebApplication_Dianthus.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\qne5z9dfll-hbc42j93gq.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Debug\net9.0\compressed\o1bvyw7p40-hbc42j93gq.gz

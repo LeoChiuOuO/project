@@ -65,6 +65,8 @@
                         <th>追蹤狀態</th>
                         <th>編輯</th>
                         <th>檢視</th>
+                        <th>說明衛教單</th>
+                        <th>文獻</th>
                     </tr>
                 </thead>
                 <tbody id="reportTableBody">
@@ -397,12 +399,13 @@
                     <td>${r.reportDate ? r.reportDate.substring(0, 10) : ''}</td>
                     <td>${r.inspectionInstitution || ''}</td>
                     <td>${r.sendingPhysicianName || ''}</td>
-                    <td><div style="background-color: ${assColor}; color: white;border-radius: 15px;text-align: center;">${r.assessmentStatus || ''}</div></td>
-                    <td><div style="background-color: ${notifyColor}; color: white;border-radius: 15px;text-align: center;">${r.notificationStatus || ''}</div></td>
-                    <td><div style="background-color: ${trackColor}; color: white;border-radius: 15px;text-align: center;">${r.trackingStatus || ''}</div></td>
-                    @* <td><button onclick="editReport(${r.id})" target="_blank">編輯</button></td> *@
+                    <td><div style="width: 75px;background-color: ${assColor}; color: white;border-radius: 10px;text-align: center;">${r.assessmentStatus || ''}</div></td>
+                    <td><div style="width: 75px;background-color: ${notifyColor}; color: white;border-radius: 10px;text-align: center;">${r.notificationStatus || ''}</div></td>
+                    <td><div style="width: 75px;background-color: ${trackColor}; color: white;border-radius: 10px;text-align: center;">${r.trackingStatus || ''}</div></td>
                     <td><a href="javascript:void(0);" onclick="openEditPage(${r.id})" class="btn btn-sm btn-primary">編輯</a></td>
-                    <td><button class="btn btn-sm btn-warning" onclick="viewReport(${r.id})" target="_blank">檢視</button></td>
+                    <td><button class="btn btn-sm btn-warning" onclick="viewReport('report',${r.id})">檢視</button></td>
+                    <td><button class="btn btn-sm btn-success" onclick="viewReport('teachreport',${r.id})">說明衛教單</button></td>
+                    <td><button class="btn btn-sm btn-info" onclick="viewReport('paperreport',${r.id})">文獻</button></td>
                 </tr>
             `;
             tbody.append(row);
@@ -429,9 +432,14 @@
         window.location.href = `/Report/Edit/${id}`;
     }
 
-    function viewReport(id) {
-        alert("此功能開發中，將可預覽報告版面與下載");
-        @* window.location.href = `/Report/View/${id}`; *@
+    function viewReport(type,id) {
+        console.log(type);
+        const url = `/pdf/${type}.pdf`;
+        window.open(url, '_blank');
+        @* 若每筆資料對應不同 PDF
+            const url = `/PDF/report_${id}.pdf`;
+            window.open(url, '_blank');
+         *@
     }
 
     function openEditPage(reportId) {
