@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication_Dianthus.Models;
+using WebApplication_Dianthus.Models.DTO;
 using WebApplication_Dianthus.Models.Interface;
 
 namespace WebApplication_Dianthus.Controllers
@@ -52,6 +53,28 @@ namespace WebApplication_Dianthus.Controllers
             _permissionService.CreatePermission(permission);
             return Json(new { success = true });
         }
+
+        [HttpPost]
+        public IActionResult UpdateAll(PermissionDTO dto)
+        {
+            if (!IsAdmin()) return Forbid();
+
+            var permission = _permissionService.GetPermission(dto.Id);
+            if (permission == null) return Json(new { success = false, message = "找不到資料" });
+
+            permission.ReviewPermissions = dto.ReviewPermissions;
+            permission.CreatePermissions = dto.CreatePermissions;
+            permission.EditPermissions = dto.EditPermissions;
+            permission.DeletePermissions = dto.DeletePermissions;
+
+            permission.UpdatedAt = DateTime.Now;
+            var userId = HttpContext.Session.GetString("UserId");
+            if (!string.IsNullOrEmpty(userId)) permission.ModifyId = int.Parse(userId);
+
+            _permissionService.UpdatePermission(permission);
+            return Json(new { success = true });
+        }
+
 
         [HttpPost]
         public IActionResult UpdateField(int id, string field, bool value)
