@@ -1,8 +1,10 @@
+using WebApplication_Dianthus.Models.DTO;
+
 namespace WebApplication_Dianthus.Models.Service.Export
 {
     public class ExcelExporter
     {
-        public byte[] ExportReports(IEnumerable<Report> reports)
+        public byte[] ExportReports(IEnumerable<ReportDTO> reports)
         {
             using var wb = new ClosedXML.Excel.XLWorkbook();
             var ws = wb.Worksheets.Add("Reports");
@@ -21,7 +23,7 @@ namespace WebApplication_Dianthus.Models.Service.Export
             {
                 ws.Cell(row, 1).Value = r.SpecimenNumber;
                 ws.Cell(row, 2).Value = r.Name;
-                ws.Cell(row, 3).Value = r.TestItem;
+                ws.Cell(row, 3).Value = r.TestItemName;
                 ws.Cell(row, 4).Value = r.TestingDate;
                 ws.Cell(row, 5).Value = r.NotificationStatus;
                 ws.Cell(row, 6).Value = r.TrackingStatus;

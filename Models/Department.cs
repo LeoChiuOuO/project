@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication_Dianthus.Models;
+
 [Table("department")]
 public class Department
 {
@@ -33,4 +34,6 @@ public class Department
 
     [ForeignKey("PartitionId")]
     public Partition Partition { get; set; }
+    
+    public ICollection<Report> Reports { get; set; }
 }

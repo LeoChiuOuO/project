@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Report> Reports { get; set; }
+    public DbSet<TestItem> TestItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,6 +27,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Partition>().HasKey(pa => pa.Id);
         modelBuilder.Entity<Department>().HasKey(d => d.Id);
         modelBuilder.Entity<Group>().HasKey(g => g.Id);
+        modelBuilder.Entity<Report>().HasKey(r => r.Id);
+        modelBuilder.Entity<TestItem>().HasKey(t => t.Id);
 
         // 設定關聯
         modelBuilder.Entity<UserRole>()
@@ -57,5 +60,28 @@ public class AppDbContext : DbContext
             .HasOne(g => g.Department)
             .WithMany()
             .HasForeignKey(g => g.DepartmentId);
+
+        modelBuilder.Entity<Report>()
+            .HasOne(r => r.TestItem)
+            .WithMany(t => t.Reports)
+            .HasForeignKey(r => r.TestItemId);
+
+        modelBuilder.Entity<Report>()
+            .HasOne(r => r.Department)
+            .WithMany(d => d.Reports)
+            .HasForeignKey(r => r.DepartmentId);
+
+        modelBuilder.Entity<Report>()
+            .HasOne(r => r.Partition)
+            .WithMany(p => p.Reports)
+            .HasForeignKey(r => r.PartitionId);
+        
+        modelBuilder.Entity<Report>()
+        .HasOne(r => r.Group)
+        .WithMany(g => g.Reports)
+        .HasForeignKey(r => r.GroupId)
+        .HasConstraintName("FK_Report_Group")
+        .OnDelete(DeleteBehavior.SetNull);
+
     }
 }

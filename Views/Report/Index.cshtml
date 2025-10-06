@@ -1,3 +1,4 @@
+@model List<WebApplication_Dianthus.Models.TestItem>
 @{
     ViewData["Title"] = "報表列表";
 }
@@ -7,10 +8,8 @@
         <!-- 篩選器 -->
         <div class="target-report-row">
             <div class="target-report-row-label"><label>檢測項目</label></div>
-            <select id="testItemSelect">
-                <option value="">請選擇</option>
-                <!-- AJAX 載入選項 -->
-            </select>
+            <button id="btnItem" class="btn btn-primary">點我篩選</button>
+            <div id="searchItem" style="min-width: 200px; max-width: 400px; overflow-x: auto; border: 1px black solid; display: -webkit-inline-box;"></div>
         </div>
 
         <div class="target-report-row">
@@ -40,7 +39,7 @@
             </div>    
         </div>
         <div>
-            <button class="btn btn-primary" onclick="">搜尋</button>
+            <button id="serach" class="btn btn-primary" onclick=serach()>搜尋</button>
             <label style="font-size: smaller;">系統不會自動帶出資料，請輸入上方篩選條件並點選[搜尋]按鈕，謝謝</label>
         </div>
 
@@ -78,9 +77,36 @@
         <div id="pagination" style="margin-top: 10px;"></div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog" style="--bs-modal-width: 800px;">
+        <div class="modal-content" style="">
+            <div class="modal-header">
+                <h5 class="modal-title">檢測項目篩選清單</h5>
+                @* <button type="button" class="close" data-dismiss="modal" style="margin-left: 358px;">&times;</button> *@
+            </div>
+            <div class="modal-body" id="modalBody">
+                <label for="" style="margin-left: 10px;">待篩選清單 (請點選項目移至下方欲篩選清單內)</label>
+                <div style="border: 1px black solid; margin: 10px;width:746px;height:242px;">
+                    <div class="form-group" id="testItemContainer" style="display: ruby;">
+                        @foreach (TestItem item in Model)
+                        {
+                            <div class="test-item" data-id="@item.Id" style="">@item.name</div>
+                        }
+                    </div>
+                </div>
+                <label for="" style="margin-left: 10px;">欲篩選清單</label>
+                <div  style="border: 1px black solid; margin: 10px;width:746px;height:242px;">
+                    <div id="testItemSearchContainer" style="display: ruby;"></div>
+                </div>
+            </div>
+            <button id="itemSaveBtn" class="btn btn-success" style="margin:10px">儲存</button>
+        </div>
+    </div>
+</div>
 @section Scripts {
 <script>
+    
     $(document).ready(function () {
         // 取得今天日期
         const today = new Date();
@@ -101,6 +127,9 @@
         document.getElementById('dateFrom').value = formatDate(prevMonth);
         document.getElementById('dateTo').value = formatDate(today);
 
+        $('#btnItem').on('click', function(){
+            $('#reportModal').modal('show');
+        });
         $('#exportExcel').on('click', function () {
             // 1. 蒐集篩選條件
            // 讀取 checkbox 勾選值
@@ -113,7 +142,6 @@
                 .get();
 
             const params = {
-                testItem: $('#testItemSelect').val(),
                 dateFrom: $('#dateFrom').val(),
                 dateTo: $('#dateTo').val(),
                 keyword: $('#keyword').val(),
@@ -154,31 +182,150 @@
             });
         });
 
-        @* loadReports(1);
-        window.addEventListener('message', function (event) {
-            if (event.data && event.data.type === 'refreshReportList') {
-                loadReports(1);
-            }
-        });
-
-        // 篩選項目變更時重新查詢
-        $('#testItemSelect, #dateFrom, #dateTo').on('change', function () {
-            loadReports(1);
-        });
-        // 關鍵字輸入即時觸發
-        $('#keyword').on('input', function () {
-            loadReports(1);
-        });
-        //勾選項目做篩選
-        $('input[name="notifyStatus"], input[name="trackStatus"]').on('change', function () {
-            loadReports(1);
-        });
-        loadDistinctOptions(); *@
         renderTable(0);
     });
+    let originalTestItems = [];
+    let currentReports = []; // 放後端撈回來的資料，給關鍵字即時篩選
 
-    function searchClick(){
-        
+    document.addEventListener("DOMContentLoaded", function () {
+        const topContainer = document.getElementById("testItemContainer");
+
+        // 儲存原始資料
+        originalTestItems = Array.from(topContainer.querySelectorAll(".test-item")).map(item => {
+            return {
+                id: item.dataset.id,
+                name: item.textContent.trim()
+            };
+        });
+
+        // 初始化點擊事件
+        topContainer.querySelectorAll(".test-item").forEach(enableToggle);
+    });
+
+    document.getElementById("itemSaveBtn").addEventListener("click", () => {
+        const bottomContainer = document.getElementById("testItemSearchContainer");
+        const searchItem = document.getElementById("searchItem");
+
+        // 清空主畫面
+        searchItem.innerHTML = "";
+
+        // 搬移下方項目
+        bottomContainer.querySelectorAll(".test-item").forEach(item => {
+            searchItem.appendChild(item);
+        });
+
+        // 清空下方
+        bottomContainer.innerHTML = "";
+
+        // 隱藏 modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("reportModal"));
+        modal.hide();
+    });
+
+    document.getElementById("btnItem").addEventListener("click", () => {
+        const topContainer = document.getElementById("testItemContainer");
+        const bottomContainer = document.getElementById("testItemSearchContainer");
+
+        // 清空上方容器
+        topContainer.innerHTML = "";
+
+        // 重新渲染原始資料
+        originalTestItems.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "test-item";
+            div.dataset.id = item.id;
+            div.textContent = item.name;
+            enableToggle(div);
+            topContainer.appendChild(div);
+        });
+
+        // 顯示 modal
+        const modal = new bootstrap.Modal(document.getElementById("reportModal"));
+        modal.show();
+    });
+
+    document.getElementById("keyword").addEventListener("input", function () {
+        const keyword = this.value.trim().toLowerCase();
+
+        if (keyword === "") {
+            renderTable(res.data);
+            renderPagination(res.page, res.pageSize, res.total);
+            return;
+        }
+
+        const filtered = currentReports.data.filter(r =>
+            r.name?.toLowerCase().includes(keyword) ||
+            r.specimenCode?.toLowerCase().includes(keyword) ||
+            r.inspectionInstitution?.toLowerCase().includes(keyword) ||
+            r.sendingPhysicianName?.toLowerCase().includes(keyword) ||
+            r.specimenType?.toLowerCase().includes(keyword) ||
+            r.specimenNumber?.toLowerCase().includes(keyword)
+        );
+        console.log("currentReports: ",currentReports)
+        renderTable(currentReports.data);
+        renderPagination(currentReports.page, currentReports.pageSize, currentReports.total);
+    });
+
+
+    function enableToggle(item) {
+        item.addEventListener("click", () => {
+            const currentParent = item.parentElement;
+            const target = currentParent.id === "testItemContainer"
+                ? document.getElementById("testItemSearchContainer")
+                : document.getElementById("testItemContainer");
+            target.appendChild(item);
+        });
+    }
+
+    function serach() {
+        const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        const notifyStatus = Array.from(document.querySelectorAll('input[name="notifyStatus"]:checked')).map(cb => cb.value);
+        const trackStatus = Array.from(document.querySelectorAll('input[name="trackStatus"]:checked')).map(cb => cb.value);
+        const keyword = document.getElementById('keyword').value.trim();
+
+        // 計算有效條件數量
+        let conditionCount = 0;
+        if (selectedItems.length > 0) conditionCount++;
+        if (dateFrom || dateTo) conditionCount++;
+        if (notifyStatus.length > 0 || trackStatus.length > 0) conditionCount++;
+        if (keyword !== "") conditionCount++;
+
+        // 限制：至少要有兩項條件
+        if (conditionCount < 2) {
+            alert("請至少選擇兩項篩選條件，避免查詢過多資料！");
+            return;
+        }
+
+        // 打包資料
+        const filterData = {
+            testItemIds: selectedItems,
+            dateFrom,
+            dateTo,
+            notifyStatus,
+            trackStatus,
+            keyword
+        };
+
+        // 傳送到後端
+        fetch('/api/report/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(filterData)
+        })
+        .then(response => response.json())
+        .then(res => {
+            console.log("後端回傳結果：", res);
+            currentReports = res;
+            renderTable(res.data);
+            renderPagination(res.page, res.pageSize, res.total);
+            // 可更新畫面
+        })
+        .catch(error => {
+            console.error("搜尋失敗：", error);
+        });
+
     }
 
     function getSelectedValues(name) {
@@ -200,7 +347,6 @@
         const params = {
             page: page,
             pageSize: 10,
-            testItem: $('#testItemSelect').val(),
             dateFrom: $('#dateFrom').val(),
             dateTo: $('#dateTo').val(),
             keyword: $('#keyword').val(),
@@ -235,6 +381,7 @@
         $.each(reports, function (i, r) {
             const notifyColor = getStatusColor(r.notificationStatus);
             const trackColor = getStatusColor(r.trackingStatus);
+            const assColor = getStatusColor(r.assessmentStatus);
 
             const row = `
                 <tr>
@@ -244,13 +391,13 @@
                     <td>${r.inspectionProgress || ''}</td>
                     <td>${r.mrNumber || ''}</td>
                     <td>${r.name || ''}</td>
-                    <td>${r.testItem || ''}</td>
+                    <td>${r.testItemName || ''}</td>
                     <td>${r.receivedDate ? r.receivedDate.substring(0, 10) : ''}</td>
                     <td>${r.testingDate ? r.testingDate.substring(0, 10) : ''}</td>
                     <td>${r.reportDate ? r.reportDate.substring(0, 10) : ''}</td>
                     <td>${r.inspectionInstitution || ''}</td>
                     <td>${r.sendingPhysicianName || ''}</td>
-                    <td>${r.assessmentStatus || ''}</td>
+                    <td><div style="background-color: ${assColor}; color: white;border-radius: 15px;text-align: center;">${r.assessmentStatus || ''}</div></td>
                     <td><div style="background-color: ${notifyColor}; color: white;border-radius: 15px;text-align: center;">${r.notificationStatus || ''}</div></td>
                     <td><div style="background-color: ${trackColor}; color: white;border-radius: 15px;text-align: center;">${r.trackingStatus || ''}</div></td>
                     @* <td><button onclick="editReport(${r.id})" target="_blank">編輯</button></td> *@
@@ -291,34 +438,19 @@
         window.open(`/Report/Edit/${reportId}`, '_blank');
     }
 
-    function loadDistinctOptions() {
-        $.ajax({
-            url: '/api/report/specimen-types/test_item',
-            type: 'GET',
-            success: function (types) {
-                const $select = $('#testItemSelect');
-                $select.empty();
-                $select.append('<option value="">全部</option>');
-                types.forEach(t => {
-                    $select.append(`<option value="${t}">${t}</option>`);
-                });
-            },
-            error: function () {
-                console.warn("項目載入失敗");
-            }
-        });
-    }
-
     function getStatusColor(status) {
         switch (status) {
             case '已通知':
             case '已追蹤':
+            case '已評估':
                 return '#28a745'; // 綠色
             case '待通知':
             case '待追蹤':
+            case '待評估':
                 return '#dc3545'; // 紅色
             case '不需通知':
             case '不需追蹤':
+            case '不需評估':
                 return '#6c757d'; // 灰色
             default:
                 return 'transparent'; // 無色
@@ -332,4 +464,19 @@
     .table tbody tr:hover td {
         background-color: #e6f7ff; /* 淺藍色高亮 */
     }
+    .test-item {
+        width: 100px; 
+        height: 30px; 
+        cursor: pointer;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        text-align: center; 
+        flex-direction: column;
+    }
+    .test-item:hover {
+        background-color: #e0f7ff; /* ✅ 高亮背景 */
+        border-color: #3399ff;     /* ✅ 高亮邊框 */
+    }
+
 </style>

@@ -13,5 +13,8 @@ namespace WebApplication_Dianthus.Models.Interface
         bool UpdateReport(ReportUpdateDto report);
         List<string> GetDistinctSpecimenTypes(string columnName);
         IEnumerable<Report> GetReportsForExport(ReportFilter filter);
+
+        PagedResult<Report> Search(ReportFilter filter);
+        List<TestItem> GetAllTestItem();
     }
 }

@@ -40,6 +40,9 @@ public class Report
     [Column("department_id")]
     public int DepartmentId { get; set; }
 
+    [Column("group_id")]
+    public int? GroupId { get; set; }
+
     [Column("submission_date")]
     public DateTime SubmissionDate { get; set; }
 
@@ -55,8 +58,8 @@ public class Report
     [Column("mr_number")]
     public int MrNumber { get; set; }
 
-    [Column("test_item")]
-    public string TestItem { get; set; }
+    [Column("test_item_id")]
+    public int TestItemId { get; set; }
 
     [Column("cost")]
     public int Cost { get; set; }
@@ -213,5 +216,11 @@ public class Report
 
     [Column("deleted_at")]
     public DateTime? DeletedAt { get; set; }
+
+    // ✅ 導覽屬性
+    public TestItem TestItem { get; set; }
+    public Department Department { get; set; }
+    public Partition Partition { get; set; }
+    public Group Group { get; set; } 
 
 }

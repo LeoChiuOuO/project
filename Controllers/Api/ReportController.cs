@@ -6,7 +6,7 @@ namespace WebApplication_Dianthus.Controllers.api
 {
     [ApiController]
     [Route("api/report")]
-    public class ReportController : Controller
+    public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;
 
@@ -40,7 +40,16 @@ namespace WebApplication_Dianthus.Controllers.api
             return Ok(report);
         }
 
-        [HttpPost]
+        [HttpPost("search")]
+        public IActionResult Search([FromBody] ReportFilter filter)
+        {
+            var reports = _reportService.SearchReports(filter);
+            if (reports == null) return NotFound();
+
+            return Ok(reports);
+        }
+
+        [HttpPost("create")]
         public IActionResult CreateReport([FromBody] Report report)
         {
             try
@@ -82,13 +91,6 @@ namespace WebApplication_Dianthus.Controllers.api
             }
         }
 
-        [HttpGet("/Report/Edit/{id}")]
-        public IActionResult Edit(int id)
-        {
-            var report = _reportService.GetReportById(id);
-            return View(report); // 傳給 Razor View
-        }
-
         [HttpGet("/api/report/specimen-types/{columnName}")]
         public IActionResult GetSpecimenTypes(string columnName)
         {
@@ -103,7 +105,7 @@ namespace WebApplication_Dianthus.Controllers.api
             {
                var filters = new ReportFilter
                 {
-                    TestItem = filter.TestItem,
+                    TestItemIds = filter.TestItemIds ?? new List<int>(),
                     DateFrom = filter.DateFrom,
                     DateTo = filter.DateTo,
                     Keyword = filter.Keyword,

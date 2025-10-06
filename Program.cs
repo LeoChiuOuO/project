@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
+using WebApplication_Dianthus.Models.Profiles;
 using WebApplication_Dianthus.Models.Repository;
 using WebApplication_Dianthus.Models.Service;
 using WebApplication_Dianthus.Models.Service.Interface;
@@ -57,6 +58,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+builder.Services.AddAutoMapper(typeof(ReportProfile));
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 

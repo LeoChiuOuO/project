@@ -4,7 +4,7 @@ namespace WebApplication_Dianthus.Models;
 // 資料篩選條件
 public class ReportFilter
 {
-    public string? TestItem { get; set; }
+    public List<int>? TestItemIds { get; set; }
     public DateTime? DateFrom { get; set; }
     public DateTime? DateTo { get; set; }
     public List<string>? NotifyList { get; set; }

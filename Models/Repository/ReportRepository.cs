@@ -1,6 +1,7 @@
 using System.Data;
 using System.Text;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Utilities;
 using WebApplication_Dianthus.Models.Interface;
 
@@ -104,8 +105,8 @@ public class ReportRepository : IReportRepository
             .Where(r => r.TestingDate >= filter.DateFrom && r.TestingDate <= filter.DateTo);
 
         // 單值篩選
-        if (!string.IsNullOrWhiteSpace(filter.TestItem))
-            query = query.Where(r => r.TestItem == filter.TestItem);
+        // if (!string.IsNullOrWhiteSpace(filter.TestItem))
+            // query = query.Where(r => r.TestItem == filter.TestItem);
 
         // 多值篩選：NotificationStatus
         if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
@@ -269,11 +270,11 @@ public class ReportRepository : IReportRepository
         parameters.Add("DateFrom", filter.DateFrom ?? DateTime.Today.AddMonths(-1));
         parameters.Add("DateTo", filter.DateTo ?? DateTime.Today);
 
-        if (!string.IsNullOrWhiteSpace(filter.TestItem))
-        {
-            sqlBuilder.Append(" AND test_item = @TestItem");
-            parameters.Add("TestItem", filter.TestItem);
-        }
+        // if (!string.IsNullOrWhiteSpace(filter.TestItem))
+        // {
+        //     sqlBuilder.Append(" AND test_item = @TestItem");
+        //     parameters.Add("TestItem", filter.TestItem);
+        // }
 
         if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
         {
@@ -303,5 +304,63 @@ public class ReportRepository : IReportRepository
         sqlBuilder.Append(" ORDER BY testing_date DESC");
 
         return _db.Query<Report>(sqlBuilder.ToString(), parameters);
+    }
+
+    public PagedResult<Report> Search(ReportFilter filter)
+    {
+        var query = _context.Reports
+        .Include(r => r.TestItem)
+        .Include(r => r.Department)
+        .Include(r => r.Partition)
+        .AsQueryable();
+
+        // 篩選：日期區間
+        if (filter.DateFrom.HasValue && filter.DateTo.HasValue)
+            query = query.Where(r => r.TestingDate >= filter.DateFrom && r.TestingDate <= filter.DateTo);
+
+        // 篩選：TestItemId
+        if (filter.TestItemIds?.Any() == true)
+            query = query.Where(r => filter.TestItemIds.Contains(r.TestItemId));
+
+        // 篩選：NotificationStatus
+        if (filter.NotifyStatus?.Any() == true)
+            query = query.Where(r => filter.NotifyStatus.Contains(r.NotificationStatus));
+
+        // 篩選：TrackingStatus
+        if (filter.TrackStatus?.Any() == true)
+            query = query.Where(r => filter.TrackStatus.Contains(r.TrackingStatus));
+
+        // 關鍵字模糊查詢
+        if (!string.IsNullOrWhiteSpace(filter.Keyword))
+        {
+            query = query.Where(r =>
+                r.SpecimenNumber.Contains(filter.Keyword) ||
+                r.InspectionInstitution.Contains(filter.Keyword) ||
+                r.SendingPhysicianName.Contains(filter.Keyword) ||
+                r.Name.Contains(filter.Keyword));
+        }
+
+        // 總筆數
+        var total = query.Count();
+
+        // 分頁 + 排序
+        var data = query
+            .OrderByDescending(r => r.TestingDate)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .ToList();
+
+        return new PagedResult<Report>
+        {
+            Data = data,
+            Total = total,
+            Page = filter.Page,
+            PageSize = filter.PageSize
+        };
+    }
+
+    public List<TestItem> GetAllTestItem()
+    {
+        return _context.TestItems.ToList();
     }
 }

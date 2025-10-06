@@ -1,0 +1,23 @@
+@model List<WebApplication_Dianthus.Models.TestItem>
+
+<form id="SelectForm">
+    <div class="form-group">
+        <label></label>
+        <div class="form-group" id="testItemContainer" style="display: contents;">
+            @foreach (TestItem item in Model)
+            {
+                <div class="test-item" data-id="@item.Id">@item.name</div>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label>描述</label>
+    </div>
+    <button type="submit" class="btn btn-success"style="margin-top: 20px;">儲存</button>
+</form>
+
+<script>
+    $('#SelectForm').submit(function (e) {
+        
+    });
+</script>

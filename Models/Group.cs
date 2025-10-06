@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApplication_Dianthus.Models;
+
 [Table("group")]
 public class Group
 {
@@ -33,4 +34,6 @@ public class Group
 
     [ForeignKey("DepartmentId")]
     public Department Department { get; set; }
+    public ICollection<Report> Reports { get; set; }
+
 }
