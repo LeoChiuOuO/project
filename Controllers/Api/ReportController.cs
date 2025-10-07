@@ -1,5 +1,8 @@
+using System.Net;
+using System.Net.Mail;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication_Dianthus.Models;
+using WebApplication_Dianthus.Models.DTO;
 using WebApplication_Dianthus.Models.Service.Interface;
 
 namespace WebApplication_Dianthus.Controllers.api
@@ -97,13 +100,13 @@ namespace WebApplication_Dianthus.Controllers.api
             var types = _reportService.GetSpecimenTypeOptions(columnName);
             return Ok(types);
         }
-        
+
         [HttpGet("/api/report/export")]
         public IActionResult Export([FromQuery] ReportFilter filter)
         {
             try
             {
-               var filters = new ReportFilter
+                var filters = new ReportFilter
                 {
                     TestItemIds = filter.TestItemIds ?? new List<int>(),
                     DateFrom = filter.DateFrom,
@@ -128,6 +131,32 @@ namespace WebApplication_Dianthus.Controllers.api
                 return StatusCode(500, $"匯出失敗: {ex.Message}");
             }
 
+        }
+        [HttpPost("/api/email/send")]
+        public async Task<IActionResult> SendEmail([FromBody] EmailDTO dto)
+        {
+            try
+            {
+                var message = new MailMessage();
+                message.From = new MailAddress(dto.Sender);
+                message.To.Add(dto.Recipient);
+                message.Subject = "異常個案追蹤通知";
+                message.Body = dto.Content;
+                message.IsBodyHtml = false;
+
+                using var smtp = new SmtpClient("smtp.gmail.com", 587)
+                {
+                    Credentials = new NetworkCredential("leochiuouo@gmail.com", "mirs mhzf zsvv szee"),
+                    EnableSsl = true
+                };
+
+                await smtp.SendMailAsync(message);
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
     }
 }

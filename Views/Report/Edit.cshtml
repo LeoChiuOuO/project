@@ -43,7 +43,7 @@
                     <div><label>業務主管：</label><label id="businessManagerLabel"></label></div>
                     <div><label>業務主管電話：</label><label id="businessManagerPhoneLabel"></label></div>
                     <div><label>業務主管Email：</label><label id="businessManagerEmailLabel"></label>
-                        <button>發送郵件</button>
+                        <button id="reviewMailBtn1">發送郵件</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="target-report-input" style="width: 300px;">
-                    <button>發送郵件</button>
+                    <button id="reviewMailBtn2">發送郵件</button>
                     <div>
                         <label for="confirmReportResultInput">Confirm檢體報告結果：</label>
                         <input type="text" id="confirmReportResultInput" name="confirmTheTestReportResults">
@@ -130,6 +130,40 @@
         </div>
     </div>
 </div>
+
+<!-- 信件預覽 Modal -->
+<div class="modal fade" id="emailPreviewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">信件預覽</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <pre id="emailContent" style="white-space: pre-wrap; font-family: inherit;"></pre>
+
+        <div class="mb-3">
+          <label for="senderEmail" class="form-label">寄件人</label>
+          <input type="email" class="form-control" id="senderEmail" value="leochiuouo@gmail.com">
+        </div>
+        <div class="mb-3">
+          <label for="recipientEmail" class="form-label">收件人</label>
+          <input type="email" class="form-control" id="recipientEmail" value="limingchiu@mfmclinic.com.tw">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="sendEmailBtn" class="btn btn-primary">寄出</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="hidden" id="reportId" value="@Model.Id" />
+<input type="hidden" id="name" value="@Model.Name" />
+<input type="hidden" id="mrNumber" value="@Model.MrNumber" />
+<input type="hidden" id="inspectionInstitution" value="@Model.InspectionInstitution" />
+<input type="hidden" id="sendingPhysicianName" value="@Model.SendingPhysicianName" />
+<input type="hidden" id="weeksOfPregnancy" value="@Model.WeeksOfPregnancy" />
 
 <script>
     $(document).ready(function () {
@@ -243,6 +277,95 @@
                 }
             });
         });
+
+        document.getElementById('reviewMailBtn1').addEventListener('click', function () {
+            const reportId = document.getElementById('reportId')?.value || '未提供';
+            const name = document.getElementById('name')?.value || '未提供';
+            const mrNumber = document.getElementById('mrNumber')?.value || '未提供';
+            const institution = document.getElementById('inspectionInstitution')?.value || '未提供';
+            const physician = document.getElementById('sendingPhysicianName')?.value || '未提供';
+            const result = document.getElementById('confirmReportResultInput')?.value || '未提供';
+            const pregnancyWeeks = document.getElementById('weeksOfPregnancy')?.value || '未提供';
+            const content = `
+                您好
+                NIPS/aCGH有 1 位異常個案如下：
+
+                    報告編號：${reportId}
+                    個案姓名：${name}
+                    病歷號：${mrNumber}
+                    送檢院所：${institution}
+                    送檢醫師：${physician}
+                    報告結果：${result}
+                    請問此個案後續狀況如何？
+                    是否繼續懷孕或是終止妊娠(引產時間點)？
+                    `;
+
+            document.getElementById('emailContent').textContent = content;
+            new bootstrap.Modal(document.getElementById('emailPreviewModal')).show();
+        });
+        document.getElementById('reviewMailBtn2').addEventListener('click', function () {
+            const reportId = document.getElementById('reportId')?.value || '未提供';
+            const name = document.getElementById('name')?.value || '未提供';
+            const mrNumber = document.getElementById('mrNumber')?.value || '未提供';
+            const institution = document.getElementById('inspectionInstitution')?.value || '未提供';
+            const physician = document.getElementById('sendingPhysicianName')?.value || '未提供';
+            const result = document.getElementById('confirmReportResultInput')?.value || '未提供';
+            const pregnancyWeeks = document.getElementById('weeksOfPregnancy')?.value || '未提供';
+            const content = `
+                您好
+                1 位異常個案如下：
+
+                報告編號：${reportId}
+                個案姓名：${name}
+                病歷號：${mrNumber}
+                送檢院所：${institution}
+                送檢醫師：${physician}
+                報告結果：${result}
+                此個案已懷孕滿 ${pregnancyWeeks} 週，請問個案後續狀況如何?
+
+                (NIPS異常個案)
+                1. 是否抽羊水？如是，抽羊水時間？
+                或
+                2. 已轉它院（檢體是否會進件？ 或 無法追蹤？）
+
+                (CS異常個案)
+                此個案已懷孕 ${pregnancyWeeks} 週，請協助詢問配偶是否進行檢測？
+                    `;
+
+            document.getElementById('emailContent').textContent = content;
+            new bootstrap.Modal(document.getElementById('emailPreviewModal')).show();
+        });
+
+        document.getElementById('sendEmailBtn').addEventListener('click', function () {
+            const sender = document.getElementById('senderEmail').value;
+            const recipient = document.getElementById('recipientEmail').value;
+            const content = document.getElementById('emailContent').textContent;
+            fetch('/api/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sender, recipient, content })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success) {
+                        alert("信件已成功寄出！");
+                        bootstrap.Modal.getInstance(document.getElementById('emailPreviewModal')).hide();
+                    } else {
+                        alert("寄信失敗：" + res.message);
+                    }
+                })
+                .catch(err => {
+                    alert("寄信錯誤：" + err);
+                });
+
+            // 模擬寄出（實際可改成呼叫 API）
+            @* console.log("寄件人：", sender);
+            console.log("收件人：", recipient);
+            console.log("信件內容：\n", content);
+
+            alert("信件已模擬寄出！"); *@
+            bootstrap.Modal.getInstance(document.getElementById('emailPreviewModal')).hide();
+        });
     });
 
     function loadSpecimenTypeOptions(columnName) {
@@ -271,4 +394,5 @@
             window.close();
         }
     }
+    
 </script>
