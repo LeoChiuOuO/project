@@ -66,6 +66,21 @@ namespace WebApplication_Dianthus.Services
             return result;
         }
 
+        public byte[] ExportSimplifiedReports(ReportFilter filter)
+        {
+            var reports = _repo.GetSimplifiedReportsForExport(filter);
+            var dtoList = _mapper.Map<List<ReportDTO>>(reports);
+            return _excelExporter.ExportReports(dtoList);
+        }
+
+        public byte[] ExportFullReports(ReportFilter filter)
+        {
+            var reports = _repo.GetFullReportsForExport(filter);
+            var dtoList = _mapper.Map<List<Report>>(reports);
+            return _excelExporter.ExportReports(dtoList);
+        }
+
+
         public PagedResult<ReportDTO> SearchReports(ReportFilter filter)
         {
             var pagedResult = _repo.Search(filter);

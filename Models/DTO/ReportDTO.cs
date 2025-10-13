@@ -8,6 +8,7 @@ public class ReportDTO
     public string InspectionProgress { get; set; }
     public int MrNumber { get; set; }
     public string Name { get; set; }
+    public string Remark { get; set; }
 
     public string TestItemName { get; set; }
 

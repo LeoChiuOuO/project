@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "報表列表";
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <div class="target-report-main">
     <div class="target-report-body">
@@ -35,7 +36,10 @@
                 <input type="text" id="keyword" placeholder="輸入姓名/檢體編號...">
             </div>
             <div style="position: absolute; right: 10px;">
-                <button id="exportExcel" class="btn btn-success">匯出Excel檔案</button>
+                <label id="exportExcel" ">匯出Excel檔案</label>
+                <button id="exportSimplifiedBtn" class="btn btn-outline-success">簡化匯出</button>
+                <button id="exportFullBtn" class="btn btn-outline-success">完整匯出</button>
+
             </div>    
         </div>
         <div>
@@ -109,7 +113,8 @@
 @section Scripts {
 <script>
     let originalTestItems = [];
-    let currentReports = []; // 放後端撈回來的資料，給關鍵字即時篩選
+    let currentFilter = {}; // 全域儲存目前查詢條件
+    let currentReports = []; // 儲存目前頁面資料
     let sortField = null;
     let sortAsc = true;
 
@@ -136,9 +141,11 @@
         $('#btnItem').on('click', function(){
             $('#reportModal').modal('show');
         });
+
         $('#exportExcel').on('click', function () {
             // 1. 蒐集篩選條件
            // 讀取 checkbox 勾選值
+           const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
             const notifyStatusFilters = $('input[name="notifyStatus"]:checked')
                 .map(function () { return $(this).val(); })
                 .get();
@@ -148,13 +155,14 @@
                 .get();
 
             const params = {
+                selectedItems:selectedItems,
                 dateFrom: $('#dateFrom').val(),
                 dateTo: $('#dateTo').val(),
                 keyword: $('#keyword').val(),
                 notifyStatus: notifyStatusFilters,
                 trackStatus: trackStatusFilters
             };
-
+            console.log("匯出Excel",params);
             // 2. 呼叫 API 下載檔案
             $('#exportExcel').prop('disabled', true).text('匯出中...');
             $.ajax({
@@ -188,8 +196,43 @@
             });
         });
 
+        $('#exportSimplifiedBtn').on('click', function () {
+            var currentFilter = getCurrentFilter();
+            fetch('/api/report/export/simplified', {
+                method: 'POST',
+                body: JSON.stringify(currentFilter),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.blob()).then(blob => {
+                saveAs(blob, '簡化報告.xlsx');
+            });
+        });
+
+        $('#exportFullBtn').on('click', function () {
+            var currentFilter = getCurrentFilter();
+            fetch('/api/report/export/full', {
+                method: 'POST',
+                body: JSON.stringify(currentFilter),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.blob()).then(blob => {
+                saveAs(blob, '完整報告.xlsx');
+            });
+        });
+
+
         renderTable(0);
     });
+
+    function getCurrentFilter() {
+        return {
+            testItemIds: $('#searchItem .test-item').map((_, el) => $(el).data('id')).get(),
+            notifyStatus: $('input[name="notifyStatus"]:checked').map((_, el) => $(el).val()).get(),
+            trackStatus: $('input[name="trackStatus"]:checked').map((_, el) => $(el).val()).get(),
+            dateFrom: $('#dateFrom').val(),
+            dateTo: $('#dateTo').val(),
+            keyword: $('#keyword').val()
+        };
+    }
+
 
     document.addEventListener("DOMContentLoaded", function () {
         const topContainer = document.getElementById("testItemContainer");
@@ -303,20 +346,22 @@
         }
 
         // 打包資料
-        const filterData = {
+        currentFilter  = {
             testItemIds: selectedItems,
             dateFrom,
             dateTo,
             notifyStatus,
             trackStatus,
-            keyword
+            keyword,
+            page: 1,
+            pageSize: 10
         };
-
+        console.log("送出查詢條件：", currentFilter);
         // 傳送到後端
         fetch('/api/report/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(filterData)
+            body: JSON.stringify(currentFilter)
         })
         .then(response => response.json())
         .then(res => {
@@ -329,7 +374,6 @@
         .catch(error => {
             console.error("搜尋失敗：", error);
         });
-
     }
 
     function getSelectedValues(name) {
@@ -339,37 +383,58 @@
     }
 
     function loadReports(page) {
-        // 讀取 checkbox 勾選值
-        const notifyStatusFilters = $('input[name="notifyStatus"]:checked')
-            .map(function () { return $(this).val(); })
-            .get();
+        if (!currentFilter || Object.keys(currentFilter).length === 0) {
+            alert("尚未執行查詢，請先選擇條件後點擊查詢");
+            return;
+        }
 
-        const trackStatusFilters = $('input[name="trackStatus"]:checked')
-            .map(function () { return $(this).val(); })
-            .get();
+        const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        const notifyStatus = Array.from(document.querySelectorAll('input[name="notifyStatus"]:checked')).map(cb => cb.value);
+        const trackStatus = Array.from(document.querySelectorAll('input[name="trackStatus"]:checked')).map(cb => cb.value);
+        const keyword = document.getElementById('keyword').value.trim();
+
+        // 計算有效條件數量
+        let conditionCount = 0;
+        if (selectedItems.length > 0) conditionCount++;
+        if (dateFrom || dateTo) conditionCount++;
+        if (notifyStatus.length > 0 || trackStatus.length > 0) conditionCount++;
+        if (keyword !== "") conditionCount++;
+
+        // 限制：至少要有兩項條件
+        if (conditionCount < 2) {
+            alert("請至少選擇兩項篩選條件，避免查詢過多資料！");
+            return;
+        }
 
         const params = {
+            testItemIds: selectedItems,
+            dateFrom,
+            dateTo,
+            notifyStatus,
+            trackStatus,
+            keyword,
             page: page,
-            pageSize: 10,
-            dateFrom: $('#dateFrom').val(),
-            dateTo: $('#dateTo').val(),
-            keyword: $('#keyword').val(),
-            notifyStatus: notifyStatusFilters,
-            trackStatus: trackStatusFilters
+            pageSize: 10
         };
-
-        $.ajax({
-            url: '/api/report',
-            type: 'GET',
-            data: params,
-            traditional: true, // 讓陣列參數正確序列化為 notifyStatus=0&notifyStatus=1
-            success: function (res) {
-                renderTable(res.data);
-                renderPagination(res.page, res.pageSize, res.total);
-            },
-            error: function () {
-                $('#reportTableBody').html('<tr><td colspan="12" class="text-danger text-center">查詢失敗，請稍後再試</td></tr>');
-            }
+        console.log("送出查詢條件：", params);
+        fetch('/api/report/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(res => {
+            console.log("後端回傳結果：", res);
+            currentReports = res;
+            renderTable(res.data);
+            renderPagination(res.page, res.pageSize, res.total);
+            // 可更新畫面
+        })
+        .catch(error => {
+            console.error("搜尋失敗：", error);
+            $('#reportTableBody').html('<tr><td colspan="12" class="text-danger text-center">查詢失敗，請稍後再試</td></tr>');
         });
     }
 

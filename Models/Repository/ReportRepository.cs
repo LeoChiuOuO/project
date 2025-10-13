@@ -216,7 +216,7 @@ public class ReportRepository : IReportRepository
             name AS Name,
             id_number AS IdNumber,
             mr_number AS MrNumber,
-            test_item AS TestItem,
+            test_item_id AS TestItemId,
             cost AS Cost,
             return_date AS ReturnDate,
             sending_physician_name AS SendingPhysicianName,
@@ -275,11 +275,11 @@ public class ReportRepository : IReportRepository
         parameters.Add("DateFrom", filter.DateFrom ?? DateTime.Today.AddMonths(-1));
         parameters.Add("DateTo", filter.DateTo ?? DateTime.Today);
 
-        // if (!string.IsNullOrWhiteSpace(filter.TestItem))
-        // {
-        //     sqlBuilder.Append(" AND test_item = @TestItem");
-        //     parameters.Add("TestItem", filter.TestItem);
-        // }
+        if (filter.TestItemIds != null && filter.TestItemIds.Any())
+        {
+            sqlBuilder.Append(" AND test_item_id = @TestItemId");
+            parameters.Add("TestItemId", filter.TestItemIds);
+        }
 
         if (filter.NotifyStatus != null && filter.NotifyStatus.Any())
         {
@@ -307,6 +307,183 @@ public class ReportRepository : IReportRepository
         }
 
         sqlBuilder.Append(" ORDER BY testing_date DESC");
+
+        return _db.Query<Report>(sqlBuilder.ToString(), parameters);
+    }
+
+    public IEnumerable<Report> GetSimplifiedReportsForExport(ReportFilter filter)
+    {
+        var sql = @"
+            SELECT
+                r.id AS Id,
+                r.report_id AS ReportId,
+                r.test_item_id AS TestItemId,
+                ti.name AS TestItemName,
+                r.name AS Name,
+                r.mr_number AS MrNumber,
+                r.specimen_number AS SpecimenNumber,
+                r.testing_date AS TestingDate,
+                r.report_date AS ReportDate,
+                r.notification_status AS NotificationStatus,
+                r.tracking_status AS TrackingStatus,
+                r.sending_physician_name AS SendingPhysicianName,
+                r.inspection_institution AS InspectionInstitution,
+                r.remark AS Remark
+            FROM reports r
+            LEFT JOIN test_item ti ON r.test_item_id = ti.id
+            WHERE r.testing_date BETWEEN @DateFrom AND @DateTo
+        ";
+
+        var parameters = new DynamicParameters();
+        parameters.Add("DateFrom", filter.DateFrom ?? DateTime.Today.AddMonths(-1));
+        parameters.Add("DateTo", filter.DateTo ?? DateTime.Today);
+
+        if (filter.TestItemIds?.Any() == true)
+        {
+            sql += " AND r.test_item_id IN @TestItemIds";
+            parameters.Add("TestItemIds", filter.TestItemIds);
+        }
+
+        if (filter.NotifyStatus?.Any() == true)
+        {
+            sql += " AND r.notification_status IN @NotifyStatus";
+            parameters.Add("NotifyStatus", filter.NotifyStatus);
+        }
+
+        if (filter.TrackStatus?.Any() == true)
+        {
+            sql += " AND r.tracking_status IN @TrackStatus";
+            parameters.Add("TrackStatus", filter.TrackStatus);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Keyword))
+        {
+            sql += @"
+                AND (
+                    r.specimen_number LIKE CONCAT('%', @Keyword, '%') OR
+                    r.inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
+                    r.sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
+                    r.name LIKE CONCAT('%', @Keyword, '%')
+                )
+            ";
+            parameters.Add("Keyword", filter.Keyword);
+        }
+
+        sql += " ORDER BY r.testing_date DESC";
+
+        return _db.Query<Report>(sql, parameters);
+
+    }
+    public IEnumerable<Report> GetFullReportsForExport(ReportFilter filter)
+    {
+        var sqlBuilder = new StringBuilder(@"
+        SELECT
+            r.id AS Id,
+            r.report_id AS ReportId,
+            r.medical_order AS MedicalOrder,
+            r.consent_form_state AS ConsentFormState,
+            r.specimen_dely_state AS SpecimenDelyState,
+            r.send_email_state AS SendEmailState,
+            r.product_name AS ProductName,
+            r.tracking_status AS TrackingStatus,
+            r.notification_status AS NotificationStatus,
+            r.partition_id AS PartitionId,
+            r.department_id AS DepartmentId,
+            r.submission_date AS SubmissionDate,
+            r.name AS Name,
+            r.id_number AS IdNumber,
+            r.mr_number AS MrNumber,
+            r.test_item_id AS TestItemId,
+            ti.name AS TestItemName,
+            r.cost AS Cost,
+            r.return_date AS ReturnDate,
+            r.sending_physician_name AS SendingPhysicianName,
+            r.remark AS Remark,
+            r.report_date AS ReportDate,
+            r.report_results AS ReportResults,
+            r.create_id AS CreateId,
+            r.modify_id AS ModifyId,
+            r.specimen_number AS SpecimenNumber,
+            r.testing_date AS TestingDate,
+            r.weeks_of_pregnancy AS WeeksOfPregnancy,
+            r.due_date AS DueDate,
+            r.inspection_institution AS InspectionInstitution,
+            r.inspection_institution_phone AS InspectionInstitutionPhone,
+            r.responsible_business_person AS ResponsibleBusinessPerson,
+            r.responsible_business_phone AS ResponsibleBusinessPhone,
+            r.responsible_business_email AS ResponsibleBusinessEmail,
+            r.business_manager AS BusinessManager,
+            r.business_manager_phone AS BusinessManagerPhone,
+            r.business_manager_email AS BusinessManagerEmail,
+            r.abnormal_report_delivery_method AS AbnormalReportDeliveryMethod,
+            r.abnormal_report_notification_method AS AbnormalReportNotificationMethod,
+            r.inspection_group AS InspectionGroup,
+            r.notification_circumstances AS NotificationCircumstances,
+            r.prenatal_testing_project_tracking_time AS PrenatalTestingProjectTrackingTime,
+            r.confirm_specimen_submission_time AS ConfirmSpecimenSubmissionTime,
+            r.confirm_specimen_type AS ConfirmSpecimenType,
+            r.confirm_the_test_report_results AS ConfirmTheTestReportResults,
+            r.tracking_time AS TrackingTime,
+            r.tracking AS Tracking,
+            r.tracking_results AS TrackingResults,
+            r.tracking_the_followup_status_of_NIPS_cases AS TrackingTheFollowupStatusOfNIPS_Cases,
+            r.referral_institution AS ReferralInstitution,
+            r.referring_physician AS ReferringPhysician,
+            r.written_report_processing_methood AS WrittenReportProcessingMethood,
+            r.fmr1_report_results AS Fmr1ReportResults,
+            r.chr_report_date AS ChrReportDate,
+            r.chr_report_results AS ChrReportResults,
+            r.wafer_report_date AS WaferReportDate,
+            r.wafer_report_results AS WaferReportResults,
+            r.v2_v3_testing_results AS V2V3TestingResults,
+            r.gene_report_date AS GeneReportDate,
+            r.gene_report_results AS GeneReportResults,
+            r.other_report_date AS OtherReportDate,
+            r.other_report_results AS OtherReportResults,
+            r.created_at AS CreatedAt,
+            r.updated_at AS UpdatedAt,
+            r.deleted_at AS DeletedAt
+            FROM reports r
+            LEFT JOIN test_item ti ON r.test_item_id = ti.id
+            WHERE r.testing_date BETWEEN @DateFrom AND @DateTo
+        ");
+
+        var parameters = new DynamicParameters();
+        parameters.Add("DateFrom", filter.DateFrom ?? DateTime.Today.AddMonths(-1));
+        parameters.Add("DateTo", filter.DateTo ?? DateTime.Today);
+
+        if (filter.TestItemIds?.Any() == true)
+        {
+            sqlBuilder.Append(" AND r.test_item_id IN @TestItemIds");
+            parameters.Add("TestItemIds", filter.TestItemIds);
+        }
+
+        if (filter.NotifyStatus?.Any() == true)
+        {
+            sqlBuilder.Append(" AND r.notification_status IN @NotifyStatus");
+            parameters.Add("NotifyStatus", filter.NotifyStatus);
+        }
+
+        if (filter.TrackStatus?.Any() == true)
+        {
+            sqlBuilder.Append(" AND r.tracking_status IN @TrackStatus");
+            parameters.Add("TrackStatus", filter.TrackStatus);
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Keyword))
+        {
+            sqlBuilder.Append(@"
+                AND (
+                    r.specimen_number LIKE CONCAT('%', @Keyword, '%') OR
+                    r.inspection_institution LIKE CONCAT('%', @Keyword, '%') OR
+                    r.sending_physician_name LIKE CONCAT('%', @Keyword, '%') OR
+                    r.name LIKE CONCAT('%', @Keyword, '%')
+                )
+            ");
+            parameters.Add("Keyword", filter.Keyword);
+        }
+
+        sqlBuilder.Append(" ORDER BY r.testing_date DESC");
 
         return _db.Query<Report>(sqlBuilder.ToString(), parameters);
     }

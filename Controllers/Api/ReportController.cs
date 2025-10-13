@@ -132,6 +132,21 @@ namespace WebApplication_Dianthus.Controllers.api
             }
 
         }
+        
+        [HttpPost("export/simplified")]
+        public IActionResult ExportSimplified([FromBody] ReportFilter filter)
+        {
+            var file = _reportService.ExportSimplifiedReports(filter);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "簡化報告.xlsx");
+        }
+
+        [HttpPost("export/full")]
+        public IActionResult ExportFull([FromBody] ReportFilter filter)
+        {
+            var file = _reportService.ExportFullReports(filter);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "完整報告.xlsx");
+        }
+
         [HttpPost("/api/email/send")]
         public async Task<IActionResult> SendEmail([FromBody] EmailDTO dto)
         {
