@@ -45,6 +45,7 @@
         <div>
             <button id="serach" class="btn btn-primary" onclick=serach()>搜尋</button>
             <label style="font-size: smaller;">系統不會自動帶出資料，請輸入上方篩選條件並點選[搜尋]按鈕，謝謝</label>
+            <div id="queryDuration" class="text-muted mt-2"></div>
         </div>
 
         <!-- 報表列表 -->
@@ -271,6 +272,8 @@
     }
 
     function serach() {
+        const startTime = new Date(); // ✅ 記錄開始時間
+
         const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
         const dateFrom = document.getElementById('dateFrom').value;
         const dateTo = document.getElementById('dateTo').value;
@@ -311,6 +314,12 @@
         })
         .then(response => response.json())
         .then(res => {
+            const endTime = new Date(); // ✅ 記錄結束時間
+            const durationMs = endTime - startTime;
+            const seconds = Math.floor((durationMs / 1000) % 60);
+            const minutes = Math.floor(durationMs / 1000 / 60);
+            const milliseconds = durationMs % 1000;
+            $('#queryDuration').text(`查詢花費時間：${minutes}分${seconds}秒${milliseconds}毫秒`);
             console.log("後端回傳結果：", res);
             currentReports = res;
             renderTable(res.data);
