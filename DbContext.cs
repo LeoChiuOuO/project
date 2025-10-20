@@ -75,13 +75,19 @@ public class AppDbContext : DbContext
             .HasOne(r => r.Partition)
             .WithMany(p => p.Reports)
             .HasForeignKey(r => r.PartitionId);
-        
+
         modelBuilder.Entity<Report>()
         .HasOne(r => r.Group)
         .WithMany(g => g.Reports)
         .HasForeignKey(r => r.GroupId)
         .HasConstraintName("FK_Report_Group")
         .OnDelete(DeleteBehavior.SetNull);
+        
+        modelBuilder.Entity<OperationLog>()
+        .Property(o => o.CreatedAt)
+        .HasColumnName("created_at")
+        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
 
     }
 }

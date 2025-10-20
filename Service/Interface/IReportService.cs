@@ -9,7 +9,6 @@ namespace WebApplication_Dianthus.Models.Service.Interface
 
         Report? GetReportById(int id);
         List<string> GetSpecimenTypeOptions(string columnName);
-        byte[] ExportReports(ReportFilter filter);
         byte[] ExportSimplifiedReports(ReportFilter filter);
         byte[] ExportFullReports(ReportFilter filter);
         List<TestItem> GetAllTestItem();

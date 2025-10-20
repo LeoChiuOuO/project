@@ -1,0 +1,119 @@
+@model IEnumerable<OperationLog>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<div>
+    <div>
+        <div>
+            <label style="width: 120px;">使用者名稱：</label>
+            <input id="userName" type="text">
+        </div>
+        <div>
+            <label style="width: 120px;">查詢時間區間：</label>
+            <input type="date" id="dateFrom"> ～ <input type="date" id="dateTo">
+        </div>
+        <div>
+            <button class="btn btn-primary" id="search">查詢</button>
+        </div>
+        <div>
+            <button class="btn btn-success" id="exportExcel">匯出Excel</button>
+        </div>
+    </div>
+    <div style="max-height: 580px; overflow-y: auto;">
+        <table class="table" id="logTable">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>使用者</th>
+                    <th>模組</th>
+                    <th>動作</th>
+                    <th>成功</th>
+                    <th>IP</th>
+                    <th>操作內容</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let cachedLogs = []; // 全域暫存查詢結果
+
+    $("#search").on('click', function () {
+        const userName = $('#userName').val();
+        const dateFrom = $('#dateFrom').val();
+        const dateTo = $('#dateTo').val();
+
+        const params = new URLSearchParams({
+            userName: userName,
+            from: dateFrom,
+            to: dateTo
+        });
+
+        fetch('/api/log/search?' + params.toString())
+            .then(async res => {
+                const text = await res.text();
+                try {
+                    const json = JSON.parse(text);
+                    cachedLogs = json;
+                    renderLogs(json);
+                } catch (err) {
+                    console.error("解析失敗：", text);
+                    $('#logTable tbody').html('<tr><td colspan="7" class="text-danger text-center">查詢失敗，請稍後再試</td></tr>');
+                }
+            });
+
+    });
+
+    // 匯出 Excel
+    $('#exportExcel').on('click', function () {
+        if (!cachedLogs || cachedLogs.length === 0) {
+        alert("目前沒有可匯出的資料");
+        return;
+        }
+
+        // 產生時間戳記
+        const now = new Date();
+        const pad = n => n.toString().padStart(2, '0');
+        const timestamp = 
+            now.getFullYear().toString() +
+            pad(now.getMonth() + 1) +
+            pad(now.getDate()) + '_' +
+            pad(now.getHours()) +
+            pad(now.getMinutes()) +
+            pad(now.getSeconds());
+
+        const filename = `${timestamp}_操作紀錄.xlsx`;
+
+         // 產生 Excel
+        const worksheet = XLSX.utils.json_to_sheet(cachedLogs);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "操作紀錄");
+        XLSX.writeFile(workbook, filename);
+    });
+
+    function renderLogs(logs) {
+        const tbody = $('#logTable tbody');
+        tbody.empty();
+
+        if (!logs || logs.length === 0) {
+            tbody.append('<tr><td colspan="7" class="text-center text-muted">查無紀錄</td></tr>');
+            return;
+        }
+
+        logs.forEach(log => {
+            const row = $(`
+                <tr>
+                    <td>${log.createdAt?.substring(0, 19).replace('T', ' ')}</td>
+                    <td>${log.userName}</td>
+                    <td>${log.module}</td>
+                    <td>${log.actionType}</td>
+                    <td>${log.success ? '✅' : '❌'}</td>
+                    <td>${log.ipAddress}</td>
+                    <td>${log.description}</td>
+                </tr>
+            `);
+            tbody.append(row);
+        });
+    }
+
+</script>

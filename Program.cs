@@ -42,15 +42,18 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// 註冊服務
+// 註冊 Repository
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
 
 builder.Services.AddTransient<ExcelExporter>();
 
+// 註冊 Service
+builder.Services.AddScoped<IOperationLogService, OperationLogService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IOBPatientService, OBPatientService>();
@@ -62,7 +65,10 @@ builder.Services.AddAutoMapper(typeof(ReportProfile));
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
+
 var app = builder.Build();
+
+
 
 // 中介軟體順序
 if (!app.Environment.IsDevelopment())

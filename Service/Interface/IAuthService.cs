@@ -8,4 +8,5 @@ public interface IAuthService
     void UpdateLastLoginDate(User user);
     bool HasPermission(string permissionName, string action);
     (int? PartitionId, int? DepartmentId) GetDataScope(string permissionName);
+    UserContext GetUserContext();
 }

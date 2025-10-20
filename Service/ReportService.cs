@@ -18,14 +18,16 @@ namespace WebApplication_Dianthus.Services
         private readonly IReportRepository _repo;
         private readonly ExcelExporter _excelExporter;
         private readonly IMapper _mapper;
+        private readonly IOperationLogService _log;
 
-        public ReportService(IDbConnection db, IAuthService auth, IReportRepository repo, ExcelExporter excelExporter, IMapper mapper)
+        public ReportService(IDbConnection db, IAuthService auth, IReportRepository repo, ExcelExporter excelExporter, IMapper mapper, IOperationLogService log,IHttpContextAccessor http)
         {
             _db = db;
             _auth = auth;
             _repo = repo;
             _excelExporter = excelExporter;
             _mapper = mapper;
+            _log = log;
         }
 
         public void CreateReport(Report report)
@@ -50,7 +52,17 @@ namespace WebApplication_Dianthus.Services
 
         public bool UpdateReport(ReportUpdateDto report)
         {
-            return _repo.UpdateReport(report);
+            var success = _repo.UpdateReport(report);
+            _log.Log(
+                actionType: "Update",
+                module: "Report",
+                success: success,
+                description: success
+                    ? $"更新報告成功：ID={report.Id}"
+                    : $"更新報告失敗：ID={report.Id}"
+            );
+
+            return success;
         }
 
         public List<string> GetSpecimenTypeOptions(string columnName)
@@ -58,60 +70,72 @@ namespace WebApplication_Dianthus.Services
             return _repo.GetDistinctSpecimenTypes(columnName);
         }
 
-        public byte[] ExportReports(ReportFilter filter)
-        {
-            var reports = _repo.GetReportsForExport(filter);
-            var dtoList = _mapper.Map<List<ReportDTO>>(reports);
-            var result = _excelExporter.ExportReports(dtoList);
-            return result;
-        }
-
         public byte[] ExportSimplifiedReports(ReportFilter filter)
         {
-            var reports = _repo.GetSimplifiedReportsForExport(filter);
-            var dtoList = _mapper.Map<List<ReportDTO>>(reports);
-            return _excelExporter.ExportReports(dtoList);
+            try{
+                var reports = _repo.GetSimplifiedReportsForExport(filter);
+                var dtoList = _mapper.Map<List<ReportDTO>>(reports);
+                _log.Log(actionType: "ExportSimplified", module: "Report", success: true, description: "ExportSimplified匯出成功");
+                return _excelExporter.ExportReports(dtoList);
+            }catch(Exception ex)
+            {
+                _log.Log(actionType: "ExportSimplified", module: "Report", success: false, description: "ExportSimplified匯出失敗: " + ex.Message);
+                return null;
+            }
         }
 
         public byte[] ExportFullReports(ReportFilter filter)
         {
-            var reports = _repo.GetFullReportsForExport(filter);
-            var dtoList = _mapper.Map<List<Report>>(reports);
-            return _excelExporter.ExportReports(dtoList);
+            try{
+                var reports = _repo.GetFullReportsForExport(filter);
+                var dtoList = _mapper.Map<List<Report>>(reports);
+                _log.Log(actionType: "ExportFull", module: "Report", success: true, description: "ExportFull匯出成功");
+                return _excelExporter.ExportReports(dtoList);
+            }catch(Exception ex)
+            {
+                _log.Log(actionType: "ExportFull", module: "Report", success: false, description: "ExportFull匯出失敗: " + ex.Message);
+                return null;
+            }
         }
-
 
         public PagedResult<ReportDTO> SearchReports(ReportFilter filter)
         {
-            var pagedResult = _repo.Search(filter);
+            try{
+                var pagedResult = _repo.Search(filter);
+                var dtoList = pagedResult.Data.Select(r => new ReportDTO
+                {
+                    Id = r.Id,
+                    SpecimenNumber = r.SpecimenNumber,
+                    SpecimenType = r.SpecimenType,
+                    InspectionProgress = r.InspectionProgress,
+                    MrNumber = r.MrNumber,
+                    Name = r.Name,
+                    TestItemName = r.TestItem.name, // 來自 TestItem 導覽屬性
 
-            var dtoList = pagedResult.Data.Select(r => new ReportDTO
+                    ReceivedDate = r.ReceivedDate,
+                    TestingDate = r.TestingDate,
+                    ReportDate = r.ReportDate,
+                    InspectionInstitution = r.InspectionInstitution,
+                    SendingPhysicianName = r.SendingPhysicianName,
+                    AssessmentStatus = r.AssessmentStatus,
+                    NotificationStatus = r.NotificationStatus,
+                    TrackingStatus = r.TrackingStatus
+                }).ToList();
+
+                _log.Log(actionType: "Search", module: "Report", success: true, description: "");
+
+                return new PagedResult<ReportDTO>
+                {
+                    Data = dtoList,
+                    Total = pagedResult.Total,
+                    Page = pagedResult.Page,
+                    PageSize = pagedResult.PageSize
+                };
+            }catch (Exception ex)
             {
-                Id = r.Id,
-                SpecimenNumber = r.SpecimenNumber,
-                SpecimenType = r.SpecimenType,
-                InspectionProgress = r.InspectionProgress,
-                MrNumber = r.MrNumber,
-                Name = r.Name,
-                TestItemName = r.TestItem.name, // ✅ 來自 TestItem 導覽屬性
-
-                ReceivedDate = r.ReceivedDate,
-                TestingDate = r.TestingDate,
-                ReportDate = r.ReportDate,
-                InspectionInstitution = r.InspectionInstitution,
-                SendingPhysicianName = r.SendingPhysicianName,
-                AssessmentStatus = r.AssessmentStatus,
-                NotificationStatus = r.NotificationStatus,
-                TrackingStatus = r.TrackingStatus
-            }).ToList();
-
-            return new PagedResult<ReportDTO>
-            {
-                Data = dtoList,
-                Total = pagedResult.Total,
-                Page = pagedResult.Page,
-                PageSize = pagedResult.PageSize
-            };
+                _log.Log(actionType: "Search", module: "Report", success: false, description: ex.Message);
+                return new PagedResult<ReportDTO>();
+            }
         }
 
         public List<TestItem> GetAllTestItem()

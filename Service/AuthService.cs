@@ -135,4 +135,20 @@ public class AuthService : IAuthService
         return (null, null);
     }
 
+    public UserContext GetUserContext()
+    {
+        var user = GetCurrentUser();
+        var ip = _http.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "0.0.0.0";
+        var (partitionId, departmentId) = GetDataScope("Report");
+
+        return new UserContext
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Ip = ip,
+            PartitionId = partitionId,
+            DepartmentId = departmentId
+        };
+    }
+
 }

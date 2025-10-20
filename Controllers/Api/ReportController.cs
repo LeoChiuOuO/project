@@ -100,38 +100,6 @@ namespace WebApplication_Dianthus.Controllers.api
             var types = _reportService.GetSpecimenTypeOptions(columnName);
             return Ok(types);
         }
-
-        [HttpGet("/api/report/export")]
-        public IActionResult Export([FromQuery] ReportFilter filter)
-        {
-            try
-            {
-                var filters = new ReportFilter
-                {
-                    TestItemIds = filter.TestItemIds ?? new List<int>(),
-                    DateFrom = filter.DateFrom,
-                    DateTo = filter.DateTo,
-                    Keyword = filter.Keyword,
-                    NotifyStatus = filter.NotifyList ?? new List<string>(),
-                    TrackStatus = filter.TrackList ?? new List<string>(),
-                    Page = 1,
-                    PageSize = int.MaxValue
-                };
-
-                var fileBytes = _reportService.ExportReports(filters);
-                var filename = $"reports_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-
-                return File(fileBytes,
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    filename);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"匯出失敗: {ex.Message}");
-            }
-
-        }
         
         [HttpPost("export/simplified")]
         public IActionResult ExportSimplified([FromBody] ReportFilter filter)

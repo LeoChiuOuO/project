@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApplication_Dianthus.Models.Service.Interface;
 
 public class AuthController : Controller
 {
     private readonly IAuthService _authService;
+    private readonly IOperationLogService _log;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IOperationLogService log)
     {
         _authService = authService;
+        _log = log;
     }
 
     [HttpGet]
@@ -30,9 +33,13 @@ public class AuthController : Controller
 
                 _authService.UpdateLastLoginDate(user);
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
+                HttpContext.Session.SetString("UserName", user.Name);
+                _log.Log(actionType: "Login", module: "Auth", success: true, description: "使用者登入成功");
+
                 return Json(new { success = true, message = "登入成功" });
             }
-
+            
+            _log.Log(actionType: "Login",module: "Auth",success: false,description: "帳號或密碼錯誤");
             return Json(new { success = false, message = "帳號或密碼錯誤" });
         }
         catch (Exception ex)
