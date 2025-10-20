@@ -55,7 +55,7 @@ namespace WebApplication_Dianthus.Services
             var success = _repo.UpdateReport(report);
             _log.Log(
                 actionType: "Update",
-                module: "Report",
+                module: "ReportService",
                 success: success,
                 description: success
                     ? $"更新報告成功：ID={report.Id}"
@@ -75,11 +75,11 @@ namespace WebApplication_Dianthus.Services
             try{
                 var reports = _repo.GetSimplifiedReportsForExport(filter);
                 var dtoList = _mapper.Map<List<ReportDTO>>(reports);
-                _log.Log(actionType: "ExportSimplified", module: "Report", success: true, description: "ExportSimplified匯出成功");
+                _log.Log(actionType: "ExportSimplified", module: "ReportService", success: true, description: "ExportSimplified匯出成功");
                 return _excelExporter.ExportReports(dtoList);
             }catch(Exception ex)
             {
-                _log.Log(actionType: "ExportSimplified", module: "Report", success: false, description: "ExportSimplified匯出失敗: " + ex.Message);
+                _log.Log(actionType: "ExportSimplified", module: "ReportService", success: false, description: "ExportSimplified匯出失敗: " + ex.Message);
                 return null;
             }
         }
@@ -89,11 +89,11 @@ namespace WebApplication_Dianthus.Services
             try{
                 var reports = _repo.GetFullReportsForExport(filter);
                 var dtoList = _mapper.Map<List<Report>>(reports);
-                _log.Log(actionType: "ExportFull", module: "Report", success: true, description: "ExportFull匯出成功");
+                _log.Log(actionType: "ExportFull", module: "ReportService", success: true, description: "ExportFull匯出成功");
                 return _excelExporter.ExportReports(dtoList);
             }catch(Exception ex)
             {
-                _log.Log(actionType: "ExportFull", module: "Report", success: false, description: "ExportFull匯出失敗: " + ex.Message);
+                _log.Log(actionType: "ExportFull", module: "ReportService", success: false, description: "ExportFull匯出失敗: " + ex.Message);
                 return null;
             }
         }
@@ -122,7 +122,7 @@ namespace WebApplication_Dianthus.Services
                     TrackingStatus = r.TrackingStatus
                 }).ToList();
 
-                _log.Log(actionType: "Search", module: "Report", success: true, description: "");
+                _log.Log(actionType: "Search", module: "ReportService", success: true, description: "");
 
                 return new PagedResult<ReportDTO>
                 {
@@ -133,7 +133,7 @@ namespace WebApplication_Dianthus.Services
                 };
             }catch (Exception ex)
             {
-                _log.Log(actionType: "Search", module: "Report", success: false, description: ex.Message);
+                _log.Log(actionType: "Search", module: "ReportService", success: false, description: ex.Message);
                 return new PagedResult<ReportDTO>();
             }
         }

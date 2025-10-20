@@ -7,7 +7,12 @@ namespace WebApplication_Dianthus.Models
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepo;
-        public UserService(IUserRepository userRepo) => _userRepo = userRepo;
+        private readonly IOperationLogService _log;
+        public UserService(IUserRepository userRepo, IOperationLogService log)
+        {
+            _userRepo = userRepo;
+            _log = log;
+        }
 
         public IEnumerable<User> GetAllUsers() => _userRepo.GetAll();
         public User GetByAccout(string account) => _userRepo.GetByAccount(account);
@@ -15,7 +20,10 @@ namespace WebApplication_Dianthus.Models
         public void CreateUser(User user)
         {
             var existing = _userRepo.GetByAccount(user.Account);
+            var success = true;
             if (existing != null){
+                success = false;
+                _log.Log(actionType: "CreateUser",module: "UserService", success: success, description: "帳號已存在，請使用其他帳號");
                 throw new ArgumentException("帳號已存在，請使用其他帳號");
             }
             if (string.IsNullOrWhiteSpace(user.Password)){
@@ -27,7 +35,7 @@ namespace WebApplication_Dianthus.Models
             }
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
+            _log.Log(actionType: "CreateUser",module: "UserService", success: success, description: "帳號建立成功");
             _userRepo.Add(user);
 
         }

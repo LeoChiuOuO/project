@@ -13,10 +13,11 @@ namespace WebApplication_Dianthus.Controllers.api
     {
         private readonly IReportService _reportService;
 
-
-        public ReportController(IReportService reportService)
+        private readonly IOperationLogService _log;
+        public ReportController(IReportService reportService, IOperationLogService log)
         {
             _reportService = reportService;
+            _log = log;
         }
 
         [HttpGet]
@@ -48,7 +49,7 @@ namespace WebApplication_Dianthus.Controllers.api
         {
             var reports = _reportService.SearchReports(filter);
             if (reports == null) return NotFound();
-
+            _log.Log(actionType: "Search",module: "ReportController", success: true, description: "搜尋成功");
             return Ok(reports);
         }
 
@@ -58,10 +59,12 @@ namespace WebApplication_Dianthus.Controllers.api
             try
             {
                 _reportService.CreateReport(report);
+                _log.Log(actionType: "CreateReport",module: "ReportController", success: true, description: "建立成功");
                 return Ok("新增成功");
             }
             catch (UnauthorizedAccessException ex)
             {
+                _log.Log(actionType: "CreateReport",module: "ReportController", success: false, description: "建立失敗:" + ex.Message);
                 return Forbid(ex.Message);
             }
         }
@@ -69,13 +72,18 @@ namespace WebApplication_Dianthus.Controllers.api
         [HttpPut("/api/report/{id}")]
         public IActionResult UpdateReport(int id, [FromBody] ReportUpdateDto updated)
         {
-            if (updated == null || updated.Id != id)
+            if (updated == null || updated.Id != id){
+                _log.Log(actionType: "UpdateReport",module: "ReportController", success: false, description: "報告資料無效");
                 return BadRequest("報告資料無效");
+            }
 
             var success = _reportService.UpdateReport(updated);
-            if (!success)
+            if (!success){
+                _log.Log(actionType: "UpdateReport",module: "ReportController", success: success, description: "更新失敗");
                 return StatusCode(500, "更新失敗");
-
+            }
+                
+            _log.Log(actionType: "UpdateReport",module: "ReportController", success: success, description: "更新成功");
             return Ok();
         }
 
