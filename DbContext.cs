@@ -51,6 +51,18 @@ public class AppDbContext : DbContext
             .WithMany(p => p.RolePermissions)
             .HasForeignKey(rp => rp.PermissionsId);
 
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Department)
+            .WithMany()
+            .HasForeignKey(rp => rp.DepartmentId)
+            .OnDelete(DeleteBehavior.Restrict); // 避免 cascade delete
+
+        modelBuilder.Entity<RolePermission>()
+            .HasOne(rp => rp.Partition)
+            .WithMany()
+            .HasForeignKey(rp => rp.PartitionId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.Entity<Department>()
             .HasOne(d => d.Partition)
             .WithMany()
@@ -88,6 +100,9 @@ public class AppDbContext : DbContext
         .HasColumnName("created_at")
         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-
+        modelBuilder.Entity<Partition>().ToTable("partition");
+        modelBuilder.Entity<Department>().ToTable("department");
+        modelBuilder.Entity<Permission>().ToTable("permissions");
+        modelBuilder.Entity<Role>().ToTable("roles");
     }
 }

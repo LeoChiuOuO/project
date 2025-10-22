@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.DTO;
@@ -12,12 +13,18 @@ namespace WebApplication_Dianthus.Controllers.api
     public class ReportController : ControllerBase
     {
         private readonly IReportService _reportService;
-
+        private readonly IUserService _userService;
+        private readonly IAuthService _authService;
         private readonly IOperationLogService _log;
-        public ReportController(IReportService reportService, IOperationLogService log)
+        public ReportController(IReportService reportService,
+                                IOperationLogService log,
+                                IUserService userService,
+                                IAuthService authService)
         {
             _reportService = reportService;
             _log = log;
+            _userService = userService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -47,7 +54,11 @@ namespace WebApplication_Dianthus.Controllers.api
         [HttpPost("search")]
         public IActionResult Search([FromBody] ReportFilter filter)
         {
-            var reports = _reportService.SearchReports(filter);
+            var partitionId = HttpContext.Session.GetString("PartitionId");
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            var roleId = _userService.GetRoleIdByUserId(userId);
+            var isAdmin = _authService.IsAdmin(userId);
+            var reports = _reportService.SearchReports(filter, partitionId, isAdmin);
             if (reports == null) return NotFound();
             _log.Log(actionType: "Search",module: "ReportController", success: true, description: "搜尋成功");
             return Ok(reports);
@@ -70,7 +81,7 @@ namespace WebApplication_Dianthus.Controllers.api
         }
 
         [HttpPut("/api/report/{id}")]
-        public IActionResult UpdateReport(int id, [FromBody] ReportUpdateDto updated)
+        public IActionResult UpdateReport(int id, [FromBody] ReportUpdateDTO updated)
         {
             if (updated == null || updated.Id != id){
                 _log.Log(actionType: "UpdateReport",module: "ReportController", success: false, description: "報告資料無效");

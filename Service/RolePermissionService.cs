@@ -9,7 +9,12 @@ public class RolePermissionService : IRolePermissionService
 
     public IEnumerable<RolePermission> GetAllRolePermissions() => _rpRepo.GetAll();
     public RolePermission GetRolePermission(int id) => _rpRepo.GetById(id);
+    public RolePermission GetRolePermissionByRoleId(int id) => _rpRepo.GetRolePermissionByRoleId(id);
     public void CreateRolePermission(RolePermission rolePermission) => _rpRepo.Add(rolePermission);
-    public void UpdateRolePermission(RolePermission rolePermission) => _rpRepo.Update(rolePermission);
-    public void DeleteRolePermission(int id) => _rpRepo.Delete(id);
+    public void UpdateRolePermission(int roleId, int permissionId, int partitionId, int departmentId, int operatorId)
+    {
+        _rpRepo.Update(roleId, permissionId, partitionId, departmentId, operatorId);
+    }
+    
+    public void DeleteRolePermission(int id, int modifierId) => _rpRepo.Delete(id, modifierId);
 }

@@ -7,16 +7,22 @@ namespace WebApplication_Dianthus.Models
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IUserRoleRepository _userRoleRepo;
+        private readonly IRolePermissionRepository _rolePermissionRepo;
         private readonly IOperationLogService _log;
-        public UserService(IUserRepository userRepo, IOperationLogService log)
+        public UserService(IUserRepository userRepo, IOperationLogService log, IUserRoleRepository userRoleRepo, IRolePermissionRepository rolePermission)
         {
             _userRepo = userRepo;
             _log = log;
+            _userRoleRepo = userRoleRepo;
+            _rolePermissionRepo = rolePermission; 
         }
 
         public IEnumerable<User> GetAllUsers() => _userRepo.GetAll();
         public User GetByAccout(string account) => _userRepo.GetByAccount(account);
         public User GetById(int id) => _userRepo.GetById(id);
+
+        public string GetRoleIdByUserId(int id) => _userRoleRepo.GetRoleIdsByUserId(id);
         public void CreateUser(User user)
         {
             var existing = _userRepo.GetByAccount(user.Account);
@@ -80,5 +86,15 @@ namespace WebApplication_Dianthus.Models
         }
 
         public void DeleteUser(int id) => _userRepo.Delete(id);
+
+        public int GetPartitionIdsByRoleIds(int id)
+        {
+            return _rolePermissionRepo.GetPartitionIdsByRoleIds(id);
+        }
+
+        public int GetDepartmentIdsByRoleIds(int id)
+        {
+            return _rolePermissionRepo.GetDepartmentIdsByRoleIds(id);
+        }
     }
 }

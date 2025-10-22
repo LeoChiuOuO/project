@@ -48,5 +48,4 @@ public class UserRepository : IUserRepository
             _context.SaveChanges();
         }
     }
-
 }

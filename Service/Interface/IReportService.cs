@@ -5,7 +5,7 @@ namespace WebApplication_Dianthus.Models.Service.Interface
     public interface IReportService
     {
         PagedResult<Report> GetReports(ReportFilter filter);
-        PagedResult<ReportDTO> SearchReports(ReportFilter filter);
+        PagedResult<ReportDTO> SearchReports(ReportFilter filter, string partitionId, bool isAdmin);
 
         Report? GetReportById(int id);
         List<string> GetSpecimenTypeOptions(string columnName);
@@ -13,7 +13,7 @@ namespace WebApplication_Dianthus.Models.Service.Interface
         byte[] ExportFullReports(ReportFilter filter);
         List<TestItem> GetAllTestItem();
         void CreateReport(Report report);
-        bool UpdateReport(ReportUpdateDto report);
+        bool UpdateReport(ReportUpdateDTO report);
         void DeleteReport(int id);
     }
 }

@@ -1,0 +1,58 @@
+@using WebApplication_Dianthus.Models.DTO
+@model UserRolePermissionEditDTO
+
+<h2>編輯使用者角色權限對應</h2>
+
+<form id="editForm">
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+    <input type="hidden" name="OperatorId" value="@(User.Identity.Name)" />
+
+    <label>角色：</label>
+    <select asp-for="RoleId" asp-items="Model.RoleList" class="form-control mb-2"></select>
+
+    <label>權限：</label>
+    <select asp-for="PermissionId" asp-items="Model.PermissionList" class="form-control mb-2"></select>
+
+    <label>場域：</label>
+    <select asp-for="PartitionId" asp-items="Model.PartitionList" class="form-control mb-2"></select>
+
+    <label>部門：</label>
+    <select asp-for="DepartmentId" asp-items="Model.DepartmentList" class="form-control mb-2"></select>
+
+    <button type="submit" class="btn btn-success">儲存</button>
+</form>
+
+@section Scripts {
+<script>
+    $("#PartitionId").change(function () {
+        var partitionId = $(this).val();
+        $.get('@Url.Action("GetDepartmentsByPartition")', { partitionId: partitionId }, function (data) {
+            var $deptSelect = $("#DepartmentId");
+            $deptSelect.empty();
+            $.each(data, function (i, dept) {
+                $deptSelect.append($('<option>', {
+                    value: dept.id,
+                    text: dept.name
+                }));
+            });
+        });
+    });
+
+    $("#editForm").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '@Url.Action("EditAjax")',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    alert("更新成功！");
+                    window.location.href = '@Url.Action("Index")';
+                } else {
+                    alert("更新失敗！");
+                }
+            }
+        });
+    });
+</script>
+}

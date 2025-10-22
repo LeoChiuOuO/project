@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication_Dianthus.Models;
-public class ReportUpdateDto
+namespace WebApplication_Dianthus.Models.DTO;
+public class ReportUpdateDTO
 {
     public int Id { get; set; }
 

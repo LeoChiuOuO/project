@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Service.Interface;
 
 public class AuthController : Controller
 {
     private readonly IAuthService _authService;
     private readonly IOperationLogService _log;
+    private readonly IUserService _userService;
 
-    public AuthController(IAuthService authService, IOperationLogService log)
+    public AuthController(IAuthService authService, IOperationLogService log,IUserService userService)
     {
         _authService = authService;
         _log = log;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -32,8 +35,14 @@ public class AuthController : Controller
                 }
 
                 _authService.UpdateLastLoginDate(user);
+                var roleId = int.Parse(_userService.GetRoleIdByUserId(user.Id));
+                var partitionId = _userService.GetPartitionIdsByRoleIds(roleId);
+                var departmentId = _userService.GetDepartmentIdsByRoleIds(roleId);
+
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 HttpContext.Session.SetString("UserName", user.Name);
+                HttpContext.Session.SetString("PartitionId", partitionId.ToString());
+                HttpContext.Session.SetString("DepartmentId", departmentId.ToString());
                 _log.Log(actionType: "Login", module: "Auth", success: true, description: "使用者登入成功");
 
                 return Json(new { success = true, message = "登入成功" });

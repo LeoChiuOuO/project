@@ -50,7 +50,7 @@ namespace WebApplication_Dianthus.Services
             return _repo.GetReports(filter);
         }
 
-        public bool UpdateReport(ReportUpdateDto report)
+        public bool UpdateReport(ReportUpdateDTO report)
         {
             var success = _repo.UpdateReport(report);
             _log.Log(
@@ -98,10 +98,10 @@ namespace WebApplication_Dianthus.Services
             }
         }
 
-        public PagedResult<ReportDTO> SearchReports(ReportFilter filter)
+        public PagedResult<ReportDTO> SearchReports(ReportFilter filter, string partitionId, bool isAdmin)
         {
             try{
-                var pagedResult = _repo.Search(filter);
+                var pagedResult = _repo.Search(filter, partitionId, isAdmin);
                 var dtoList = pagedResult.Data.Select(r => new ReportDTO
                 {
                     Id = r.Id,

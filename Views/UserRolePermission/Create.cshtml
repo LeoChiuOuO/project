@@ -1,0 +1,149 @@
+@using WebApplication_Dianthus.Models.DTO
+@model UserRolePermissionCreateDTO
+
+<h2>新增使用者角色權限</h2>
+
+<form id="createForm">
+    <label for="">使用者名稱：</label>
+    <select name="UserId" class="form-control mb-2">
+        <option value=null disabled selected >請選擇</option>
+        @foreach (var user in ViewBag.Users)
+        {
+            <option value="@user.Id">@user.Name</option>
+        }
+    </select>
+
+    <label for="">角色名稱：</label>
+    <select name="RoleId" class="form-control mb-2">
+        <option value=null disabled selected >請選擇</option>
+        @foreach (var role in ViewBag.Roles)
+        {
+            <option value="@role.Id">@role.Name</option>
+        }
+    </select>
+    <label for="">權限名稱：</label>
+    <select name="PermissionId" class="form-control mb-2">
+        <option value=null disabled selected >請選擇</option>
+        @foreach (var perm in ViewBag.Permissions)
+        {
+            <option value="@perm.Id">@perm.Name</option>
+        }
+    </select>
+    <div id="crudDisplay" class="mb-3">
+        <label>權限設定：</label>
+        <div id="crudBadges">
+            <span class="badge bg-secondary">新增</span>
+            <span class="badge bg-secondary">讀取</span>
+            <span class="badge bg-secondary">修改</span>
+            <span class="badge bg-secondary">刪除</span>
+        </div>
+    </div>
+
+    <label for="">場域：</label>
+    <select name="PartitionId" id="partitionSelect" class="form-control mb-2">
+        <option value=null disabled selected>請選擇</option>
+        @foreach (var partition in ViewBag.Partitions)
+        {
+            <option value="@partition.Id">@partition.Name</option>
+        }
+    </select>
+
+    <label for="">部門：</label>
+    <select name="DepartmentId" id="departmentSelect" class="form-control mb-2">
+        <option value=null disabled selected>請先選擇場域</option>
+    </select>
+
+    @* <input type="number" name="GroupId" placeholder="群組 ID" class="form-control mb-2" /> *@
+    <input type="hidden" name="OperatorId" value="@(User.Identity.Name)" />
+
+    <button type="submit" class="btn btn-success">儲存</button>
+</form>
+
+@section Scripts {
+<script>
+    $("#createForm").submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: '@Url.Action("CreateAjax")',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    alert("新增成功！");
+                    window.location.href = '@Url.Action("Index")';
+                } else {
+                    alert("新增失敗！");
+                }
+            }
+        });
+    });
+
+    function updateCrudBadges(data) {
+        const badgeMap = {
+            create: "新增",
+            read: "讀取",
+            update: "修改",
+            delete: "刪除"
+        };
+
+        $("#crudBadges").empty();
+        for (const key in badgeMap) {
+            const enabled = data[key];
+            const color = enabled ? {
+                create: "success",
+                read: "info",
+                update: "warning",
+                delete: "danger"
+            }[key] : "secondary";
+
+            $("#crudBadges").append(
+                `<span class="badge bg-${color} me-1">${badgeMap[key]}</span>`
+            );
+        }
+    }
+
+    $("select[name='PermissionId']").change(function () {
+        const permissionId = $(this).val();
+        if (!permissionId) return;
+
+        $.ajax({
+            url: '@Url.Action("GetPermissionCrud")',
+            method: 'GET',
+            data: { id: permissionId },
+            success: function (res) {
+                if (res.success) {
+                    updateCrudBadges(res);
+                } else {
+                    $("#crudBadges").html("<span class='text-danger'>查無權限設定</span>");
+                }
+            }
+        });
+    });
+
+    $("#partitionSelect").change(function () {
+        const partitionId = $(this).val();
+        if (!partitionId) return;
+
+        $.ajax({
+            url: '@Url.Action("GetDepartmentsByPartition")',
+            method: 'GET',
+            data: { partitionId: partitionId },
+            success: function (departments) {
+                const $deptSelect = $("#departmentSelect");
+                $deptSelect.empty();
+                if (departments.length === 0) {
+                    $deptSelect.append(`<option disabled selected>此場域無部門</option>`);
+                    return;
+                }
+
+                $deptSelect.append(`<option disabled selected>請選擇</option>`);
+                departments.forEach(d => {
+                    $deptSelect.append(`<option value="${d.id}">${d.name}</option>`);
+                });
+            }
+        });
+    });
+
+
+</script>
+}

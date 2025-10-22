@@ -1,0 +1,46 @@
+@model IEnumerable<UserRolePermissionViewModel>
+
+<h2>使用者角色權限對應</h2>
+<a class="btn btn-primary mb-3" href="@Url.Action("Create")">新增對應</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>使用者名稱</th>
+            <th>角色名稱</th>
+            <th>場域</th>
+            <th>部門</th>
+            <th>權限名稱</th>
+            <th>操作權限</th>
+            <th>編輯</th>
+            <th>刪除</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.RoleName</td>
+                <td>@item.PartitionName</td>
+                <td>@item.DepartmentName</td>
+                <td>@item.PermissionName</td>
+                <td>
+                    @if (item.CanCreate) { <span class="badge bg-success">新增</span> }
+                    @if (item.CanRead)   { <span class="badge bg-info">讀取</span> }
+                    @if (item.CanUpdate) { <span class="badge bg-warning">修改</span> }
+                    @if (item.CanDelete) { <span class="badge bg-danger">刪除</span> }
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", new { userId = item.UserId })">編輯</a>
+                </td>
+
+                <td>
+                    <form asp-action="Delete" asp-route-userId="@item.UserId" method="post" onsubmit="return confirm('確定要刪除這筆資料嗎？');">
+                        <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

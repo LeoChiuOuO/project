@@ -9,4 +9,5 @@ public interface IAuthService
     bool HasPermission(string permissionName, string action);
     (int? PartitionId, int? DepartmentId) GetDataScope(string permissionName);
     UserContext GetUserContext();
+    bool IsAdmin(int roleId);
 }

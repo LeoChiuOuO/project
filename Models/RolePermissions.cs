@@ -45,4 +45,10 @@ public class RolePermission
     [ForeignKey("PermissionsId")]
     public Permission Permission { get; set; }
 
+    [ForeignKey("DepartmentId")]
+    public Department Department { get; set; }
+
+    [ForeignKey("PartitionId")]
+    public Partition Partition { get; set; }
+
 }
