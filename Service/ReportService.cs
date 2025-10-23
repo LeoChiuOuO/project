@@ -142,5 +142,10 @@ namespace WebApplication_Dianthus.Services
         {
             return _repo.GetAllTestItem();
         }
+
+        public ReportDashboardViewModel GetDashboard()
+        {
+            return _repo.GetDashboardStats();
+        }
     }
 }

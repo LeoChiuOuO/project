@@ -2,19 +2,32 @@ using System.Data;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Utilities;
+using WebApplication_Dianthus.Models.Service.Interface;
 
 public class HomeController : Controller
 {
     private readonly IDbConnection _db;
+    private readonly IReportService _reportService;
 
-    public HomeController(IDbConnection db)
+    public HomeController(IDbConnection db,IReportService reportService)
     {
         _db = db;
+        _reportService = reportService;
     }
     public IActionResult Index()
     {
-        return View();
+        var dashboard = _reportService.GetDashboard();
+        return View(dashboard);
+
     }
+
+    [HttpGet]
+    public IActionResult GetDashboard()
+    {
+        var dashboard = _reportService.GetDashboard();
+        return Json(dashboard);
+    }
+
 
     public IActionResult TestOne()
     {
@@ -192,5 +205,150 @@ SELECT
         _db.Execute(sql);
         return Ok(new { success = true });
     }
-    
+
+    public IActionResult TestOverTime()
+    {
+        var testItemId = new Random().Next(10);
+        var reportDueDate = DateTime.Today.ToString("yyyy-MM-dd");
+        var sql = @"
+        INSERT INTO reports (
+            report_id, medical_order, consent_form_state, specimen_dely_state, send_email_state, product_name,
+            tracking_status, notification_status, partition_id, department_id, submission_date, received_date,
+            name, id_number, mr_number,test_item_id, cost, return_date, sending_physician_name, remark, report_date,
+            report_results, create_id, modify_id, specimen_number, specimen_type, testing_date, inspection_progress,
+            assessment_status, weeks_of_pregnancy, due_date,report_due_date, inspection_institution, inspection_institution_phone,
+            responsible_business_person, responsible_business_phone, responsible_business_email, business_manager,
+            business_manager_phone, business_manager_email, abnormal_report_delivery_method,
+            abnormal_report_notification_method, inspection_group, notification_circumstances,
+            prenatal_testing_project_tracking_time, confirm_specimen_submission_time, confirm_specimen_type,
+            confirm_the_test_report_results, tracking_time, tracking, tracking_results,
+            tracking_the_followup_status_of_NIPS_cases, referral_institution, referring_physician,
+            written_report_processing_methood, fmr1_report_results, chr_report_date, chr_report_results,
+            wafer_report_date, wafer_report_results, v2_v3_testing_results, gene_report_date, gene_report_results,
+            other_report_date, other_report_results
+        ) VALUES (
+            CONCAT('RPT', LPAD(FLOOR(RAND()*99999), 5, '0')),
+            CONCAT('MO', LPAD(FLOOR(RAND()*999), 3, '0')),
+            ELT(1 + FLOOR(RAND()*2), '已簽', '未簽'),
+            ELT(1 + FLOOR(RAND()*2), '已送達', '運送中'),
+            ELT(1 + FLOOR(RAND()*2), '已發送', '未發送'),
+            ELT(1 + FLOOR(RAND()*5), '產品A', '產品B', '產品C', '產品D', '產品E'),
+            '待追蹤',
+            '待通知',
+            1 + FLOOR(RAND()*3),
+            1 + FLOOR(RAND()*3),
+            NOW(),
+            NOW(),
+            CONCAT('測試姓名', FLOOR(RAND()*100)),
+            CONCAT(CHAR(65 + FLOOR(RAND()*26)), LPAD(FLOOR(RAND()*999999999), 9, '0')),
+            1000 + FLOOR(RAND()*1000),
+            5,
+            4000 + FLOOR(RAND()*2000),
+            NOW(),
+            CONCAT('醫師', FLOOR(RAND()*10)),
+            CONCAT('備註', FLOOR(RAND()*10)),
+            ELT(1 + FLOOR(RAND()*3), CURDATE() - INTERVAL 25 DAY, CURDATE() - INTERVAL 55 DAY, CURDATE() - INTERVAL 65 DAY),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常'),
+            1 + FLOOR(RAND()*5),
+            1 + FLOOR(RAND()*5),
+            CONCAT('SP', LPAD(FLOOR(RAND()*9999), 4, '0')),
+            ELT(1 + FLOOR(RAND()*2), '血液', '羊水'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*3), '進行中', '已完成', '待處理'),
+            ELT(1 + FLOOR(RAND()*2), '中度', '一般'),
+            10 + FLOOR(RAND()*30),
+            NOW(),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*5), '台北醫院', '榮總', '長庚', '馬偕醫院', '新光醫院'),
+            20000000 + FLOOR(RAND()*80000000),
+            CONCAT('業務', FLOOR(RAND()*10)),
+            900000000 + FLOOR(RAND()*99999999),
+            CONCAT('sales', FLOOR(RAND()*10), '@example.com'),
+            CONCAT('主管', FLOOR(RAND()*10)),
+            900000000 + FLOOR(RAND()*99999999),
+            CONCAT('manager', FLOOR(RAND()*10), '@example.com'),
+            ELT(1 + FLOOR(RAND()*3), '郵寄', '快遞', '親送'),
+            ELT(1 + FLOOR(RAND()*3), '電話', '簡訊', 'Email'),
+            CONCAT('組別', FLOOR(RAND()*5)),
+            CONCAT('情形', FLOOR(RAND()*5)),
+            NOW(),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*2), '血液', '羊水'),
+            ELT(1 + FLOOR(RAND()*2), '陰性', '陽性'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*3), '已追蹤', '待追蹤', '不需追蹤'),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*5), '台北醫院', '榮總', '長庚', '馬偕醫院', '新光醫院'),
+            CONCAT('醫師', FLOOR(RAND()*50)),
+            ELT(1 + FLOOR(RAND()*3), '郵寄', '快遞', '親送'),
+            ELT(1 + FLOOR(RAND()*2), '陰性', '陽性'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常'),
+            ELT(1 + FLOOR(RAND()*2), '陰性', '陽性'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常'),
+            NOW(),
+            ELT(1 + FLOOR(RAND()*2), '正常', '異常')
+        );
+        ";
+        _db.Execute(sql);
+        return Ok(new { success = true });
+    }
+
+    public IActionResult TestHightLight()
+    {
+        var name = "測試姓名" + new Random().Next(100);
+        var mrNumber = 1000 + new Random().Next(999);
+        var testingDate = DateTime.Today.ToString("yyyy-MM-dd");
+        var reportId = "MTT" + new Random().Next(9999);
+        var testItemId = new Random().Next(10);
+        var reportDueDate = DateTime.Today.ToString("yyyy-MM-dd");
+        var sql = $@"
+        INSERT INTO reports (
+            report_id, medical_order, consent_form_state, specimen_dely_state, send_email_state, product_name,
+            tracking_status, notification_status, partition_id, department_id, submission_date, received_date,
+            name, id_number, mr_number,test_item_id, cost, return_date, sending_physician_name, remark, report_date,
+            report_results, create_id, modify_id, specimen_number, specimen_type, testing_date, inspection_progress,
+            assessment_status, weeks_of_pregnancy, due_date,report_due_date, inspection_institution, inspection_institution_phone,
+            responsible_business_person, responsible_business_phone, responsible_business_email, business_manager,
+            business_manager_phone, business_manager_email, abnormal_report_delivery_method,
+            abnormal_report_notification_method, inspection_group, notification_circumstances,
+            prenatal_testing_project_tracking_time, confirm_specimen_submission_time, confirm_specimen_type,
+            confirm_the_test_report_results, tracking_time, tracking, tracking_results,
+            tracking_the_followup_status_of_NIPS_cases, referral_institution, referring_physician,
+            written_report_processing_methood, fmr1_report_results, chr_report_date, chr_report_results,
+            wafer_report_date, wafer_report_results, v2_v3_testing_results, gene_report_date, gene_report_results,
+            other_report_date, other_report_results
+        ) VALUES (
+            '{reportId}', 'MO001', '已簽', '已送達', '已發送', '產品A',
+            '待追蹤', '待通知', 1, 1, NOW(), NOW(),
+            '{name}', 'A123456789', {mrNumber},'{testItemId}', 5000, NOW(), '醫師A', '備註內容',
+            CURDATE() - INTERVAL 25 DAY,
+            '異常', 1, 1, 'SP0001', '血液', '{testingDate}', '進行中',
+            '重大', 12, CURDATE(),'{reportDueDate}', '台北馬偕', 0223456789,
+            '業務A', 0912345678, 'sales@example.com', '主管A',
+            0923456789, 'manager@example.com', '郵寄',
+            '電話', '組別1', '情形1',
+            NOW(), NOW(), '血液',
+            '陽性', NOW(), '追蹤中', '已追蹤',
+            NOW(), '轉介院所A', '轉介醫師A',
+            '親送', '陽性', NOW(), '異常',
+            NOW(), '異常', '陰性', NOW(), '異常',
+            NOW(), '異常'
+        );
+        ";
+
+        _db.Execute(sql);
+
+        return Ok(new {
+            success = true,
+            name,
+            mrNumber,
+            testingDate
+        });
+
+    }
 }

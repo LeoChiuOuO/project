@@ -19,5 +19,7 @@ namespace WebApplication_Dianthus.Models.Interface
 
         PagedResult<Report> Search(ReportFilter filter, string partitionId, bool isAdmin);
         List<TestItem> GetAllTestItem();
+        ReportDashboardViewModel GetDashboardStats();
+
     }
 }

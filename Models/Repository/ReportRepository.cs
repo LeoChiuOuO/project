@@ -408,6 +408,7 @@ public class ReportRepository : IReportRepository
                 r.SpecimenNumber.Contains(filter.Keyword) ||
                 r.InspectionInstitution.Contains(filter.Keyword) ||
                 r.SendingPhysicianName.Contains(filter.Keyword) ||
+                r.AssessmentStatus.Contains(filter.Keyword) ||
                 r.Name.Contains(filter.Keyword));
         }
 
@@ -438,5 +439,37 @@ public class ReportRepository : IReportRepository
     public IEnumerable<Report> GetReportsForExport(ReportFilter filter)
     {
         throw new NotImplementedException();
+    }
+
+    public ReportDashboardViewModel GetDashboardStats()
+    {
+        var today = DateTime.Today;
+        var unread = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知");
+
+        var upcoming = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate < today.AddDays(-20));
+
+        var overdue = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-60) && r.ReportDate < today.AddDays(-30));
+
+        var critical = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate < today.AddDays(-60));
+
+        var criticalAssessment = _context.Reports
+            .Count(r => r.AssessmentStatus == "重大");
+
+        return new ReportDashboardViewModel
+        {
+            UnreadCount = unread,
+            UpcomingOverdueCount = upcoming,
+            OverdueCount = overdue,
+            CriticalOverdueCount = critical,
+            CriticalAssessmentCount = criticalAssessment    
+        };
+
     }
 }
