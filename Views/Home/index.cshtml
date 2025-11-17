@@ -1,17 +1,11 @@
 @model ReportDashboardViewModel
 
 <div class="container-fluid">
-    <h2>Welcome </h2>
-    <h2>以下按鈕用於生成測試資料</h2>
-    @* <button class="btn btn-primary" onclick="TestOne()">新增今日1筆測試用資料</button>
-    <button class="btn btn-primary" onclick="Test100()">新增100筆測試用資料</button> *@
-    <button class="btn btn-primary" onclick="TestOverTime()">新增1筆[逾期]測試用資料</button>
-    <button class="btn btn-primary" onclick="TestHightLight()">新增1筆[需關懷]測試用資料</button>
 </div>
 <h2>報告統計儀表板</h2>
 <div class="row">
     <div class="col-md-3">
-        <div class="card text-white bg-info mb-3">
+        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('unread')">
             <div class="card-header">未讀報告</div>
             <div class="card-body">
                 <h5 class="card-title">@Model.UnreadCount</h5>
@@ -19,7 +13,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-warning mb-3">
+        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('upcoming')">
             <div class="card-header">將要逾時 (報告未處理 20~30天)</div>
             <div class="card-body">
                 <h5 class="card-title">@Model.UpcomingOverdueCount</h5>
@@ -27,7 +21,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-danger mb-3">
+        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('overdue')">
             <div class="card-header">已經逾時(報告未處理 30~60天)</div>
             <div class="card-body">
                 <h5 class="card-title">@Model.OverdueCount</h5>
@@ -35,7 +29,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-dark mb-3">
+        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('critical')">
             <div class="card-header">嚴重逾時(報告未處理 60天以上)</div>
             <div class="card-body">
                 <h5 class="card-title">@Model.CriticalOverdueCount</h5>
@@ -43,7 +37,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-white bg-danger mb-3">
+        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('assessment')">
             <div class="card-header">重大評估報告</div>
             <div class="card-body">
                 <h5 class="card-title">@Model.CriticalAssessmentCount</h5>
@@ -52,8 +46,41 @@
     </div>
 </div>
 
+
 @section Scripts {
 <script>
+    async function apitest() {
+        try {
+        const res = await fetch('/home/testAPIAsync', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) {
+            const text = await res.text();
+            console.error('API error', res.status, text);
+            return;
+        }
+
+        // 如果後端回傳 JSON
+        const data = await res.json();
+        console.log('API response JSON:', data);
+
+        // 若後端回傳純文字/非 JSON，改用
+        // const text = await res.text();
+        // console.log('API response text:', text);
+
+        // 範例：把結果顯示在畫面上
+        // document.getElementById('apiResult').innerText = JSON.stringify(data, null, 2);
+        } catch (err) {
+        console.error('Fetch failed', err);
+        }
+    }
+
+
+    function goToReport(type) {
+        window.location.href = `/Report/Index?filter=${type}`;
+    }
 
     function showAlert(message, type) {
         const html = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -64,21 +91,21 @@
         setTimeout(() => $('.alert').alert('close'), 3000);
     }
 
-    function TestOne() { callTestApi('/Home/TestOne'); }
-    function Test100() { callTestApi('/Home/Test100'); }
     function TestOverTime() { callTestApi('/Home/TestOverTime'); }
     function TestHightLight() { callTestApi('/Home/TestHightLight'); }
 
     function callTestApi(endpoint) {
         $.get(endpoint, function (res) {
             showAlert(res.success ? "資料已更新" : "更新失敗", res.success ? "success" : "danger");
-             if (res.success) refreshDashboard();
-             // 額外顯示該筆資料（僅限 TestHightLight）
-            if (endpoint === '/Home/TestHightLight') {
-                const detail = `新增報告 ➤ 姓名：${res.name}，病歷號：${res.mrNumber}，採檢日期：${res.testingDate}`;
-                showAlert(detail, "info");
-            }
+            if (res.success) {
+                refreshDashboard();
 
+                // 顯示該筆報告資訊（支援 TestOverTime 與 TestHightLight）
+                if (res.name && res.mrNumber && res.testingDate) {
+                    const detail = `新增報告 ➤ 姓名：${res.name}，病歷號：${res.mrNumber}，採檢日期：${res.testingDate}`;
+                    showAlert(detail, "info");
+                }
+            }
         }).fail(function () {
             showAlert("伺服器錯誤", "danger");
         });
@@ -86,14 +113,28 @@
 
     function refreshDashboard() {
         $.get('/Home/GetDashboard', function (res) {
-            $('.card-title').eq(0).text(res.unreadCount);
-            $('.card-title').eq(1).text(res.upcomingOverdueCount);
-            $('.card-title').eq(2).text(res.overdueCount);
-            $('.card-title').eq(3).text(res.criticalOverdueCount);
-            $('.card-title').eq(4).text(res.criticalAssessmentCount);
+            $('#UnreadCount').text(res.unreadCount);
+            $('#UpcomingOverdueCount').text(res.upcomingOverdueCount);
+            $('#OverdueCount').text(res.overdueCount);
+            $('#CriticalOverdueCount').text(res.criticalOverdueCount);
+            $('#CriticalAssessmentCount').text(res.criticalAssessmentCount);
         });
     }
-
-
 </script>
 }
+
+<style>
+
+    .card.highlight-card {
+        background-color: #e0f2ff; /* 淺藍色 */
+        color: #004080;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+    }
+
+    .card.highlight-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        background-color: #d0eaff; /* 更亮一點的藍 */
+    }
+</style>

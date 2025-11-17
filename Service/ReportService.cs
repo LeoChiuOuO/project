@@ -147,5 +147,49 @@ namespace WebApplication_Dianthus.Services
         {
             return _repo.GetDashboardStats();
         }
+
+        public ReportFilter BuildFilterFromType(string type)
+        {
+            var today = DateTime.Today;
+            var filter = new ReportFilter
+            {
+                Page = 1,
+                PageSize = 100
+            };
+
+            switch (type)
+            {
+                case "unread":
+                    filter.NotifyStatus = new List<string> { "待通知" };
+                    filter.TrackStatus = new List<string> { "待追蹤" };
+                    break;
+                case "upcoming":
+                    filter.NotifyStatus = new List<string> { "待通知" };
+                    filter.TrackStatus = new List<string> { "待追蹤" };
+                    filter.DateFrom = today.AddDays(-30);
+                    filter.DateTo = today.AddDays(-20);
+                    break;
+                case "overdue":
+                    filter.NotifyStatus = new List<string> { "待通知" };
+                    filter.TrackStatus = new List<string> { "待追蹤" };
+                    filter.DateFrom = today.AddDays(-60);
+                    filter.DateTo = today.AddDays(-30);
+                    break;
+                case "critical":
+                    filter.NotifyStatus = new List<string> { "待通知" };
+                    filter.TrackStatus = new List<string> { "待追蹤" };
+                    filter.DateFrom = today.AddDays(-365);
+                    filter.DateTo = today.AddDays(-60);
+                    break;
+                case "assessment":
+                    filter.NotifyStatus = new List<string> { "待通知" };
+                    filter.TrackStatus = new List<string> { "待追蹤" };
+                    filter.AssessmentStatus = "重大"; // 或你可以加 AssessmentStatus 條件
+                    filter.DateFrom = today.AddDays(-365);
+                    break;
+            }
+
+            return filter;
+        }
     }
 }

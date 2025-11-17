@@ -1,4 +1,6 @@
-@model List<WebApplication_Dianthus.Models.TestItem>
+@model WebApplication_Dianthus.Models.ReportIndexViewModel
+@* @model ReportIndexViewModel *@
+
 @{
     ViewData["Title"] = "報表列表";
 }
@@ -96,7 +98,7 @@
                 <label for="" style="margin-left: 10px;">待篩選清單 (請點選項目移至下方欲篩選清單內)</label>
                 <div style="border: 1px black solid; margin: 10px;width:746px;height:242px;">
                     <div class="form-group" id="testItemContainer" style="display: ruby;">
-                        @foreach (TestItem item in Model)
+                        @foreach (TestItem item in Model.TestItems)
                         {
                             <div class="test-item" data-id="@item.Id" style="">@item.name</div>
                         }
@@ -118,6 +120,7 @@
     let currentReports = []; // 儲存目前頁面資料
     let sortField = null;
     let sortAsc = true;
+    let forceQuery = false;
 
     $(document).ready(function () {
         $.get('/api/auth/permission', function (res) {
@@ -157,6 +160,18 @@
         document.getElementById('dateFrom').value = formatDate(prevMonth);
         document.getElementById('dateTo').value = formatDate(today);
 
+        //從home儀表板進來
+        const filterType = '@Model.FilterType';
+        if (filterType) {
+        $('#queryDuration').text(`目前查詢分類：${filterType}`);
+        forceQuery = true; // ✅ 啟用強制查詢
+        applyFilterTypeDefaults(filterType); // ✅ 套用條件
+        serach(); // ✅ 自動查詢
+        } else {
+            $('#queryDuration').text("請選擇篩選條件後點擊搜尋");
+        }
+
+
         $('#btnItem').on('click', function(){
             $('#reportModal').modal('show');
         });
@@ -186,6 +201,45 @@
 
         renderTable(0);
     });
+
+    function applyFilterTypeDefaults(type) {
+        switch (type) {
+            case "unread":
+                $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
+                $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
+                $('#dateFrom').val(getDateNDaysAgo(365));
+                break;
+            case "upcoming":
+                $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
+                $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
+                $('#dateFrom').val(getDateNDaysAgo(30));
+                $('#dateTo').val(getDateNDaysAgo(20));
+                break;
+            case "overdue":
+                $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
+                $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
+                $('#dateFrom').val(getDateNDaysAgo(60));
+                $('#dateTo').val(getDateNDaysAgo(30));
+                break;
+            case "critical":
+                $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
+                $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
+                $('#dateFrom').val(getDateNDaysAgo(365));
+                $('#dateTo').val(getDateNDaysAgo(60));
+                break;
+            case "assessment":
+                $('#keyword').val("重大");
+                $('#dateFrom').val(getDateNDaysAgo(365));
+                break;
+        }
+    }
+
+    function getDateNDaysAgo(n) {
+        const d = new Date();
+        d.setDate(d.getDate() - n);
+        return d.toISOString().split('T')[0]; // yyyy-mm-dd
+    }
+
 
     function getCurrentFilter() {
         return {
@@ -307,7 +361,7 @@
         if (keyword !== "") conditionCount++;
 
         // 限制：至少要有兩項條件
-        if (conditionCount < 2) {
+        if (!forceQuery && conditionCount < 2) {
             alert("請至少選擇兩項篩選條件，避免查詢過多資料！");
             return;
         }

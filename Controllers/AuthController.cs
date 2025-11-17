@@ -43,6 +43,7 @@ public class AuthController : Controller
                 HttpContext.Session.SetString("UserName", user.Name);
                 HttpContext.Session.SetString("PartitionId", partitionId.ToString());
                 HttpContext.Session.SetString("DepartmentId", departmentId.ToString());
+                HttpContext.Session.SetString("Account", user.Account);
                 _log.Log(actionType: "Login", module: "Auth", success: true, description: "使用者登入成功");
 
                 return Json(new { success = true, message = "登入成功" });

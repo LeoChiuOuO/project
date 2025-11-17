@@ -13,6 +13,8 @@ public class ReportFilter
     public List<string> NotifyStatus { get; set; } = new();
     public List<string> TrackStatus { get; set; } = new();
 
+    public string? AssessmentStatus { get; set; }
+
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 10;
 

@@ -61,6 +61,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IOBPatientService, OBPatientService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserContextService, AuthService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
@@ -71,7 +72,8 @@ builder.Services.AddScoped<IPartitionService, PartitionService>();
 builder.Services.AddAutoMapper(typeof(ReportProfile));
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddHttpClient();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

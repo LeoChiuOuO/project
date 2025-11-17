@@ -6,7 +6,8 @@ using WebApplication_Dianthus.Models.Interface;
 using WebApplication_Dianthus.Models.Service.Interface;
 using ZstdSharp.Unsafe;
 
-public class AuthService : IAuthService
+public class AuthService : IAuthService, IUserContextService
+
 {
     private readonly IDbConnection _db;
     private readonly IHttpContextAccessor _http;
@@ -33,16 +34,19 @@ public class AuthService : IAuthService
 
     public User GetCurrentUser()
     {
-        var account = _http.HttpContext.User.Identity?.Name;
+        var account = _http.HttpContext?.Session.GetString("Account");
         if (string.IsNullOrEmpty(account)) throw new UnauthorizedAccessException("未登入");
 
         var sql = @"
-            SELECT 
+            SELECT
                 u.id AS UserId, u.account,
                 r.id AS RoleId, r.name AS RoleName,
+                rp.id AS RolePermissionId, rp.partition_id, rp.department_id, rp.permissions_id,
                 p.id AS PermissionId, p.name AS PermissionName,
-                p.review_permissions, p.create_permissions, p.edit_permissions, p.dele_permissions,
-                rp.partition_id, rp.department_id
+                p.review_permissions AS ReviewPermissions,
+                p.create_permissions AS CreatePermissions,
+                p.edit_permissions AS EditPermissions,
+                p.dele_permissions AS DeletePermissions
             FROM users u
             JOIN role_user ru ON ru.user_id = u.id
             JOIN roles r ON r.id = ru.role_id
@@ -53,9 +57,9 @@ public class AuthService : IAuthService
 
         var lookup = new Dictionary<int, User>();
 
-        _db.Query<User, Role, RolePermission, User>(
+        _db.Query<User, Role, RolePermission, Permission, User>(
             sql,
-            (user, role, rp) =>
+            (user, role, rp, permission) =>
             {
                 if (!lookup.TryGetValue(user.Id, out var foundUser))
                 {
@@ -72,32 +76,22 @@ public class AuthService : IAuthService
                     foundUser.Roles.Add(existingRole);
                 }
 
-                rp.Permission = new Permission
+                if (rp != null)
                 {
-                    Id = rp.PermissionsId,
-                    Name = rp.Permission.Name,
-                    ReviewPermissions = rp.Permission.ReviewPermissions,
-                    CreatePermissions = rp.Permission.CreatePermissions,
-                    EditPermissions = rp.Permission.EditPermissions,
-                    DeletePermissions = rp.Permission.DeletePermissions
-                };
+                    // rp.Permission 由 Dapper 映射的 permission 填入
+                    rp.Permission = permission;
+                    existingRole.RolePermissions.Add(rp);
+                }
 
-                existingRole.RolePermissions.Add(rp);
                 return foundUser;
             },
             new { Account = account },
-            splitOn: "RoleId,PermissionId"
+            splitOn: "RoleId,RolePermissionId,PermissionId"
         );
 
         return lookup.Values.FirstOrDefault() ?? throw new UnauthorizedAccessException("找不到使用者");
     }
 
-
-    public bool HasPermission(string permissionName, string action)
-    {
-        return false;
-    }
-    
     public bool IsAdmin(int userId)
     {
         var user = _userRepository.GetById(userId);
@@ -141,4 +135,11 @@ public class AuthService : IAuthService
         };
     }
 
+    public int GetUserId() => GetCurrentUser().Id;
+
+    public int? GetPartitionId() => GetUserContext().PartitionId;
+
+    public int? GetDepartmentId() => GetUserContext().DepartmentId;
+
+    public string GetUserName() => GetCurrentUser().Name;
 }

@@ -385,9 +385,9 @@ public class ReportRepository : IReportRepository
         }
 
 
-        // 篩選：日期區間
+        // 篩選：日期區間(報告日期)
         if (filter.DateFrom.HasValue && filter.DateTo.HasValue)
-            query = query.Where(r => r.TestingDate >= filter.DateFrom && r.TestingDate <= filter.DateTo);
+            query = query.Where(r => r.ReportDate >= filter.DateFrom && r.ReportDate <= filter.DateTo);
 
         // 篩選：TestItemId
         if (filter.TestItemIds?.Any() == true)
@@ -411,6 +411,10 @@ public class ReportRepository : IReportRepository
                 r.AssessmentStatus.Contains(filter.Keyword) ||
                 r.Name.Contains(filter.Keyword));
         }
+
+        // 篩選報告嚴重度
+        if (!string.IsNullOrEmpty(filter.AssessmentStatus))
+        query = query.Where(r => r.AssessmentStatus == filter.AssessmentStatus);
 
         // 總筆數
         var total = query.Count();
@@ -445,19 +449,19 @@ public class ReportRepository : IReportRepository
     {
         var today = DateTime.Today;
         var unread = _context.Reports
-            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知");
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知" );
 
         var upcoming = _context.Reports
             .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
-                && r.ReportDate >= today.AddDays(-30) && r.ReportDate < today.AddDays(-20));
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate < today.AddDays(-19));
 
         var overdue = _context.Reports
             .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
-                && r.ReportDate >= today.AddDays(-60) && r.ReportDate < today.AddDays(-30));
+                && r.ReportDate >= today.AddDays(-60) && r.ReportDate < today.AddDays(-29));
 
         var critical = _context.Reports
             .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
-                && r.ReportDate < today.AddDays(-60));
+                && r.ReportDate < today.AddDays(-59));
 
         var criticalAssessment = _context.Reports
             .Count(r => r.AssessmentStatus == "重大");

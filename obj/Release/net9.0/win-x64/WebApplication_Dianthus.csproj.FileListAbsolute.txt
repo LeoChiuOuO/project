@@ -241,5 +241,7 @@ C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\sc
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\Report\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\scopedcss\Views\User\Index.cshtml.rz.scp.css
 C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\yxbo6amnzv-2lyaa6ibwf.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\qne5z9dfll-h5pizc7i8k.gz
-C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\o1bvyw7p40-h5pizc7i8k.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\AutoMapper.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\bin\Release\net9.0\win-x64\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\qne5z9dfll-r7mcwuhf1f.gz
+C:\Users\D\Desktop\project\WebApplication_Dianthus\obj\Release\net9.0\win-x64\compressed\o1bvyw7p40-r7mcwuhf1f.gz

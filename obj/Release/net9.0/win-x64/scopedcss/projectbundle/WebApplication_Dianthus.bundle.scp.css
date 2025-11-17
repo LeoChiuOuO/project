@@ -70,6 +70,7 @@ html[b-moq9deg8gi], body[b-moq9deg8gi] {
     animation: shake-b-moq9deg8gi 0.5s;
 }
 /* _content/WebApplication_Dianthus/Views/Report/Index.cshtml.rz.scp.css */
+
 .target-report-on[b-48x5ve6fy4] {
     position: relative;
     display: flex;
@@ -81,7 +82,7 @@ html[b-moq9deg8gi], body[b-moq9deg8gi] {
 }
 
 .target-report-main[b-48x5ve6fy4] {
-
+    min-width: 1850px;
 }
 
 .target-report-body[b-48x5ve6fy4] {
@@ -130,6 +131,7 @@ html[b-moq9deg8gi], body[b-moq9deg8gi] {
     text-align: center; 
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
+
 /* _content/WebApplication_Dianthus/Views/Shared/_Layout.cshtml.rz.scp.css */
 /* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */

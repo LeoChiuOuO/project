@@ -17,7 +17,7 @@ public class Role
 
     [Column("description")]
     [MaxLength(60)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Column("create_id")]
     public int? CreateId { get; set; }

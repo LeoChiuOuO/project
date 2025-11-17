@@ -1,3 +1,4 @@
+
 .target-report-on[b-48x5ve6fy4] {
     position: relative;
     display: flex;
@@ -9,7 +10,7 @@
 }
 
 .target-report-main[b-48x5ve6fy4] {
-
+    min-width: 1850px;
 }
 
 .target-report-body[b-48x5ve6fy4] {
@@ -58,3 +59,4 @@
     text-align: center; 
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
+

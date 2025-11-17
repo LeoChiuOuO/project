@@ -4,6 +4,8 @@ C:\Users\D\Desktop\project\publish\MyApp\appsettings.json
 C:\Users\D\Desktop\project\publish\MyApp\WebApplication_Dianthus.dll
 C:\Users\D\Desktop\project\publish\MyApp\WebApplication_Dianthus.runtimeconfig.json
 C:\Users\D\Desktop\project\publish\MyApp\WebApplication_Dianthus.pdb
+C:\Users\D\Desktop\project\publish\MyApp\AutoMapper.dll
+C:\Users\D\Desktop\project\publish\MyApp\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\D\Desktop\project\publish\MyApp\Azure.Core.dll
 C:\Users\D\Desktop\project\publish\MyApp\Azure.Identity.dll
 C:\Users\D\Desktop\project\publish\MyApp\BCrypt.Net-Next.dll
