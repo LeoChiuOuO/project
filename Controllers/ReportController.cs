@@ -41,7 +41,8 @@ namespace WebApplication_Dianthus.Controllers
             {
                 Reports = pagedReports,
                 TestItems = testItems,
-                FilterType = filter
+                FilterType = filter,
+                PartitionId = int.Parse(partitionId)
             };
 
             return View(vm);

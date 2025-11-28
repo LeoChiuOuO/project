@@ -7,4 +7,6 @@ public class ReportIndexViewModel
     public List<TestItem> TestItems { get; set; }
     public string FilterType { get; set; }
 
+    public int PartitionId {get;set;}
+
 }

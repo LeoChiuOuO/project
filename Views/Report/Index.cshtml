@@ -60,10 +60,10 @@
                         <th data-sort="specimenType"><span class="sort-icon">↑↓</span>檢體類別</th>
                         <th data-sort="inspectionProgress"><span class="sort-icon">↑↓</span>檢驗進度</th>
                         <th data-sort="mrNumber"><span class="sort-icon">↑↓</span>病歷號</th>
-                        <th data-sort="name"><span class="sort-icon">↑↓</span>客戶姓名</th>
+                        <th data-sort="name"><span class="sort-icon">↑↓</span>姓名</th>
                         <th data-sort="testItemName"><span class="sort-icon">↑↓</span>檢測項目</th>
-                        <th data-sort="receivedDate"><span class="sort-icon">↑↓</span>收件日期</th>
                         <th data-sort="testingDate"><span class="sort-icon">↑↓</span>採檢日期</th>
+                        <th data-sort="receivedDate"><span class="sort-icon">↑↓</span>收件日期</th>
                         <th data-sort="reportDate"><span class="sort-icon">↑↓</span>報告日期</th>
                         <th data-sort="inspectionInstitution"><span class="sort-icon">↑↓</span>送檢院所</th>
                         <th>送檢醫師</th>
@@ -71,8 +71,8 @@
                         <th>通知狀態</th>
                         <th>追蹤狀態</th>
                         <th>編輯</th>
-                        <th>檢視</th>
-                        <th>說明衛教單</th>
+                        <th>報告</th>
+                        <th>衛教單</th>
                         <th>文獻</th>
                     </tr>
                 </thead>
@@ -164,9 +164,9 @@
         const filterType = '@Model.FilterType';
         if (filterType) {
         $('#queryDuration').text(`目前查詢分類：${filterType}`);
-        forceQuery = true; // ✅ 啟用強制查詢
-        applyFilterTypeDefaults(filterType); // ✅ 套用條件
-        serach(); // ✅ 自動查詢
+        forceQuery = true; // 啟用強制查詢
+        applyFilterTypeDefaults(filterType); // 套用條件
+        serach(); // 自動查詢
         } else {
             $('#queryDuration').text("請選擇篩選條件後點擊搜尋");
         }
@@ -344,7 +344,7 @@
     }
 
     function serach() {
-        const startTime = new Date(); // ✅ 記錄開始時間
+        const startTime = new Date(); // 記錄開始時間
 
         const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
         const dateFrom = document.getElementById('dateFrom').value;
@@ -386,7 +386,7 @@
         })
         .then(response => response.json())
         .then(res => {
-            const endTime = new Date(); // ✅ 記錄結束時間
+            const endTime = new Date(); // 記錄結束時間
             const durationMs = endTime - startTime;
             const seconds = Math.floor((durationMs / 1000) % 60);
             const minutes = Math.floor(durationMs / 1000 / 60);
@@ -488,8 +488,8 @@
                     <td>${r.mrNumber || ''}</td>
                     <td>${r.name || ''}</td>
                     <td>${r.testItemName || ''}</td>
-                    <td>${r.receivedDate ? r.receivedDate.substring(0, 10) : ''}</td>
                     <td>${r.testingDate ? r.testingDate.substring(0, 10) : ''}</td>
+                    <td>${r.receivedDate ? r.receivedDate.substring(0, 10) : ''}</td>
                     <td>${r.reportDate ? r.reportDate.substring(0, 10) : ''}</td>
                     <td>${r.inspectionInstitution || ''}</td>
                     <td>${r.sendingPhysicianName || ''}</td>
@@ -503,8 +503,8 @@
                         }
                     </td>
 
-                    <td><button class="btn btn-sm btn-warning" onclick="viewReport('report',${r.id})">檢視</button></td>
-                    <td><button class="btn btn-sm btn-success" onclick="viewReport('teachreport',${r.id})">說明衛教單</button></td>
+                    <td><button class="btn btn-sm btn-warning" onclick="viewReport('report',${r.id})">報告</button></td>
+                    <td><button class="btn btn-sm btn-success" onclick="viewReport('teachreport',${r.id})">衛教單</button></td>
                     <td><button class="btn btn-sm btn-info" onclick="viewReport('paperreport',${r.id})">文獻</button></td>
                 </tr>
             `;
@@ -539,7 +539,11 @@
     }
 
     function openEditPage(reportId) {
-        window.open(`/Report/Edit/${reportId}`, '_blank');
+        if(@Model.PartitionId == 1){
+            window.open(`/Report/Edit/${reportId}`, '_blank');
+        }else{
+            window.open(`/Report/Edit/${reportId}`, '_blank');
+        }
     }
 
     function getStatusColor(status) {
@@ -625,8 +629,8 @@
         flex-direction: column;
     }
     .test-item:hover {
-        background-color: #e0f7ff; /* ✅ 高亮背景 */
-        border-color: #3399ff;     /* ✅ 高亮邊框 */
+        background-color: #e0f7ff; /* 高亮背景 */
+        border-color: #3399ff;     /* 高亮邊框 */
     }
 
     th[data-sort] {
