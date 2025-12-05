@@ -16,18 +16,23 @@
         </div>
 
         <div class="target-report-row">
-            <div class="target-report-row-label"><label>追蹤範圍</label></div>
+            <div class="target-report-row-label"><label>收件日期</label></div>
             <input type="date" id="dateFrom"> ～ <input type="date" id="dateTo">
         </div>
 
         <div class="target-report-row">
-            <div class="target-report-row-label"><label>案件狀態</label></div>
+            <div class="target-report-row-label"><label>通知狀態</label></div>
             <div class="target-report-input">
                 <div><input type="checkbox" name="notifyStatus" value="待通知"><label>待通知</label></div>
-                <div><input type="checkbox" name="trackStatus" value="待追蹤"><label>待追蹤</label></div>
                 <div><input type="checkbox" name="notifyStatus" value="已通知"><label>已通知</label></div>
-                <div><input type="checkbox" name="trackStatus" value="已追蹤"><label>已追蹤</label></div>
                 <div><input type="checkbox" name="notifyStatus" value="不需通知"><label>不需通知</label></div>
+            </div>
+        </div>
+        <div class="target-report-row">
+            <div class="target-report-row-label"><label>追蹤狀態</label></div>
+            <div class="target-report-input">
+                <div><input type="checkbox" name="trackStatus" value="待追蹤"><label>待追蹤</label></div>
+                <div><input type="checkbox" name="trackStatus" value="已追蹤"><label>已追蹤</label></div>
                 <div><input type="checkbox" name="trackStatus" value="不需追蹤"><label>不需追蹤</label></div>
             </div>
         </div>
@@ -56,7 +61,7 @@
                 <thead>
                     <tr>
                         <th>序號</th>
-                        <th data-sort="specimenNumber"><span class="sort-icon">↑↓</span>檢體編號</th>
+                        @* <th data-sort="specimenNumber"><span class="sort-icon">↑↓</span>檢體編號</th> *@
                         <th data-sort="specimenType"><span class="sort-icon">↑↓</span>檢體類別</th>
                         <th data-sort="inspectionProgress"><span class="sort-icon">↑↓</span>檢驗進度</th>
                         <th data-sort="mrNumber"><span class="sort-icon">↑↓</span>病歷號</th>
@@ -69,7 +74,8 @@
                         <th>送檢醫師</th>
                         <th>評估狀態</th>
                         <th>通知狀態</th>
-                        <th>追蹤狀態</th>
+                        <th>慧智追蹤</th>
+                        <th>院所追蹤</th>
                         <th>編輯</th>
                         <th>報告</th>
                         <th>衛教單</th>
@@ -493,8 +499,8 @@
                     <td>${r.reportDate ? r.reportDate.substring(0, 10) : ''}</td>
                     <td>${r.inspectionInstitution || ''}</td>
                     <td>${r.sendingPhysicianName || ''}</td>
-                    <td><div style="width: 75px;background-color: ${assColor}; color: white;border-radius: 10px;text-align: center;">${r.assessmentStatus || ''}</div></td>
-                    <td><div style="width: 75px;background-color: ${notifyColor}; color: white;border-radius: 10px;text-align: center;">${r.notificationStatus || ''}</div></td>
+                    <td><div style="width: 75px;background-color: ${assColor}; color: white;border-radius: 10px;text-align: center;">${r.notificationStatus || ''}</div></td>
+                    <td><div style="width: 75px;background-color: ${notifyColor}; color: white;border-radius: 10px;text-align: center;">${r.trackingStatus || ''}</div></td>
                     <td><div style="width: 75px;background-color: ${trackColor}; color: white;border-radius: 10px;text-align: center;">${r.trackingStatus || ''}</div></td>
                     <td>
                         ${canUpdate
