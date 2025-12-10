@@ -17,6 +17,14 @@
 
         <div class="target-report-row">
             <div class="target-report-row-label"><label>收件日期</label></div>
+            <input type="date" id="receivedateFrom"> ～ <input type="date" id="receivedateTo">
+        </div>
+        <div class="target-report-row">
+            <div class="target-report-row-label"><label>採檢日期</label></div>
+            <input type="date" id="testdateFrom"> ～ <input type="date" id="testdateTo">
+        </div>
+        <div class="target-report-row">
+            <div class="target-report-row-label"><label>報告日期</label></div>
             <input type="date" id="dateFrom"> ～ <input type="date" id="dateTo">
         </div>
 
@@ -29,14 +37,21 @@
             </div>
         </div>
         <div class="target-report-row">
-            <div class="target-report-row-label"><label>追蹤狀態</label></div>
+            <div class="target-report-row-label"><label>慧智追蹤狀態</label></div>
             <div class="target-report-input">
                 <div><input type="checkbox" name="trackStatus" value="待追蹤"><label>待追蹤</label></div>
                 <div><input type="checkbox" name="trackStatus" value="已追蹤"><label>已追蹤</label></div>
                 <div><input type="checkbox" name="trackStatus" value="不需追蹤"><label>不需追蹤</label></div>
             </div>
         </div>
-
+        <div class="target-report-row">
+            <div class="target-report-row-label"><label>院所追蹤狀態</label></div>
+            <div class="target-report-input">
+                <div><input type="checkbox" name="clinictrackStatus" value="待追蹤"><label>待追蹤</label></div>
+                <div><input type="checkbox" name="clinictrackStatus" value="已追蹤"><label>已追蹤</label></div>
+                <div><input type="checkbox" name="clinictrackStatus" value="不需追蹤"><label>不需追蹤</label></div>
+            </div>
+        </div>
         <div class="target-report-row" style="position: relative;">
             <div class="target-report-row-label"><label>關鍵字</label></div>
             <div class="target-report-input">
@@ -72,7 +87,6 @@
                         <th data-sort="reportDate"><span class="sort-icon">↑↓</span>報告日期</th>
                         <th data-sort="inspectionInstitution"><span class="sort-icon">↑↓</span>送檢院所</th>
                         <th>送檢醫師</th>
-                        <th>評估狀態</th>
                         <th>通知狀態</th>
                         <th>慧智追蹤</th>
                         <th>院所追蹤</th>
@@ -144,7 +158,6 @@
                         alert('您沒有查詢權限');
                     });
             }
-
         });
 
         // 取得今天日期
@@ -163,16 +176,22 @@
         }
 
         // 設定 input 的 value
+        //收件日期
+        document.getElementById('receivedateFrom').value = formatDate(prevMonth);
+        document.getElementById('receivedateTo').value = formatDate(today);
+        //檢測日期
+        document.getElementById('testdateFrom').value = formatDate(prevMonth);
+        document.getElementById('testdateTo').value = formatDate(today);
+        //報告日期
         document.getElementById('dateFrom').value = formatDate(prevMonth);
         document.getElementById('dateTo').value = formatDate(today);
-
         //從home儀表板進來
         const filterType = '@Model.FilterType';
         if (filterType) {
-        $('#queryDuration').text(`目前查詢分類：${filterType}`);
-        forceQuery = true; // 啟用強制查詢
-        applyFilterTypeDefaults(filterType); // 套用條件
-        serach(); // 自動查詢
+            $('#queryDuration').text(`目前查詢分類：${filterType}`);
+            forceQuery = true; // 啟用強制查詢
+            applyFilterTypeDefaults(filterType); // 套用條件
+            serach(); // 自動查詢
         } else {
             $('#queryDuration').text("請選擇篩選條件後點擊搜尋");
         }
@@ -182,6 +201,7 @@
             $('#reportModal').modal('show');
         });
 
+        //匯出簡化報告
         $('#exportSimplifiedBtn').on('click', function () {
             var currentFilter = getCurrentFilter();
             fetch('/api/report/export/simplified', {
@@ -193,6 +213,7 @@
             });
         });
 
+        //匯出完整報告
         $('#exportFullBtn').on('click', function () {
             var currentFilter = getCurrentFilter();
             fetch('/api/report/export/full', {
@@ -233,10 +254,6 @@
                 $('#dateFrom').val(getDateNDaysAgo(365));
                 $('#dateTo').val(getDateNDaysAgo(60));
                 break;
-            case "assessment":
-                $('#keyword').val("重大");
-                $('#dateFrom').val(getDateNDaysAgo(365));
-                break;
         }
     }
 
@@ -252,6 +269,11 @@
             testItemIds: $('#searchItem .test-item').map((_, el) => $(el).data('id')).get(),
             notifyStatus: $('input[name="notifyStatus"]:checked').map((_, el) => $(el).val()).get(),
             trackStatus: $('input[name="trackStatus"]:checked').map((_, el) => $(el).val()).get(),
+            clinictrackStatus: $('input[name="clinictrackStatus"]:checked').map((_, el) => $(el).val()).get(),
+            receivedateFrom: $('#receivedateFrom').val(),
+            receivedateTo: $('#receivedateTo').val(),
+            testdateFrom: $('#testdateFrom').val(),
+            testdateTo: $('#testdateTo').val(),
             dateFrom: $('#dateFrom').val(),
             dateTo: $('#dateTo').val(),
             keyword: $('#keyword').val()
@@ -353,6 +375,10 @@
         const startTime = new Date(); // 記錄開始時間
 
         const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
+        const receivedateFrom = document.getElementById('recevedateFrom').value;
+        const receivedateTo = document.getElementById('recevedateTo').value;
+        const testdateFrom = document.getElementById('testdateFrom').value;
+        const testdateTo = document.getElementById('testdateTo').value;
         const dateFrom = document.getElementById('dateFrom').value;
         const dateTo = document.getElementById('dateTo').value;
         const notifyStatus = Array.from(document.querySelectorAll('input[name="notifyStatus"]:checked')).map(cb => cb.value);
@@ -483,12 +509,12 @@
         $.each(reports, function (i, r) {
             const notifyColor = getStatusColor(r.notificationStatus);
             const trackColor = getStatusColor(r.trackingStatus);
-            const assColor = getStatusColor(r.assessmentStatus);
+            const assColor = getStatusColor(r.trackingStatus);
 
             const row = `
                 <tr>
                     <td>${i + 1}</td>
-                    <td>${r.specimenNumber || ''}</td>
+                    @* <td>${r.specimenNumber || ''}</td> *@
                     <td>${r.specimenType || ''}</td>
                     <td>${r.inspectionProgress || ''}</td>
                     <td>${r.mrNumber || ''}</td>
@@ -556,15 +582,12 @@
         switch (status) {
             case '已通知':
             case '已追蹤':
-            case '已評估':
                 return '#28a745'; // 綠色
             case '待通知':
             case '待追蹤':
-            case '重大':
                 return '#dc3545'; // 紅色
             case '不需通知':
             case '不需追蹤':
-            case '待評估':
                 return '#6c757d'; // 灰色
             default:
                 return 'transparent'; // 無色
