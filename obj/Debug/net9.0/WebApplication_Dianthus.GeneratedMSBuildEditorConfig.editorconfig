@@ -17,113 +17,113 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WebApplication_Dianthus
 build_property.RootNamespace = WebApplication_Dianthus
-build_property.ProjectDir = C:\Users\D\Desktop\project\WebApplication_Dianthus\
+build_property.ProjectDir = C:\Users\210124\Desktop\newProject\project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\D\Desktop\project\WebApplication_Dianthus
+build_property.MSBuildProjectDirectory = C:\Users\210124\Desktop\newProject\project
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Home/index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Home/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxpbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/LogViewer/index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/LogViewer/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nVmlld2VyXGluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/OBPatient/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/OBPatient/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT0JQYXRpZW50XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Permissions/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Permissions/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVybWlzc2lvbnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/Edit.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Report/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/ItemList.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Report/ItemList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEl0ZW1MaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/ReportReviewPage.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Report/ReportReviewPage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFJlcG9ydFJldmlld1BhZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Roles/Create.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Roles/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Roles/Edit.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Roles/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Roles/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Roles/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/Error.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/_LayoutLogin.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Shared/_LayoutLogin.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/_UserInfo.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Shared/_UserInfo.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Vc2VySW5mby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/UserRolePermission/Create.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/UserRolePermission/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVQZXJtaXNzaW9uXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/UserRolePermission/Edit.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/UserRolePermission/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVQZXJtaXNzaW9uXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/UserRolePermission/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/UserRolePermission/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVQZXJtaXNzaW9uXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/User/Create.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/User/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/User/Profile.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/User/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/_ViewImports.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/_ViewStart.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Auth/Login.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Auth/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = b-moq9deg8gi
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Report/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Report/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = b-48x5ve6fy4
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/Shared/_Layout.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-zbm04d3yxb
 
-[C:/Users/D/Desktop/project/WebApplication_Dianthus/Views/User/Index.cshtml]
+[C:/Users/210124/Desktop/newProject/project/Views/User/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = b-dit3pak6wn
