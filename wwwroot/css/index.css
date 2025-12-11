@@ -1,0 +1,234 @@
+/*!*****************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./src/ctbcpages/index/index.scss ***!
+  \*****************************************************************************************************************************************************/
+@charset "UTF-8";
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+iframe {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
+.container {
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  grid-template-rows: 60px 1fr;
+  transition: grid-template-columns 150ms ease-in-out;
+}
+.container .sidebar {
+  z-index: 10;
+  grid-column: 1;
+  grid-row: span 2;
+  background: linear-gradient(76deg, var(--c-cyan-500) -55%, var(--c-primary-500) 90%);
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 5px;
+}
+.container .pinned-announcement {
+  display: none;
+}
+.container .header {
+  grid-column: 2;
+  grid-row: 1;
+}
+.container .main {
+  grid-column: 2;
+  grid-row: 2;
+  background-color: #f0f0f0;
+}
+
+.container.sidebar-collapse {
+  grid-template-columns: 0px 1fr;
+  transition: grid-template-columns 150ms ease-in-out;
+}
+
+/** 當有置頂公告時，變三列，第一列:公告、第二列:header、第三列:主頁 */
+.container.with-announcement {
+  grid-template-rows: 45px 60px 1fr;
+}
+.container.with-announcement .sidebar {
+  grid-row: span 3;
+}
+.container.with-announcement .pinned-announcement {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+}
+.container.with-announcement .header {
+  grid-column: 2;
+  grid-row: 2;
+}
+.container.with-announcement .main {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.header {
+  font: 1em/1.231 "Noto Sans TC", Helvetica, sans-serif, Geneva, sans-serif;
+  letter-spacing: 1.5px;
+  line-height: 1.5;
+  color: #333;
+  background-color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 22px;
+}
+.header .header__left {
+  display: flex;
+  align-items: center;
+}
+.header .header__left .title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 10px;
+  letter-spacing: 3px;
+}
+.header .header__left .title span {
+  color: #008080;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+    .header .header__left .title span::after {
+        content: "";
+        display: block;
+        height: 3px;
+        background-color: #f1a64e8f;
+        left: 0;
+        bottom: -3px;
+    }
+    .header .header__left .title .i_ttpay {
+        display: inline-block;
+        background: url('/images/header_icon.svg');
+        width: 42px;
+        height: 42px;
+        display: inline-block;
+        transform: scale(0.6) translateX(-5px);
+        background-repeat: no-repeat;
+        background-size: contain; /* 或 cover，讓圖片符合容器大小 */
+        background-position: center; /* 置中對齊 */
+    }
+.header .header__left .git-version {
+  font-size: 11px;
+  color: #333;
+}
+.header .header__right {
+  height: 100%;
+  font-size: 0.83rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.header .header__right .logout-welcome {
+  font-family: var(--c-font-family);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 9px;
+  border-radius: 50px;
+  background: linear-gradient(290deg, var(--c-cyan-500) -55%, var(--c-primary-500) 90%);
+}
+.header .header__right .logout-welcome a {
+  color: #fff;
+  display: block;
+  padding: 0 12px;
+  text-decoration: none;
+  outline: none;
+  position: relative;
+}
+.header .header__right .logout-welcome a:first-child::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background-color: #fff;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.header .header__right .logout-welcome a:first-child:hover {
+  background: #0a5e5e;
+  border-radius: 80px;
+  opacity: 0.45;
+}
+.header .header__right .logout-welcome #userInfo {
+  cursor: pointer;
+}
+.header .header__right .logout-welcome #userInfo:hover {
+  background: #0a5e5e;
+  border-radius: 80px;
+  opacity: 0.45;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.time p {
+  color: #707070;
+  transform: translateY(1px);
+}
+.time p span {
+  color: #F03D3D;
+}
+.time .i_hourglass {
+  display: inline-block;
+  background: no-repeat scroll center;
+  background-size: 100% auto;
+  background: url(85b60d3308bd6f33fa33.svg);
+  width: 15px;
+  height: 15px;
+  transform: scale(0.9);
+}
+
+.pinned-announcement {
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 1000;
+  background: linear-gradient(90deg, #f3a9a9 0%, #7f6bde 50%, #f85d98 120%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  color: white;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pinned-announcement a {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.pinned-announcement a:hover {
+  color: #ffd52f;
+}
+.pinned-announcement button {
+  background-color: transparent;
+  border: none;
+  padding-right: 10px;
+  cursor: pointer;
+}
+.pinned-announcement button:hover {
+  color: red;
+}
+
+#announcement-link-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/*# sourceMappingURL=index.css.map*/

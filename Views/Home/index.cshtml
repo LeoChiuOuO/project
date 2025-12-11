@@ -1,5 +1,30 @@
 @model ReportDashboardViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication_Dianthus.styles.css" asp-append-version="true" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/main.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/index.css")">
+
+    <script defer src="@Url.Content("~/js/main.js")"></script>
+    <script defer src="@Url.Content("~/js/index.js")"></script>
+    <script defer src="@Url.Content("~/js/FunctionUtil.js")"></script>
+    <script defer src="@Url.Content("~/js/axios-1.6.2.min.js")"></script>
+    <script defer src="@Url.Content("~/js/axiosInterceptor.js")"></script>
+    <script defer src="@Url.Content("~/js/axiosShared.js")"></script>
+</head>
+<body>
 <div class="container-fluid">
 </div>
 <h2>報告統計儀表板</h2>
@@ -49,7 +74,7 @@
 </div>
 
 
-@section Scripts {
+
 <script>
     async function apitest() {
         try {
@@ -123,10 +148,8 @@
         });
     }
 </script>
-}
 
 <style>
-
     .card.highlight-card {
         background-color: #e0f2ff; /* 淺藍色 */
         color: #004080;
@@ -153,3 +176,34 @@
     }
 
 </style>
+
+    <script>
+        // 開新分頁時沒有showLoader和hideLoader方法則重新定義
+        window.addEventListener('load', () => {
+          if (!top.showLoader) {
+            if (!document.querySelector('c-loader')) {
+              let cLoader = document.createElement('c-loader');
+              document.body.append(cLoader);
+            }
+
+            top.showLoader = (msg = 'Loading...', ms = 180000) => {
+              let loader = document.querySelector('c-loader');
+              loader.show(msg, ms);
+            }
+          }
+
+          if (!top.hideLoader) {
+            if (!document.querySelector('c-loader')) {
+              let cLoader = document.createElement('c-loader');
+              document.body.append(cLoader);
+            }
+
+            top.hideLoader = () => {
+              let loader = document.querySelector('c-loader');
+              loader.hide();
+            }
+          }
+        });
+    </script>
+</body>
+</html>

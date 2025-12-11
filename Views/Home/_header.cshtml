@@ -1,0 +1,50 @@
+﻿@using Azure.Identity
+@using WebApplication_Dianthus.Models.Interface
+@inject IUserRepository UserRepo
+@{
+	bool isAdmin = false;
+	string? userName = null;
+	var userId = Context.Session.GetString("UserId");
+	if (!string.IsNullOrEmpty(userId))
+	{
+		var user = UserRepo.GetById(int.Parse(userId));
+		if (user != null && user.Account == "admin")
+		{
+			isAdmin = true;
+		}
+		if (user != null)
+		{
+			userName = user.Name;
+		}
+	}
+}
+
+<div class="header">
+	<button class="hamburger">
+		<span class="line line1"></span>
+		<span class="line line2"></span>
+		<span class="line line3"></span>
+	</button>
+
+	<div class="header__left">
+		<h2 class="title"><i class="icon i_ttpay"></i><span>諮詢報告平台</span></h2>
+		<span style="font-size: 17px;font-weight: bold;color: #028eea; margin-bottom: 1px; letter-spacing: .5px">
+			DEV
+		</span>
+		<div class="space-4"></div>
+		<div class="space-4"></div>
+		<div class="space-4"></div>
+	</div>
+
+	<div class="header__right">
+		<div class="logout-welcome">
+			<form asp-controller="Auth" asp-action="Logout" method="post" class="mb-0">
+				@Html.AntiForgeryToken()
+				<a href="javascript:void(0)" onclick="this.parentElement.submit(); return false;">登出</a>
+			</form>
+			<a id="userInfo">
+				<span>@userName</span>您好 !
+			</a>
+		</div>
+	</div>
+</div>

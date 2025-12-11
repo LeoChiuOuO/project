@@ -257,7 +257,7 @@
 
 				<form id="loginForm" method="POST">
 					<div class="input-group">
-						<label for="username">帳號A (Account)</label>
+						<label for="username">帳號 (Account)</label>
 						<div class="input-wrapper">
 							<input type="text" id="account" name="account" placeholder="請輸入帳號" autocomplete="off">
 						</div>
@@ -296,7 +296,6 @@
 					type: 'POST',
 					data: $(this).serialize(),
 					success: function (res) {
-						debugger
 						if (res.success) {
 							window.location.href = '/Home/Index';
 						} else {

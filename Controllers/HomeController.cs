@@ -26,6 +26,17 @@ public class HomeController : Controller
 
     }
 
+    public IActionResult Index2()
+    {
+        var dashboard = _reportService.GetDashboard();
+        return View(dashboard);
+    }
+
+    public IActionResult leftMenu()
+    {
+        return View();
+    }
+
     [HttpGet]
     public IActionResult GetDashboard()
     {

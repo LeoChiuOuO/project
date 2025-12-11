@@ -1,0 +1,55 @@
+@{
+	Layout = "_Layout2";
+}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1,maximum-scale=1">
+	<title>諮詢報告平台</title>
+	<link rel="icon" type="image/x-icon" href="image/favicon.ico">
+	<script type="text/javascript" for="window" event="onunload">
+		top.location.replace('<%=request.getContextPath()%>/logout');
+	</script>
+	<link rel="stylesheet" type="text/css" href="@Url.Content("~/css/main.css")">
+	<link rel="stylesheet" type="text/css" href="@Url.Content("~/css/index.css")">
+
+	<script defer src="@Url.Content("~/js/main.js")"></script>
+	<script defer src="@Url.Content("~/js/index.js")"></script>
+	<script defer src="@Url.Content("~/js/FunctionUtil.js")"></script>
+	<script defer src="@Url.Content("~/js/axios-1.6.2.min.js")"></script>
+	<script defer src="@Url.Content("~/js/axiosInterceptor.js")"></script>
+</head>
+<body>
+	<c-loader></c-loader>
+	<div class="container">
+		<!-- 左選單menu區塊 -->
+		<div class="sidebar">
+			<iframe src="leftMenu" name="b" scrolling="yes" noresize></iframe>
+		</div>
+		<!-- Header 區塊 -->
+		<partial name="_header" />
+		<!-- 右下主要內容區塊 -->
+		<div class="main">
+			<iframe class="main-content" src="@Url.Action("Index", "Home")" name="c"></iframe>
+		</div>
+	</div>
+	<script>
+		window.focusSearch = () => {
+		  const leftMenu = document.querySelector('iframe[src="leftMenu"]');
+		  leftMenu.contentWindow.document.querySelector('c-sidemenu').focusSearch();
+		}
+
+		// default timeout 10 minute
+		window.showLoader = (msg = 'Loading...', ms = 600000) => {
+		  const loader = document.querySelector('c-loader');
+		  loader.show(msg, ms);
+		}
+		window.hideLoader = () => {
+		  const loader = document.querySelector('c-loader');
+		  loader.hide();
+		}
+	</script>
+</body>
+</html>
