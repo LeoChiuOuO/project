@@ -5,6 +5,10 @@ namespace WebApplication_Dianthus.Models;
 public class ReportFilter
 {
     public List<int>? TestItemIds { get; set; }
+    public DateTime? ReceiveDateFrom { get; set; }
+    public DateTime? ReceiveDateTo { get; set; }
+    public DateTime? TestDateFrom { get; set; }
+    public DateTime? TestDateTo { get; set; }
     public DateTime? DateFrom { get; set; }
     public DateTime? DateTo { get; set; }
     public List<string>? NotifyList { get; set; }

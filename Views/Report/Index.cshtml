@@ -235,24 +235,38 @@
                 $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
                 $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
                 $('#dateFrom').val(getDateNDaysAgo(365));
+                $('#receivedateFrom').val(getDateNDaysAgo(365));
+                $('#testdateFrom').val(getDateNDaysAgo(365));
                 break;
             case "upcoming":
                 $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
                 $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
                 $('#dateFrom').val(getDateNDaysAgo(30));
                 $('#dateTo').val(getDateNDaysAgo(20));
+                $('#receivedateFrom').val(getDateNDaysAgo(30));
+                $('#receivedateTo').val(getDateNDaysAgo(20));
+                $('#testdateFrom').val(getDateNDaysAgo(30));
+                $('#testdateTo').val(getDateNDaysAgo(20));
                 break;
             case "overdue":
                 $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
                 $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
                 $('#dateFrom').val(getDateNDaysAgo(60));
                 $('#dateTo').val(getDateNDaysAgo(30));
+                $('#receivedateFrom').val(getDateNDaysAgo(60));
+                $('#receivedateTo').val(getDateNDaysAgo(30));
+                $('#testdateFrom').val(getDateNDaysAgo(60));
+                $('#testdateTo').val(getDateNDaysAgo(30));
                 break;
             case "critical":
                 $('input[name="notifyStatus"][value="待通知"]').prop('checked', true);
                 $('input[name="trackStatus"][value="待追蹤"]').prop('checked', true);
                 $('#dateFrom').val(getDateNDaysAgo(365));
                 $('#dateTo').val(getDateNDaysAgo(60));
+                $('#receivedateFrom').val(getDateNDaysAgo(365));
+                $('#receivedateTo').val(getDateNDaysAgo(60));
+                $('#testdateFrom').val(getDateNDaysAgo(365));
+                $('#testdateTo').val(getDateNDaysAgo(60));
                 break;
         }
     }
@@ -375,8 +389,8 @@
         const startTime = new Date(); // 記錄開始時間
 
         const selectedItems = Array.from(document.querySelectorAll('#searchItem .test-item')).map(item => item.dataset.id);
-        const receivedateFrom = document.getElementById('recevedateFrom').value;
-        const receivedateTo = document.getElementById('recevedateTo').value;
+        const receivedateFrom = document.getElementById('receivedateFrom').value;
+        const receivedateTo = document.getElementById('receivedateTo').value;
         const testdateFrom = document.getElementById('testdateFrom').value;
         const testdateTo = document.getElementById('testdateTo').value;
         const dateFrom = document.getElementById('dateFrom').value;
@@ -388,7 +402,7 @@
         // 計算有效條件數量
         let conditionCount = 0;
         if (selectedItems.length > 0) conditionCount++;
-        if (dateFrom || dateTo) conditionCount++;
+        if ((dateFrom || dateTo) && (testdateFrom || testdateTo) && (receivedateFrom || receivedateTo)) conditionCount++;
         if (notifyStatus.length > 0 || trackStatus.length > 0) conditionCount++;
         if (keyword !== "") conditionCount++;
 
@@ -401,6 +415,10 @@
         // 打包資料
         currentFilter  = {
             testItemIds: selectedItems,
+            receivedateFrom,
+            receivedateTo,
+            testdateFrom,
+            testdateTo,
             dateFrom,
             dateTo,
             notifyStatus,

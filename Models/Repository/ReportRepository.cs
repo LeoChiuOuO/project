@@ -384,6 +384,13 @@ public class ReportRepository : IReportRepository
             query = query.Where(r => r.PartitionId.ToString() == partitionId);
         }
 
+        // 篩選：日期區間(收件日期)
+        if (filter.DateFrom.HasValue && filter.DateTo.HasValue)
+            query = query.Where(r => r.ReceivedDate >= filter.ReceiveDateFrom && r.ReceivedDate <= filter.ReceiveDateTo);
+
+        // 篩選：日期區間(檢測日期)
+        if (filter.DateFrom.HasValue && filter.DateTo.HasValue)
+            query = query.Where(r => r.TestingDate >= filter.TestDateFrom && r.TestingDate <= filter.TestDateTo);
 
         // 篩選：日期區間(報告日期)
         if (filter.DateFrom.HasValue && filter.DateTo.HasValue)
