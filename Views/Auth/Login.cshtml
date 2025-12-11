@@ -1,58 +1,323 @@
 @{
-    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
-    ViewData["Title"] = "登入";
+	Layout = null;  // This disables the layout
 }
 
-<div class="login-container">
-    @* <div class="logo-placeholder">LOGO</div> *@
-    <img src="~/images/logo.png" alt="LOGO" class="logo-img" />
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>診所內部管理系統 | 登入</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    <form id="loginForm" class="login-form">
-    <div>
-        <div><label>帳號</label></div>
-        <div><input type="text" name="account" placeholder="請輸入帳號" required /></div>
-    </div>
-    <div style="margin-top: 10px;">
-        <div><label>密碼</label></div>
-        <div><input type="password" name="password" placeholder="請輸入密碼" required /></div>
-    </div >
-        <div class="btn-row" style="margin-top: 10px;">
-            <button type="submit">登入</button>
-        </div>
-    </form>
+	<style>
+		:root {
+			/* High-End Clinic Palette */
+			--primary-color: #0F5156; /* Deep Teal - Trustworthy & Calm */
+			--accent-color: #2A9D8F; /* Lighter Teal for highlights */
+			--bg-color: #F3F4F6; /* Soft Light Gray */
+			--text-main: #1F2937; /* Dark Charcoal */
+			--text-muted: #6B7280; /* Muted Gray */
+			--white: #FFFFFF;
+			--input-bg: #F9FAFB;
+			--border-radius: 12px;
+			--shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+		}
 
-    <div id="loginResult" class="error-msg"></div>
-</div>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(function () {
-        $('#loginForm').on('submit', function (e) {
-            e.preventDefault();
-            $.ajax({
-                url: '@Url.Action("Login", "Auth")',
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function (res) {
-                    if (res.success) {
-                        window.location.href = '/Home/Index';
-                    } else {
-                        $('#loginResult').text(res.message);
-                        // 加上抖動動畫
-                        $('.login-form').addClass('shake');
-                        setTimeout(function () {
-                            $('.login-form').removeClass('shake');
-                        }, 500);
-                    }
-                },
-                error: function () {
-                    $('#loginResult').text('伺服器錯誤，請稍後再試');
-                    $('.login-form').addClass('shake');
-                    setTimeout(function () {
-                        $('.login-form').removeClass('shake');
-                    }, 500);
-                }
-            });
-        });
-    });
-</script>
+		body {
+			font-family: 'Noto Sans TC', sans-serif;
+			background-color: var(--bg-color);
+			height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.login-container {
+			width: 100%;
+			max-width: 1000px;
+			height: 650px;
+			background: var(--white);
+			border-radius: 24px;
+			box-shadow: var(--shadow);
+			display: flex;
+			overflow: hidden;
+			margin: 20px;
+		}
+
+		/* LEFT SIDE: Visual Branding */
+		.brand-section {
+			flex: 1;
+			background-image: url('@Url.Content("~/images/home_background.jpg")');
+			background-size: cover;
+			background-position: center;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			padding: 40px;
+			color: var(--white);
+		}
+
+			/* Dark overlay to make text readable on the image */
+			.brand-section::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: linear-gradient(to top, rgba(15, 81, 86, 0.9), rgba(15, 81, 86, 0.3));
+				z-index: 1;
+			}
+
+		.brand-content {
+			position: relative;
+			z-index: 2;
+		}
+
+			.brand-content h2 {
+				font-size: 2rem;
+				font-weight: 700;
+				margin-bottom: 10px;
+				letter-spacing: 1px;
+			}
+
+			.brand-content p {
+				font-size: 0.95rem;
+				opacity: 0.9;
+				font-weight: 300;
+			}
+
+		/* RIGHT SIDE: Login Form */
+		.form-section {
+			flex: 1;
+			padding: 60px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.header {
+			margin-bottom: 40px;
+		}
+
+			.header h1 {
+				color: var(--text-main);
+				font-size: 1.75rem;
+				font-weight: 700;
+				margin-bottom: 8px;
+			}
+
+			.header p {
+				color: var(--text-muted);
+				font-size: 0.9rem;
+			}
+
+		.input-group {
+			margin-bottom: 24px;
+			position: relative;
+		}
+
+			.input-group label {
+				display: block;
+				margin-bottom: 8px;
+				color: var(--text-main);
+				font-weight: 500;
+				font-size: 0.9rem;
+			}
+
+		.input-wrapper {
+			position: relative;
+		}
+
+			.input-wrapper input {
+				width: 100%;
+				padding: 14px 16px;
+				padding-left: 16px;
+				background: var(--input-bg);
+				border: 1px solid #E5E7EB;
+				border-radius: var(--border-radius);
+				font-size: 1rem;
+				color: var(--text-main);
+				transition: all 0.3s ease;
+				outline: none;
+			}
+
+				.input-wrapper input:focus {
+					border-color: var(--accent-color);
+					background: var(--white);
+					box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.1);
+				}
+
+		/* Icons styling (using simple CSS shapes or emojis for standalone static file) */
+		/* In a real project, use SVG icons */
+
+		.actions {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 30px;
+			font-size: 0.85rem;
+		}
+
+		.remember-me {
+			display: flex;
+			align-items: center;
+			color: var(--text-muted);
+			cursor: pointer;
+		}
+
+			.remember-me input {
+				margin-right: 8px;
+				accent-color: var(--primary-color);
+			}
+
+		.forgot-pass {
+			color: var(--primary-color);
+			text-decoration: none;
+			font-weight: 500;
+			transition: color 0.2s;
+		}
+
+			.forgot-pass:hover {
+				color: var(--accent-color);
+			}
+
+		.login-btn {
+			width: 100%;
+			padding: 14px;
+			background: var(--primary-color);
+			color: var(--white);
+			border: none;
+			border-radius: var(--border-radius);
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			letter-spacing: 0.5px;
+		}
+
+			.login-btn:hover {
+				background-color: #0b3d41;
+				transform: translateY(-1px);
+				box-shadow: 0 4px 12px rgba(15, 81, 86, 0.2);
+			}
+
+		.footer {
+			margin-top: auto;
+			text-align: center;
+			font-size: 0.8rem;
+			color: #9CA3AF;
+		}
+
+		/* Responsive Design */
+		@@media (max-width: 768px) {
+			.login-container {
+				flex-direction: column;
+				height: auto;
+				max-width: 400px;
+			}
+
+			.brand-section {
+				display: none; /* Hide image on mobile for cleaner look */
+			}
+
+			.form-section {
+				padding: 40px 30px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="login-container">
+
+			<div class="brand-section">
+				<div class="brand-content">
+					<h2>諮詢報告平台</h2>
+					<p>先進照護 • 專業至上 • 莫忘初衷 • 不斷創新</p>
+					<p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.7;">v1.0.2 a276a5c</p>
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="header">
+					<h1>歡迎回來</h1>
+					<p>請輸入您的帳號密碼以登入諮詢系統</p>
+				</div>
+
+				<form id="loginForm" method="POST">
+					<div class="input-group">
+						<label for="username">帳號A (Account)</label>
+						<div class="input-wrapper">
+							<input type="text" id="account" name="account" placeholder="請輸入帳號" autocomplete="off">
+						</div>
+					</div>
+
+					<div class="input-group">
+						<label for="password">密碼 (Password)</label>
+						<div class="input-wrapper">
+							<input type="password" id="password" name="password" placeholder="請輸入密碼">
+						</div>
+					</div>
+
+					<div class="actions" style="visibility: hidden">
+						<label class="remember-me" style="visibility: hidden">
+							<div id="loginResult" class="error-msg"></div>
+						</label>
+					</div>
+
+					<button type="submit" class="login-btn">安全登入</button>
+				</form>
+
+				<div class="footer">
+					<p>&copy; 2025 Dianthus Report System. All rights reserved.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(function () {
+			$('#loginForm').on('submit', function (e) {
+				e.preventDefault();
+				$.ajax({
+					url: '@Url.Action("Login", "Auth")',
+					type: 'POST',
+					data: $(this).serialize(),
+					success: function (res) {
+						debugger
+						if (res.success) {
+							window.location.href = '/Home/Index';
+						} else {
+							$('#loginResult').text(res.message);
+							// 加上抖動動畫
+							$('.login-form').addClass('shake');
+							setTimeout(function () {
+								$('.login-form').removeClass('shake');
+							}, 500);
+						}
+					},
+					error: function () {
+						$('#loginResult').text('伺服器錯誤，請稍後再試');
+						$('.login-form').addClass('shake');
+						setTimeout(function () {
+							$('.login-form').removeClass('shake');
+						}, 500);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>
