@@ -16,6 +16,5 @@ namespace WebApplication_Dianthus.Models.Service.Interface
         bool UpdateReport(ReportUpdateDTO report);
         void DeleteReport(int id);
         ReportDashboardViewModel GetDashboard();
-        ReportFilter BuildFilterFromType(string type);
     }
 }
