@@ -26,17 +26,6 @@ public class HomeController : Controller
 
     }
 
-    public IActionResult Index2()
-    {
-        var dashboard = _reportService.GetDashboard();
-        return View(dashboard);
-    }
-
-    public IActionResult leftMenu()
-    {
-        return View();
-    }
-
     [HttpGet]
     public IActionResult GetDashboard()
     {
@@ -56,7 +45,7 @@ public class HomeController : Controller
 
         var response = await client.SendAsync(request);
         var content = await response.Content.ReadAsStringAsync();
-        
+
         if (!response.IsSuccessStatusCode)
         {
             // 回傳原始錯誤與狀態供前端顯示

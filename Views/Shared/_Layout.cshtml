@@ -11,7 +11,7 @@
         if (user != null && user.Account == "admin")
         {
             isAdmin = true;
-        } 
+        }
     }
 }
 
@@ -46,13 +46,13 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Report" asp-action="Index">檢驗報告</a>
-                             @* <button class="nav-link text-dark" onclick="loadPage('/Report/Index')">檢驗報告</button> *@
+                            @* <button class="nav-link text-dark" onclick="loadPage('/Report/Index')">檢驗報告</button> *@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Profile">基本資料設定</a>
                             @* <a class="nav-link text-dark" onclick="loadPage('/User/Profile')">基本資料設定</a> *@
                         </li>
-                        @if(isAdmin)
+                        @if (isAdmin)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">帳號管理</a>
