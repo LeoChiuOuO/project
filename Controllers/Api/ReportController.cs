@@ -140,11 +140,21 @@ namespace WebApplication_Dianthus.Controllers.api
             try
             {
                 var message = new MailMessage();
+                Console.WriteLine(dto.Content);
                 message.From = new MailAddress(dto.Sender);
-                message.To.Add(dto.Recipient);
                 message.Subject = "異常個案追蹤通知";
                 message.Body = dto.Content;
                 message.IsBodyHtml = false;
+
+                // 加入多個收件人
+                foreach (var recipient in dto.Recipients ?? new List<string>())
+                {
+                    if (!string.IsNullOrWhiteSpace(recipient))
+                    {
+                        message.To.Add(new MailAddress(recipient));
+                    }
+                }
+
 
                 using var smtp = new SmtpClient("smtp.gmail.com", 587)
                 {

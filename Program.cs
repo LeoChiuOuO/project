@@ -80,11 +80,11 @@ var app = builder.Build();
 
 
 // 中介軟體順序
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+// if (!app.Environment.IsDevelopment())
+// {
+//     app.UseExceptionHandler("/Home/Error");
+//     app.UseHsts();
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // 這行很重要，讓 CSS/JS/圖片能被載入
