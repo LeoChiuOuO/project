@@ -52,6 +52,9 @@ public class Report
     [Column("name")]
     public string Name { get; set; }
 
+    [Column("birthday")]
+    public DateTime? Birthday{get;set;}
+
     [Column("id_number")]
     public string IdNumber { get; set; }
 
