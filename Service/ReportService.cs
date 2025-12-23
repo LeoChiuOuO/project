@@ -32,7 +32,11 @@ namespace WebApplication_Dianthus.Services
 
         public void CreateReport(Report report)
         {
-            throw new NotImplementedException();
+            //塞入預設值
+            report.TrackingStatus = "待追蹤";
+            report.NotificationStatus = "待通知";
+            report.SendEmailState = "未發送";
+            _repo.CreateReport(report);
         }
 
         public void DeleteReport(int id)

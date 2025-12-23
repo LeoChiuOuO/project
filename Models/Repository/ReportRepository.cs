@@ -19,6 +19,15 @@ public class ReportRepository : IReportRepository
         _context = context;
     }
 
+    public void CreateReport(Report report)
+    {
+        //設定建立時間
+        report.CreatedAt = DateTime.UtcNow;
+        report.UpdatedAt = DateTime.UtcNow;
+        _context.Reports.Add(report);
+        _context.SaveChanges();
+    }
+
     public Report GetReportById(int id)
     {
         var sql = @"

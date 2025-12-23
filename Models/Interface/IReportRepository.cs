@@ -9,6 +9,7 @@ namespace WebApplication_Dianthus.Models.Interface
 {
     public interface IReportRepository
     {
+        void CreateReport(Report report);
         PagedResult<Report> GetReports(ReportFilter filter);
         Report GetReportById(int id);
         bool UpdateReport(ReportUpdateDTO report);
