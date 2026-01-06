@@ -166,82 +166,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" id="consult=records-setion">
                 <div class="row">
                     <div class="col-md-6" style="margin-top: 10px;">
                         <h4>諮詢紀錄</h4>
-                        <div style="border-color: black;border: ridge;">
-                            <ul>
-                                <li>
-                                    <!-- 第一行：日期在左，三點按鈕在右 -->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="date">2024-12-12</span>
-
-                                        <!-- 三點按鈕 -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-three-dots-vertical"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><button class="dropdown-item">編輯</button></li>
-                                                <li><button class="dropdown-item text-danger">刪除</button></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- 第二行：姓名 -->
-                                    <div class="name">慧智 陳OO</div>
-
-                                    <!-- 第三行：備註 -->
-                                    <p class="note">[備註內容]</p>
-                                </li>
-                                <li>
-                                    <!-- 第一行：日期在左，三點按鈕在右 -->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="date">2024-12-14</span>
-
-                                        <!-- 三點按鈕 -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-three-dots-vertical"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><button class="dropdown-item">編輯</button></li>
-                                                <li><button class="dropdown-item text-danger">刪除</button></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- 第二行：姓名 -->
-                                    <div class="name">禾馨 王OO</div>
-
-                                    <!-- 第三行：備註 -->
-                                    <p class="note">[備註內容]</p>
-                                </li>
-                                <li>
-                                    <!-- 第一行：日期在左，三點按鈕在右 -->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="date">2024-12-20</span>
-
-                                        <!-- 三點按鈕 -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="bi bi-three-dots-vertical"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><button class="dropdown-item">編輯</button></li>
-                                                <li><button class="dropdown-item text-danger">刪除</button></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- 第二行：姓名 -->
-                                    <div class="name">慧智 陳OO</div>
-
-                                    <!-- 第三行：備註 -->
-                                    <p class="note">[備註內容]</p>
-                                </li>
+                        <div id="remarkContainer" class="border border-2 p-2" style="height:240px; overflow-y:auto; overflow-x:hidden; border-color: black;border: ridge;">
+                            <ul id="remarkList">
+                                <!-- 帶入備註內容 -->
                             </ul>
                         </div>
                         <input id="remarkInput" name="remark" style="width: 100%; height: 80px;margin-top: 10px;" type="text">
-                        <button class="btn btn-primary mt-3">輸入備註</button>
+                        <button class="btn btn-primary mt-3" id="remarkBtn">輸入備註</button>
                     </div>
                     <div class="col-md-6">
                         <div class="container mt-5 mb-5">
@@ -374,6 +309,7 @@
 <input type="hidden" id="inspectionInstitution" value="@Model.InspectionInstitution" />
 <input type="hidden" id="sendingPhysicianName" value="@Model.SendingPhysicianName" />
 <input type="hidden" id="weeksOfPregnancy" value="@Model.WeeksOfPregnancy" />
+<input type="hidden" id="currentUserName" value="@ViewBag.CurrentUserName">
 
 <script>
     $(document).ready(function () {
@@ -529,7 +465,6 @@
             `;
         });
 
-
         // 共用：取值函式
         function getFieldValue(id) {
             return document.getElementById(id)?.value || "未提供";
@@ -643,34 +578,164 @@
             }
         });
 
-    });
+        const remarkInput = document.getElementById("remarkInput");
+        const remarkBtn = document.getElementById("remarkBtn");
+        const remarkList = document.getElementById("remarkList");
+        const remarkContainer = document.getElementById("remarkContainer");
 
-    document.getElementById("confirmAddBtn").addEventListener("click", function () {
-        const name = document.getElementById("nameInput").value.trim();
-        const date = document.getElementById("dateInput").value;
+        // 從 hidden inputs 取得必要資訊
+        const currentUserName = document.getElementById("currentUserName").value;
 
-        if (!name || !date) {
-            alert("請輸入姓名與日期！");
-            return;
+        // 頁面載入時先載入紀錄
+        loadRecords();
+
+        async function loadRecords() {
+            const res = await fetch(`/api/consultrecord/${reportId}`);
+            const records = await res.json();
+
+            remarkList.innerHTML = "";
+            records.forEach(r => renderRecord(r));
+            remarkContainer.scrollTop = remarkContainer.scrollHeight;
         }
 
-        // 建立新的 li
-        const li = document.createElement("li");
-        li.innerHTML = `
-            <a>${name}</a>
-            <a class="float-right">${date}</a>
-            <p>待追蹤</p>
-        `;
+        function renderRecord(record) {
+            const li = document.createElement("li");
+            li.dataset.id = record.id;
 
-        document.getElementById("timelineList").appendChild(li);
+            // 格式化時間：把 ISO 8601 轉成 yyyy-MM-dd HH:mm:ss
+            const date = new Date(record.createdAt);
+            const formattedDate =
+                date.getFullYear() + "-" +
+                String(date.getMonth() + 1).padStart(2, "0") + "-" +
+                String(date.getDate()).padStart(2, "0") + " " +
+                String(date.getHours()).padStart(2, "0") + ":" +
+                String(date.getMinutes()).padStart(2, "0") + ":" +
+                String(date.getSeconds()).padStart(2, "0");
 
-        // 關閉 Modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById("addItemModal"));
-        modal.hide();
 
-        // 清空輸入框
-        document.getElementById("nameInput").value = "";
-        document.getElementById("dateInput").value = "";
+            li.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="date">${formattedDate}</span>
+                    <div class="dropdown">
+                        <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><button class="dropdown-item edit-btn">編輯</button></li>
+                            <li><button class="dropdown-item text-danger delete-btn">刪除</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="name">${record.name}</div>
+                <p class="note">${record.content}</p>
+            `;
+            remarkList.appendChild(li);
+        }
+
+        // 新增紀錄
+        remarkBtn.addEventListener("click", async function () {
+            const content = remarkInput.value.trim();
+            if (!content) return;
+
+            const res = await fetch(`/api/consultrecord`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    reportId: reportId,
+                    name: currentUserName,
+                    content: content
+                })
+            });
+
+            const result = await res.json();
+            await loadRecords(); // 重新載入紀錄
+
+            remarkInput.value = "";
+            remarkContainer.scrollTop = remarkContainer.scrollHeight;
+        });
+
+        // 刪除紀錄
+        remarkList.addEventListener("click", async function (e) {
+            const deleteBtn = e.target.closest(".delete-btn");
+            if (deleteBtn) {
+                const recordLi = deleteBtn.closest("li");
+                const id = recordLi.dataset.id;
+
+                await fetch(`/api/consultrecord/${id}`, { method: "DELETE" });
+                recordLi.remove();
+            }
+        });
+
+        // 編輯紀錄
+        remarkList.addEventListener("click", function (e) {
+            const editBtn = e.target.closest(".edit-btn");
+            if (editBtn) {
+                const li = editBtn.closest("li");
+                const note = li.querySelector(".note");
+
+                if (li.querySelector("textarea")) return;
+
+                const textarea = document.createElement("textarea");
+                textarea.className = "form-control mt-2";
+                textarea.value = note.textContent;
+
+                const saveBtn = document.createElement("button");
+                saveBtn.className = "btn btn-sm btn-success mt-2";
+                saveBtn.textContent = "儲存";
+
+                note.replaceWith(textarea);
+                li.appendChild(saveBtn);
+
+                saveBtn.addEventListener("click", async function () {
+                    const id = li.dataset.id;
+                    const newContent = textarea.value;
+
+                    await fetch(`/api/consultrecord/${id}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ content: newContent })
+                    });
+
+                    const newNote = document.createElement("p");
+                    newNote.className = "note";
+                    newNote.textContent = newContent;
+
+                    textarea.replaceWith(newNote);
+                    saveBtn.remove();
+
+                    remarkContainer.scrollTop = remarkContainer.scrollHeight;
+                });
+            }
+        });
+
+
+        document.getElementById("confirmAddBtn").addEventListener("click", function () {
+            const name = document.getElementById("nameInput").value.trim();
+            const date = document.getElementById("dateInput").value;
+
+            if (!name || !date) {
+                alert("請輸入姓名與日期！");
+                return;
+            }
+
+            // 建立新的 li
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <a>${name}</a>
+                <a class="float-right">${date}</a>
+                <p>待追蹤</p>
+            `;
+
+            document.getElementById("timelineList").appendChild(li);
+
+            // 關閉 Modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById("addItemModal"));
+            modal.hide();
+
+            // 清空輸入框
+            document.getElementById("nameInput").value = "";
+            document.getElementById("dateInput").value = "";
+        });
     });
 
 

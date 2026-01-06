@@ -34,15 +34,27 @@ public class AuthController : Controller
                     return Json(new { success = false, message = "此帳號已停用，請聯絡管理員" });
                 }
 
-                _authService.UpdateLastLoginDate(user);
-                var roleId = int.Parse(_userService.GetRoleIdByUserId(user.Id));
-                var partitionId = _userService.GetPartitionIdsByRoleIds(roleId);
-                var departmentId = _userService.GetDepartmentIdsByRoleIds(roleId);
+                // 直接從關聯撈 Partition 與 Department
+                var partition = user.UserRoles
+                    .SelectMany(ur => ur.Role.RolePermissions)
+                    .Select(rp => rp.Partition)
+                    .FirstOrDefault();
 
+                var department = user.UserRoles
+                    .SelectMany(ur => ur.Role.RolePermissions)
+                    .Select(rp => rp.Department)
+                    .FirstOrDefault();
+
+
+                _authService.UpdateLastLoginDate(user);
+
+                var currentUserName = (partition?.Name ?? "") + " " + user.Name;
                 HttpContext.Session.SetString("UserId", user.Id.ToString());
                 HttpContext.Session.SetString("UserName", user.Name);
-                HttpContext.Session.SetString("PartitionId", partitionId.ToString());
-                HttpContext.Session.SetString("DepartmentId", departmentId.ToString());
+                HttpContext.Session.SetString("PartitionId", partition?.Id.ToString() ?? "");
+                HttpContext.Session.SetString("PartitionName", partition?.Name ?? "");
+                HttpContext.Session.SetString("CurrentUserName",currentUserName); //登入者部門+姓名
+                HttpContext.Session.SetString("DepartmentId", department?.Id.ToString() ?? "");
                 HttpContext.Session.SetString("Account", user.Account);
                 _log.Log(actionType: "Login", module: "Auth", success: true, description: "使用者登入成功");
 

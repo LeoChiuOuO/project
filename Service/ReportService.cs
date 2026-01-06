@@ -8,7 +8,7 @@ using WebApplication_Dianthus.Models.Interface;
 using ClosedXML.Excel;
 using WebApplication_Dianthus.Models.DTO;
 
-namespace WebApplication_Dianthus.Services
+namespace WebApplication_Dianthus.Models.Service
 {
 
     public class ReportService : IReportService

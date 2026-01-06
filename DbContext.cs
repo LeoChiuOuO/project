@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<Report> Reports { get; set; }
     public DbSet<TestItem> TestItems { get; set; }
+    public DbSet<ConsultRecord> ConsultRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,5 +105,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Department>().ToTable("department");
         modelBuilder.Entity<Permission>().ToTable("permissions");
         modelBuilder.Entity<Role>().ToTable("roles");
+
+        modelBuilder.Entity<ConsultRecord>().ToTable("consult_records");
+        modelBuilder.Entity<ConsultRecord>().HasKey(cr => cr.Id);
+        modelBuilder.Entity<ConsultRecord>()
+        .HasOne(cr => cr.Report)                // 一個 ConsultRecord 對應一個 Report
+        .WithMany(r => r.ConsultRecords)        // 一個 Report 有多個 ConsultRecord
+        .HasForeignKey(cr => cr.ReportId)       // 外鍵是 ReportId
+        .HasConstraintName("fk_consult_report") // 與 DB schema 對應
+        .OnDelete(DeleteBehavior.Cascade);  
     }
 }

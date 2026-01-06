@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.DTO;
 using WebApplication_Dianthus.Models.Service.Interface;
-using WebApplication_Dianthus.Services;
 
 namespace WebApplication_Dianthus.Controllers
 {
@@ -52,6 +51,12 @@ namespace WebApplication_Dianthus.Controllers
         [HttpGet("/Report/Edit/{id}")]
         public IActionResult Edit(int id)
         {
+            // 取得 Session 值
+            var currentUserName = HttpContext.Session.GetString("CurrentUserName");
+
+            // 把 Session 值傳到 View
+            ViewBag.CurrentUserName = currentUserName;
+
             var report = _report.GetReportById(id);
             return View(report);
         }

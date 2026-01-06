@@ -10,7 +10,6 @@ using WebApplication_Dianthus.Models.Profiles;
 using WebApplication_Dianthus.Models.Repository;
 using WebApplication_Dianthus.Models.Service;
 using WebApplication_Dianthus.Models.Service.Interface;
-using WebApplication_Dianthus.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,9 +51,9 @@ builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IPartitionRepository, PartitionRepository>();
+builder.Services.AddScoped<IConsultRecordRepository, ConsultRecordRepository>();
 
 builder.Services.AddTransient<ExcelExporter>();
-
 // 註冊 Service
 builder.Services.AddScoped<IOperationLogService, OperationLogService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -68,6 +67,7 @@ builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
 builder.Services.AddScoped<IUserRoleService, userRoleService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPartitionService, PartitionService>();
+builder.Services.AddScoped<IConsultRecordService, ConsultRecordService>();
 
 builder.Services.AddAutoMapper(typeof(ReportProfile));
 builder.Services.AddControllersWithViews();

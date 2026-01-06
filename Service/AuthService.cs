@@ -21,7 +21,7 @@ public class AuthService : IAuthService, IUserContextService
 
     public bool ValidateUser(string account, string password, out User user)
     {
-        user = _userRepository.GetByAccount(account);
+        user = _userRepository.GetByAccountWithRelations(account);
         if (user == null) return false;
         return BCrypt.Net.BCrypt.Verify(password, user.Password);
     }

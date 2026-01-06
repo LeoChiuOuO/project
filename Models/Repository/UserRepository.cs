@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebApplication_Dianthus.Models;
 using WebApplication_Dianthus.Models.Interface;
 
@@ -20,6 +21,20 @@ public class UserRepository : IUserRepository
     public User GetByAccount(string account)
     {
         return _context.Users.FirstOrDefault(u => u.Account == account);
+    }
+
+    public User GetByAccountWithRelations(string account)
+    {
+       return _context.Users
+        .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+                .ThenInclude(r => r.RolePermissions)
+                    .ThenInclude(rp => rp.Partition)
+        .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+                .ThenInclude(r => r.RolePermissions)
+                    .ThenInclude(rp => rp.Department)
+        .FirstOrDefault(u => u.Account == account && u.DeletedAt == null);
     }
 
     public User GetById(int id)
