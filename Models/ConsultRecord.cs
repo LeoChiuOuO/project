@@ -8,6 +8,9 @@ public class ConsultRecord
     [Column("report_id")]
     public int ReportId { get; set; }
 
+    [Column("current_user_id")]
+    public int CurrentUserId { get; set;}
+
     [Column("name")]
     public string Name { get; set; }
 

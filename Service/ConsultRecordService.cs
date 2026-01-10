@@ -19,11 +19,12 @@ namespace WebApplication_Dianthus.Models.Service
         public async Task<ConsultRecord?> GetRecordAsync(int id)
             => await _repository.GetByIdAsync(id);
 
-        public async Task<int> CreateRecordAsync(int reportId, string name, string content)
+        public async Task<int> CreateRecordAsync(int reportId, int currentUserId, string name, string content)
         {
             var record = new ConsultRecord
             {
                 ReportId = reportId,
+                CurrentUserId = currentUserId,
                 Name = name,
                 Content = content,
                 CreatedAt = DateTime.Now

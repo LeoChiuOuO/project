@@ -28,8 +28,8 @@ namespace WebApplication_Dianthus.Controllers.Api
         public async Task<IActionResult> Create([FromBody] CreateRecordDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var id = await _service.CreateRecordAsync(dto.ReportId, dto.Name, dto.Content);
+            var currentUserId = int.Parse(HttpContext.Session.GetString("UserId"));
+            var id = await _service.CreateRecordAsync(dto.ReportId, currentUserId, dto.Name, dto.Content);
             return Ok(new { id });
         }
 
@@ -56,6 +56,7 @@ namespace WebApplication_Dianthus.Controllers.Api
     public class CreateRecordDto
     {
         public int ReportId { get; set; }
+        public int CurrentUserId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
     }

@@ -310,6 +310,7 @@
 <input type="hidden" id="sendingPhysicianName" value="@Model.SendingPhysicianName" />
 <input type="hidden" id="weeksOfPregnancy" value="@Model.WeeksOfPregnancy" />
 <input type="hidden" id="currentUserName" value="@ViewBag.CurrentUserName">
+<input type="hidden" id="currentUserId" value="@ViewBag.CurrentUserID" />
 
 <script>
     $(document).ready(function () {
@@ -612,25 +613,58 @@
                 String(date.getMinutes()).padStart(2, "0") + ":" +
                 String(date.getSeconds()).padStart(2, "0");
 
+            let actionButtons = "";
+            let content = record.content || ""; // 防止 null 或 undefined
+            let isLong = content.length > 100;
+
+            if (record.currentUserId === @ViewBag.CurrentUserID) {
+                actionButtons = `
+                    <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <button class="dropdown-item edit-btn" data-id="${record.id}">編輯</button>
+                        <button class="dropdown-item text-danger delete-btn" data-id="${record.id}">刪除</button>
+                    </div>
+
+                `;
+            }
 
             li.innerHTML = `
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="date">${formattedDate}</span>
                     <div class="dropdown">
-                        <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><button class="dropdown-item edit-btn">編輯</button></li>
-                            <li><button class="dropdown-item text-danger delete-btn">刪除</button></li>
-                        </ul>
+                        ${actionButtons}
                     </div>
                 </div>
-                <div class="name">${record.name}</div>
-                <p class="note">${record.content}</p>
+                <div class="d-flex align-items-center mb-1">
+                    <div class="name" data-id="${record.currentUserId}">${record.name}</div>
+                    ${isLong ? `<button class="btn btn-sm btn-link toggle-btn me-1">▼ 展開</button>` : ""}
+                </div>
+                <p class="note collapsed">${content}</p>
             `;
             remarkList.appendChild(li);
         }
+
+        // 加入Remark收闔事件
+        remarkList.addEventListener("click", function (e) {
+            const toggleBtn = e.target.closest(".toggle-btn");
+            if (!toggleBtn) return;
+
+            const note = toggleBtn.closest("li").querySelector(".note");
+
+            if (note.classList.contains("collapsed")) {
+                // 展開 → 顯示完整
+                note.classList.remove("collapsed");
+                toggleBtn.textContent = "▲ 收合";
+            } else {
+                // 收合 → 限制高度
+                note.classList.add("collapsed");
+                toggleBtn.textContent = "▼ 展開";
+            }
+        });
+
+
 
         // 新增紀錄
         remarkBtn.addEventListener("click", async function () {
@@ -658,55 +692,89 @@
         remarkList.addEventListener("click", async function (e) {
             const deleteBtn = e.target.closest(".delete-btn");
             if (deleteBtn) {
-                const recordLi = deleteBtn.closest("li");
-                const id = recordLi.dataset.id;
+                const id = deleteBtn.dataset.id;
+                if (!id) return console.error("刪除失敗：按鈕沒有 data-id");
 
-                await fetch(`/api/consultrecord/${id}`, { method: "DELETE" });
-                recordLi.remove();
+                const res = await fetch(`/api/consultrecord/${id}`, { method: "DELETE" });
+                if (res.ok) {
+                    await loadRecords(); // 重新載入紀錄
+                }
             }
         });
 
         // 編輯紀錄
         remarkList.addEventListener("click", function (e) {
             const editBtn = e.target.closest(".edit-btn");
-            if (editBtn) {
-                const li = editBtn.closest("li");
-                const note = li.querySelector(".note");
+            if (!editBtn) return;
 
-                if (li.querySelector("textarea")) return;
+            const li = editBtn.closest("li");
+            if (!li) return;
 
-                const textarea = document.createElement("textarea");
-                textarea.className = "form-control mt-2";
-                textarea.value = note.textContent;
+            const note = li.querySelector(".note");
+            if (!note || li.querySelector("textarea")) return;
 
-                const saveBtn = document.createElement("button");
-                saveBtn.className = "btn btn-sm btn-success mt-2";
-                saveBtn.textContent = "儲存";
+            // 建立 textarea
+            const textarea = document.createElement("textarea");
+            textarea.className = "form-control mt-2";
+            textarea.value = note.textContent;
 
-                note.replaceWith(textarea);
-                li.appendChild(saveBtn);
+            // 建立儲存按鈕
+            const saveBtn = document.createElement("button");
+            saveBtn.className = "btn btn-sm btn-success mt-2 me-2";
+            saveBtn.textContent = "儲存";
 
-                saveBtn.addEventListener("click", async function () {
-                    const id = li.dataset.id;
-                    const newContent = textarea.value;
+            // 建立取消按鈕
+            const cancelBtn = document.createElement("button");
+            cancelBtn.className = "btn btn-sm btn-secondary mt-2";
+            cancelBtn.textContent = "取消";
 
-                    await fetch(`/api/consultrecord/${id}`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ content: newContent })
-                    });
+            // 替換 note → textarea
+            note.replaceWith(textarea);
+            li.appendChild(saveBtn);
+            li.appendChild(cancelBtn);
 
+            // 儲存事件
+            saveBtn.addEventListener("click", async function () {
+                const id = li.dataset.id;
+                if (!id) {
+                    console.error("編輯失敗：li 沒有 data-id");
+                    return;
+                }
+
+                const newContent = textarea.value;
+
+                const res = await fetch(`/api/consultrecord/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ content: newContent })
+                });
+
+                if (res.ok) {
                     const newNote = document.createElement("p");
                     newNote.className = "note";
                     newNote.textContent = newContent;
 
                     textarea.replaceWith(newNote);
                     saveBtn.remove();
-
+                    cancelBtn.remove();
                     remarkContainer.scrollTop = remarkContainer.scrollHeight;
-                });
-            }
+                } else {
+                    console.error("更新失敗：", await res.text());
+                }
+            });
+
+            // 取消事件
+            cancelBtn.addEventListener("click", function () {
+                const originalNote = document.createElement("p");
+                originalNote.className = "note";
+                originalNote.textContent = note.textContent; // 回復原本內容
+
+                textarea.replaceWith(originalNote);
+                saveBtn.remove();
+                cancelBtn.remove();
+            });
         });
+
 
 
         document.getElementById("confirmAddBtn").addEventListener("click", function () {
@@ -798,4 +866,23 @@
         height: 20px;
         z-index: 400;
     }
+
+    .note.collapsed {
+        max-height: 2.5em;   /* 收合時只顯示一行或兩行 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .toggle-btn {
+        padding: 0;
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+
+    .name {
+        margin-left: 5px;
+        font-weight: 500;
+    }
+
+
 </style>

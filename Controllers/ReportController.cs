@@ -53,10 +53,11 @@ namespace WebApplication_Dianthus.Controllers
         {
             // 取得 Session 值
             var currentUserName = HttpContext.Session.GetString("CurrentUserName");
+            var userId = int.Parse(HttpContext?.Session.GetString("UserId"));
 
             // 把 Session 值傳到 View
             ViewBag.CurrentUserName = currentUserName;
-
+            ViewBag.CurrentUserID = userId;
             var report = _report.GetReportById(id);
             return View(report);
         }
