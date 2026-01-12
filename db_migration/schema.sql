@@ -21,17 +21,23 @@ USE `dianthus_report`;
 
 -- 傾印  資料表 dianthus_report.consult_records 結構
 CREATE TABLE IF NOT EXISTS `consult_records` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '諮詢記錄編號',
-  `report_id` int(11) NOT NULL COMMENT '對應報告 ID',
-  `name` varchar(60) NOT NULL COMMENT '諮詢者姓名',
-  `content` text NOT NULL COMMENT '諮詢內容',
-  `created_at` datetime DEFAULT current_timestamp() COMMENT '建立時間',
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
-  `deleted_at` datetime DEFAULT NULL COMMENT '刪除時間',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `fk_consult_report` (`report_id`) USING BTREE,
-  CONSTRAINT `fk_consult_report` FOREIGN KEY (`report_id`) REFERENCES `reports` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='諮詢記錄表';
+	`id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '諮詢記錄編號',
+	`report_id` INT(11) NOT NULL COMMENT '對應報告 ID',
+	`current_user_id` INT(11) NOT NULL DEFAULT '0' COMMENT '諮詢者 ID',
+	`name` VARCHAR(60) NOT NULL COMMENT '諮詢者姓名' COLLATE 'utf8mb4_uca1400_ai_ci',
+	`content` TEXT NOT NULL COMMENT '諮詢內容' COLLATE 'utf8mb4_uca1400_ai_ci',
+	`created_at` DATETIME NULL DEFAULT current_timestamp() COMMENT '建立時間',
+	`updated_at` DATETIME NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
+	`deleted_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `fk_consult_report` (`report_id`) USING BTREE,
+	CONSTRAINT `fk_consult_report` FOREIGN KEY (`report_id`) REFERENCES `reports` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)
+COMMENT='諮詢記錄表'
+COLLATE='utf8mb4_uca1400_ai_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=7
+;
 
 -- 取消選取資料匯出。
 
@@ -269,17 +275,24 @@ CREATE TABLE IF NOT EXISTS `test_item` (
 
 -- 傾印  資料表 dianthus_report.tracking_timeline 結構
 CREATE TABLE IF NOT EXISTS `tracking_timeline` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '追蹤項目編號',
-  `report_id` int(11) NOT NULL COMMENT '對應報告 ID',
-  `name` varchar(60) NOT NULL COMMENT '追蹤對象姓名',
-  `status` varchar(30) NOT NULL COMMENT '追蹤狀態',
-  `created_at` datetime DEFAULT current_timestamp() COMMENT '建立時間',
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
-  `deleted_at` datetime DEFAULT NULL COMMENT '刪除時間',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `fk_tracking_report` (`report_id`) USING BTREE,
-  CONSTRAINT `fk_tracking_report` FOREIGN KEY (`report_id`) REFERENCES `reports` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci COMMENT='追蹤時間軸表';
+	`id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '追蹤項目編號',
+	`report_id` INT(11) NOT NULL COMMENT '對應報告 ID',
+	`current_user_id` INT(11) NOT NULL COMMENT '使用者ID',
+	`name` VARCHAR(60) NOT NULL COMMENT '使用者姓名' COLLATE 'utf8mb4_uca1400_ai_ci',
+	`status` VARCHAR(30) NOT NULL COMMENT '狀態' COLLATE 'utf8mb4_uca1400_ai_ci',
+	`content` TEXT NULL DEFAULT NULL COMMENT '備註' COLLATE 'utf8mb4_uca1400_ai_ci',
+	`tracking_date` DATETIME NULL DEFAULT NULL COMMENT '通知日期',
+	`created_at` DATETIME NULL DEFAULT current_timestamp() COMMENT '建立時間',
+	`updated_at` DATETIME NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '更新時間',
+	`deleted_at` DATETIME NULL DEFAULT NULL COMMENT '刪除時間',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `fk_tracking_report` (`report_id`) USING BTREE,
+	CONSTRAINT `fk_tracking_report` FOREIGN KEY (`report_id`) REFERENCES `reports` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)
+COMMENT='追蹤時間軸表'
+COLLATE='utf8mb4_uca1400_ai_ci'
+ENGINE=InnoDB
+;
 
 -- 取消選取資料匯出。
 

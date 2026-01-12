@@ -184,16 +184,7 @@
                                 <div>
                                     <h4>追蹤時間軸</h4>
                                     <ul class="timeline"  id="timelineList">
-                                        <li>
-                                            <a>陳OO</a>
-                                            <a class="float-right">2024-12-12</a>
-                                            <p>已追蹤</p>
-                                        </li>
-                                        <li>
-                                            <a>陳OO</a>
-                                            <a class="float-right">2025-12-12</a>
-                                            <p>待追蹤</p>
-                                        </li>
+                                        <!-- 帶入備註內容 -->
                                     </ul>
                                     <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addItemModal">
                                         加入追蹤項目
@@ -204,28 +195,28 @@
                     </div>
                     <!-- Modal 小視窗 -->
                     <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addItemModalLabel">新增追蹤項目</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="取消"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                            <label for="nameInput" class="form-label">姓名</label>
-                            <input type="text" class="form-control" id="nameInput" placeholder="輸入姓名">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addItemModalLabel">新增追蹤項目</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="取消"></button>
                             </div>
-                            <div class="mb-3">
-                            <label for="dateInput" class="form-label">日期</label>
-                            <input type="date" class="form-control" id="dateInput">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="dateInput" class="form-label">日期</label>
+                                    <input type="date" class="form-control" id="dateInput">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contentInput" class="form-label">備註</label>
+                                    <input type="text" class="form-control" id="contentInput" placeholder="輸入備註">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" id="confirmAddBtn">確定</button>
+                            </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="confirmAddBtn">確定</button>
-                        </div>
-                        </div>
-                    </div>
                     </div>
 
                 </div>
@@ -315,7 +306,9 @@
 <script>
     $(document).ready(function () {
         const reportId = getReportIdFromUrl();
-        
+
+        loadTrackingTimeline(reportId);
+
         $.ajax({
             url: `/api/report/${reportId}`,
             type: 'GET',
@@ -579,12 +572,13 @@
             }
         });
 
+        // 從 hidden inputs 取得必要資訊
         const remarkInput = document.getElementById("remarkInput");
         const remarkBtn = document.getElementById("remarkBtn");
         const remarkList = document.getElementById("remarkList");
         const remarkContainer = document.getElementById("remarkContainer");
 
-        // 從 hidden inputs 取得必要資訊
+        const currentUserId = document.getElementById("currentUserId").value;
         const currentUserName = document.getElementById("currentUserName").value;
 
         // 頁面載入時先載入紀錄
@@ -777,32 +771,58 @@
 
 
 
-        document.getElementById("confirmAddBtn").addEventListener("click", function () {
-            const name = document.getElementById("nameInput").value.trim();
+       document.getElementById("confirmAddBtn").addEventListener("click", async function () {
+            const content = document.getElementById("contentInput").value.trim();
             const date = document.getElementById("dateInput").value;
-
-            if (!name || !date) {
-                alert("請輸入姓名與日期！");
+            if (!date) {
+                alert("請輸入日期！");
                 return;
             }
 
-            // 建立新的 li
-            const li = document.createElement("li");
-            li.innerHTML = `
-                <a>${name}</a>
-                <a class="float-right">${date}</a>
-                <p>待追蹤</p>
-            `;
+            try {
+                // 呼叫後端 API 建立 TrackingTimeline
+                const res = await fetch("/api/trackingtimeline", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        reportId: reportId,          // 後端需要的報告 ID
+                        currentUserId: currentUserId, // 當前使用者 ID
+                        name: currentUserName,
+                        status: "待追蹤",
+                        content: content,
+                        trackingDate: date,
+                        createdAt: date
+                    })
+                });
 
-            document.getElementById("timelineList").appendChild(li);
+                if (!res.ok) {
+                    throw new Error("新增失敗");
+                }
 
-            // 關閉 Modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById("addItemModal"));
-            modal.hide();
+                const newItem = await res.json();
 
-            // 清空輸入框
-            document.getElementById("nameInput").value = "";
-            document.getElementById("dateInput").value = "";
+                // 建立新的 li，使用後端回傳的資料
+                const li = document.createElement("li");
+                li.dataset.id = newItem.id;
+                li.innerHTML = `
+                    <a data-id="${newItem.current_user_id}">${newItem.name}</a>
+                    <a class="float-right">${newItem.createdAt.split("T")[0]}</a>
+                    <p>${newItem.status}</p>
+                    <p>${newItem.content}</p>
+                    <button class="btn btn-sm btn-link edit-btn">編輯</button>
+                `;
+                document.getElementById("timelineList").appendChild(li);
+
+                // 關閉 Modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById("addItemModal"));
+                modal.hide();
+
+                // 清空輸入框
+                document.getElementById("nameInput").value = "";
+                document.getElementById("dateInput").value = "";
+            } catch (err) {
+                alert(err.message);
+            }
         });
     });
 
@@ -832,6 +852,35 @@
             }
             window.close();
         }
+    }
+
+    async function loadTrackingTimeline(reportId) {
+        try {
+            const res = await fetch(`/api/trackingtimeline/report/${reportId}`);
+            if (!res.ok) throw new Error("載入失敗");
+
+            const items = await res.json();
+            document.getElementById("timelineList").innerHTML = ""; // 清空列表
+
+            items.forEach(item => renderTimelineItem(item));
+        } catch (err) {
+            alert("載入追蹤時間軸失敗：" + err.message);
+        }
+    }
+
+    function renderTimelineItem(item) {
+        const li = document.createElement("li");
+        li.dataset.id = item.id;
+
+        li.innerHTML = `
+            <a data-id="${item.currentUserId}">${item.name}</a>
+            <a class="float-right">${item.trackingDate ? item.trackingDate.split("T")[0] : ""}</a>
+            <p>${item.status}</p>
+            <p>${item.content ?? ""}</p>
+            <button class="btn btn-sm btn-link edit-btn">編輯</button>
+        `;
+
+        document.getElementById("timelineList").appendChild(li);
     }
     
 </script>

@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Report> Reports { get; set; }
     public DbSet<TestItem> TestItems { get; set; }
     public DbSet<ConsultRecord> ConsultRecords { get; set; }
+    public DbSet<TrackingTimeline> TrackingTimelines { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -113,6 +114,15 @@ public class AppDbContext : DbContext
         .WithMany(r => r.ConsultRecords)        // 一個 Report 有多個 ConsultRecord
         .HasForeignKey(cr => cr.ReportId)       // 外鍵是 ReportId
         .HasConstraintName("fk_consult_report") // 與 DB schema 對應
+        .OnDelete(DeleteBehavior.Cascade);  
+
+        modelBuilder.Entity<TrackingTimeline>().ToTable("tracking_timeline");
+        modelBuilder.Entity<TrackingTimeline>().HasKey(cr => cr.Id);
+        modelBuilder.Entity<TrackingTimeline>()
+        .HasOne(cr => cr.Report)                   // 一個 TrackingTimeline 對應一個 Report
+        .WithMany(r => r.TrackingTimelines)        // 一個 Report 有多個 TrackingTimelines
+        .HasForeignKey(cr => cr.ReportId)          // 外鍵是 ReportId
+        .HasConstraintName("fk_tracking_timeline") // 與 DB schema 對應
         .OnDelete(DeleteBehavior.Cascade);  
     }
 }

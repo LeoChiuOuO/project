@@ -228,4 +228,5 @@ public class Report
 
     // 一個 Report 可以有多個 ConsultRecord
     public ICollection<ConsultRecord> ConsultRecords { get; set; } = new List<ConsultRecord>();
+    public ICollection<TrackingTimeline> TrackingTimelines { get; set; } = new List<TrackingTimeline>();
 }

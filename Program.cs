@@ -52,6 +52,7 @@ builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IPartitionRepository, PartitionRepository>();
 builder.Services.AddScoped<IConsultRecordRepository, ConsultRecordRepository>();
+builder.Services.AddScoped<TrackingTimelineRepository, TrackingTimelineRepository>();
 
 builder.Services.AddTransient<ExcelExporter>();
 // 註冊 Service
