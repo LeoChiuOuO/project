@@ -115,7 +115,7 @@ namespace WebApplication_Dianthus.Models.Service
                     MrNumber = r.MrNumber,
                     Name = r.Name,
                     TestItemName = r.TestItem.name, // 來自 TestItem 導覽屬性
-
+                    Remark = r.Remark,
                     ReceivedDate = r.ReceivedDate,
                     TestingDate = r.TestingDate,
                     ReportDate = r.ReportDate,

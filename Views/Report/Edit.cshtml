@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <div id="targetReport" class="target-report-off">
     <div class="target-report-main">
         <h1>報告編輯頁面</h1>
@@ -8,6 +9,22 @@
             <div class="col-md-6">  
                 <div style="display: flex;gap: 10px;">
                     <div class="target-report-row" style="width: 300px;">
+                        <div class="target-report-row-label"><label>姓名備註：</label>
+                            <select id="remarkIcon"  style="font-size: 20px;">
+                                <option value="1">★★★★★</option>
+                                <option value="2">★★★★☆</option>
+                                <option value="3">★★★☆☆</option>
+                                <option value="4">★★☆☆☆</option>
+                                <option value="5">★☆☆☆☆</option>
+                                <option value="6">👎</option>
+                                <option value="7">🦈</option>
+                                <option value="8">💢</option>
+                                <option value="9">☢️</option>
+                                <option value="10">㊖</option>
+                                <option value="11">㊕</option>
+                                <option value="12">㊝</option>
+                            </select>
+                        </div>
                         <div class="target-report-row-label"><label>個案姓名：</label><label id="nameLabel"></label></div>
                         <div class="target-report-row-label"><label>身分證號：</label><label id="idNumberLabel"></label></div>
                         <div class="target-report-row-label"><label>檢體編號：</label><label id="specimenNumberLabel"></label></div>
@@ -371,7 +388,7 @@
             $('#trackingResultsLabel').text(r.trackingResults || '');
             $('#referralInstitutionInput').val(r.referralInstitution || '');
             $('#referringPhysicianInput').val(r.referringPhysician || '');
-            $('#remarkInput').val(r.remark || '');
+            $('#remarkIcon').val(r.remark || '');
             if (!$('#notificationStatusSelect').val() || !$('#trackingStatusSelect').val()) {
                 alert("請選擇通知狀態與追蹤狀態");
                 return;
@@ -395,7 +412,7 @@
                 confirmTheTestReportResults: $('#confirmReportResultInput').val(),
                 referralInstitution: $('#referralInstitutionInput').val(),
                 referringPhysician: $('#referringPhysicianInput').val(),
-                remark: $('#remarkInput').val()
+                remark: $('#remarkIcon').val()
             };
             $.ajax({
                 url: `/api/report/${reportId}`,

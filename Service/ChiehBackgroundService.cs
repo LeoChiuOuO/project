@@ -36,7 +36,7 @@ namespace WebApplication_Dianthus.Models.Service
                     _logger.LogError(ex, "Chieh DB 撈取失敗");
                 }
                 // 每兩小時撈取一次
-                // await Task.Delay(TimeSpan.FromHours(2), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(2), stoppingToken);
             }
         }
     }

@@ -80,10 +80,10 @@
                         <th>送檢醫師</th>
                         <th>通知狀態</th>
                         <th>追蹤狀態</th>
-                        <th>編輯</th>
                         <th>報告</th>
                         <th>衛教單</th>
                         <th>文獻</th>
+                        <th>    </th>
                     </tr>
                 </thead>
                 <tbody id="reportTableBody">
@@ -518,15 +518,16 @@
             const notifyColor = getStatusColor(r.notificationStatus);
             const trackColor = getStatusColor(r.trackingStatus);
             const assColor = getStatusColor(r.trackingStatus);
-
+            let icon = r.remark ? getUniconByRemarkIconValue(r.remark) : "";
+            console.log("r.remark: "+r.remark);
+            console.log("icon: "+icon);
             const row = `
                 <tr>
                     <td>${i + 1}</td>
-                    @* <td>${r.specimenNumber || ''}</td> *@
                     <td>${r.specimenType || ''}</td>
                     <td>${r.inspectionProgress || ''}</td>
                     <td>${r.mrNumber || ''}</td>
-                    <td>${r.name || ''}</td>
+                    <td>${icon} ${r.name || ''}</td>
                     <td>${r.testItemName || ''}</td>
                     <td>${r.testingDate ? r.testingDate.substring(0, 10) : ''}</td>
                     <td>${r.receivedDate ? r.receivedDate.substring(0, 10) : ''}</td>
@@ -535,20 +536,51 @@
                     <td>${r.sendingPhysicianName || ''}</td>
                     <td><div style="width: 75px;background-color: ${notifyColor}; color: white;border-radius: 10px;text-align: center;">${r.notificationStatus || ''}</div></td>
                     <td><div style="width: 75px;background-color: ${trackColor}; color: white;border-radius: 10px;text-align: center;">${r.trackingStatus || ''}</div></td>
-                    <td>
-                        ${canUpdate
-                            ? `<a href="javascript:void(0);" onclick="openEditPage(${r.id})" class="btn btn-sm btn-primary">編輯</a>`
-                            : `<button class="btn btn-sm btn-secondary" onclick="alert('您沒有編輯權限')" disabled>編輯</button>`
-                        }
-                    </td>
 
                     <td><button class="btn btn-sm btn-warning" onclick="viewReport('report',${r.id})">報告</button></td>
                     <td><button class="btn btn-sm btn-success" onclick="viewReport('teachreport',${r.id})">衛教單</button></td>
                     <td><button class="btn btn-sm btn-info" onclick="viewReport('paperreport',${r.id})">文獻</button></td>
+                    <td>
+                        ${canUpdate
+                            ? `<a href="javascript:void(0);" onclick="openEditPage(${r.id})" class="btn btn-sm btn-primary"><i class="fas fa-cog"></i></a>`
+                            : `<button class="btn btn-sm btn-secondary" onclick="alert('您沒有編輯權限')" disabled><i class="fas fa-cog"></i></button>`
+                        }
+                    </td>
                 </tr>
             `;
             tbody.append(row);
         });
+    }
+
+    function getUniconByRemarkIconValue(value){
+        switch(value){
+            case "1" :
+                return "★★★★★";
+            case "2" :
+                return "★★★★☆";
+            case "3" :
+                return "★★★☆☆";
+            case "4" :
+                return "★★☆☆☆";
+            case "5" :
+                return "★☆☆☆☆";
+            case "6" :
+                return "👎";
+            case "7" :
+                return "🦈";
+            case "8" :
+                return "💢";
+            case "9" :
+                return "☢️";
+            case "10" :
+                return "㊖";
+            case "11" :
+                return "㊕";
+            case "12" :
+                return "㊝";
+            default:
+                return "";
+        }
     }
 
     function renderPagination(page, pageSize, total) {

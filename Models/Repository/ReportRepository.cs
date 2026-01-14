@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Utilities;
 using WebApplication_Dianthus.Models.DTO;
 using WebApplication_Dianthus.Models.Interface;
+using ZstdSharp.Unsafe;
 
 namespace WebApplication_Dianthus.Models.Repository;
 
@@ -426,13 +427,14 @@ public class ReportRepository : IReportRepository
                 r.SpecimenNumber.Contains(filter.Keyword) ||
                 r.InspectionInstitution.Contains(filter.Keyword) ||
                 r.SendingPhysicianName.Contains(filter.Keyword) ||
-                r.AssessmentStatus.Contains(filter.Keyword) ||
                 r.Name.Contains(filter.Keyword));
         }
 
-        // 篩選報告嚴重度
-        if (!string.IsNullOrEmpty(filter.AssessmentStatus))
-        query = query.Where(r => r.AssessmentStatus == filter.AssessmentStatus);
+        // 篩選檢驗項目名稱
+        if (filter.ProductName != null && filter.ProductName.Any())
+        {
+            query = query.Where(r => filter.ProductName.Contains(r.ProductName));
+        }
 
         // 總筆數
         var total = query.Count();
@@ -466,6 +468,49 @@ public class ReportRepository : IReportRepository
     public ReportDashboardViewModel GetDashboardStats()
     {
         var today = DateTime.Today;
+        var PrenatalCheckupList = new List<string>{"慧智帶因篩檢 v1.0/ v2.0/ v3.0",
+                                                            "海洋性貧血基因檢測-HBA、HBB基因",
+                                                            "脊髓性肌肉萎縮症基因檢測-SMN基因 (SMA)",
+                                                            "X染色體脆折症基因檢測-FMR1基因 (FXS)",
+                                                            "慧智非侵產前染色體篩檢 v1.0/ v2.0/ v3.0 (NIPS)",
+                                                            "慧智全方位複合式晶片檢測 v1.0/ v2.0/ v3.0 (Array)",
+                                                            "細胞染色體檢查",
+                                                            "母血唐氏症篩檢 (FDS)",
+                                                            "子癲前症風險評估 (PE)",
+                                                            "葉酸代謝基因檢測-MTHFR基因 (Folate)",
+                                                            "先天性感染篩檢 (TORCH)"};
+        var NewbornList = new List<string>{"慧智新生兒基因篩檢 v1.0/ v2.0/ v3.0",
+                                                            "異位性皮膚炎過敏基因檢測-FLG基因 (AD)",
+                                                            "感覺神經性聽損基因檢測",
+                                                            "天中樞性換氣不足症候群基因檢測 (CCHS)",
+                                                            "先天性巨細胞病毒感染檢測 (CMV)"};
+        var RareDiseaseList = new List<string>{"聽損基因檢測 v1.0/ v2.0/ v3.0",
+                                                            "慧智單基因檢測",
+                                                            "全外顯子定序基因檢測 (WES)",
+                                                            "親緣鑑定檢測 (PT)"};
+        var CancerList = new List<string>{"慧智癌症基因篩檢",
+                                                            "人類乳突病毒篩檢 (HPV)",
+                                                            "慧智癌風險基因檢測 v1.0/ v2.0",
+                                                            "慧智癌風險-BRCA1/2基因檢測",
+                                                            "慧智癌風險-大腸癌基因檢測",
+                                                            "慧智癌風險-婦癌基因檢測"};
+        var PreciseMedicationList = new List<string>{"慧智CGP癌症基因檢測",
+                                                            "慧智癌監控基因檢測 v1.0/ v2.1",
+                                                            "慧智HRD檢測",
+                                                            "慧智癌監控基因檢測-BRCA1/2",
+                                                            "微衛星不穩定檢測 (MSI)",
+                                                            "慧智癌監控基因檢測 v2.2/ v3.0",
+                                                            "慧智癌追蹤/慧智癌症特定基因檢測套組",
+                                                            "慧智基因 癌監控基因檢測v2.2 x 國泰人壽醫心康愛防癌定期健康保險(外溢型)(實物給付型保險商品)",
+                                                            "子宮內膜癌基因分型",
+                                                            "攝護腺癌基因檢測",
+                                                            "慧智癌監控基因檢測-肺癌",
+                                                            "慧智癌監控基因檢測-乳癌",
+                                                            "慧智癌監控基因檢測-大腸癌",
+                                                            "慧智癌監控基因檢測-膽管癌",
+                                                            "慧智癌監控基因檢測-泌尿道上皮癌",
+                                                            "阿茲海默症​基因檢測-APOE"};
+        var ReproductiveMedicineList = new List<string>{"胚胎著床前染色體篩檢 (PGT-A)","非侵入性胚胎著床前染色體篩檢 (niPGT-A)","胚胎著床前單基因檢測 (PGT-M)"};
         var unread = _context.Reports
             .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知" );
 
@@ -481,8 +526,35 @@ public class ReportRepository : IReportRepository
             .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
                 && r.ReportDate < today.AddDays(-59));
 
-        var criticalAssessment = _context.Reports
-            .Count(r => r.AssessmentStatus == "重大");
+        var PrenatalCheckup = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && PrenatalCheckupList.Contains(r.ProductName));
+        
+        var Newborn = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && NewbornList.Contains(r.ProductName));
+
+        var RareDisease = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && RareDiseaseList.Contains(r.ProductName));
+
+        var Cancer = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && ReproductiveMedicineList.Contains(r.ProductName));
+
+        var PreciseMedication = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && ReproductiveMedicineList.Contains(r.ProductName));
+
+        var ReproductiveMedicine = _context.Reports
+            .Count(r => r.TrackingStatus == "待追蹤" && r.NotificationStatus == "待通知"
+                && r.ReportDate >= today.AddDays(-30) && r.ReportDate <= today
+                && ReproductiveMedicineList.Contains(r.ProductName));
 
         return new ReportDashboardViewModel
         {
@@ -490,7 +562,12 @@ public class ReportRepository : IReportRepository
             UpcomingOverdueCount = upcoming,
             OverdueCount = overdue,
             CriticalOverdueCount = critical,
-            CriticalAssessmentCount = criticalAssessment    
+            PrenatalCheckupCount = PrenatalCheckup,
+            NewbornCount = Newborn,
+            RareDiseaseCount = RareDisease,
+            CancerCount = Cancer,
+            PreciseMedicationCount = PreciseMedication,
+            ReproductiveMedicineCount = ReproductiveMedicine 
         };
 
     }

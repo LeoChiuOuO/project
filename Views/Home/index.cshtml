@@ -3,50 +3,94 @@
 <div class="container-fluid">
 </div>
 <h2>報告統計儀表板</h2>
-@* <div class="row">
-    <div class="col-md-3">
-        <div class="card highlight-card critical-assessment mb-3" role="button" style="cursor: pointer;" onclick="goToReport('assessment')">
-            <div class="card-header">重大評估報告</div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.CriticalAssessmentCount</h5>
+    <div>
+        <div class="row">
+            <div class="col-md-3">
+            <div class="card unread-card mb-3" role="button" onclick="goToReport('unread')">
+                <div class="card-header">未讀報告</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.UnreadCount</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card upcoming-card mb-3" role="button" onclick="goToReport('upcoming')">
+                <div class="card-header">將要逾時 (報告未處理 20~30天)</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.UpcomingOverdueCount</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card overdue-card mb-3" role="button" onclick="goToReport('overdue')">
+                <div class="card-header">已經逾時(報告未處理 30~60天)</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.OverdueCount</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card critical-card mb-3" role="button" onclick="goToReport('critical')">
+                <div class="card-header">嚴重逾時(報告未處理 60天以上)</div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.CriticalOverdueCount</h5>
+                </div>
             </div>
         </div>
     </div>
-</div> *@
-<div class="row">
-    <div class="col-md-3">
-        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('unread')">
-            <div class="card-header">未讀報告</div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.UnreadCount</h5>
+    <h4>四大類(採檢日期一個月內、未追蹤、未通知)</h4>
+    <div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('prenatalCheckup')">
+                    <div class="card-header">產前孕前</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.PrenatalCheckupCount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('newborn')">
+                    <div class="card-header">新生兒</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.NewbornCount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('rareDisease')">
+                    <div class="card-header">罕見疾病</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.RareDiseaseCount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('cancer')">
+                    <div class="card-header">癌症</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.CancerCount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('reproductiveMedicine')">
+                    <div class="card-header">生殖醫學</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.PreciseMedicationCount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card unread-card mb-3" role="button" onclick="goToReport('preciseMedication')">
+                    <div class="card-header">精準用藥</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.ReproductiveMedicineCount</h5>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('upcoming')">
-            <div class="card-header">將要逾時 (報告未處理 20~30天)</div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.UpcomingOverdueCount</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('overdue')">
-            <div class="card-header">已經逾時(報告未處理 30~60天)</div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.OverdueCount</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card highlight-card mb-3" role="button" style="cursor: pointer;" onclick="goToReport('critical')">
-            <div class="card-header">嚴重逾時(報告未處理 60天以上)</div>
-            <div class="card-body">
-                <h5 class="card-title">@Model.CriticalOverdueCount</h5>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 @section Scripts {
@@ -92,64 +136,53 @@
             $('body').append(html);
             setTimeout(() => $('.alert').alert('close'), 3000);
         }
-
-        function TestOverTime() { callTestApi('/Home/TestOverTime'); }
-        function TestHightLight() { callTestApi('/Home/TestHightLight'); }
-
-        function callTestApi(endpoint) {
-            $.get(endpoint, function (res) {
-                showAlert(res.success ? "資料已更新" : "更新失敗", res.success ? "success" : "danger");
-                if (res.success) {
-                    refreshDashboard();
-
-                    // 顯示該筆報告資訊（支援 TestOverTime 與 TestHightLight）
-                    if (res.name && res.mrNumber && res.testingDate) {
-                        const detail = `新增報告 ➤ 姓名：${res.name}，病歷號：${res.mrNumber}，採檢日期：${res.testingDate}`;
-                        showAlert(detail, "info");
-                    }
-                }
-            }).fail(function () {
-                showAlert("伺服器錯誤", "danger");
-            });
-        }
-
-        function refreshDashboard() {
-            $.get('/Home/GetDashboard', function (res) {
-                $('#UnreadCount').text(res.unreadCount);
-                $('#UpcomingOverdueCount').text(res.upcomingOverdueCount);
-                $('#OverdueCount').text(res.overdueCount);
-                $('#CriticalOverdueCount').text(res.criticalOverdueCount);
-                $('#CriticalAssessmentCount').text(res.criticalAssessmentCount);
-            });
-        }
     </script>
 }
 
 <style>
-
-    .card.highlight-card {
+    .card.unread-card {
         background-color: #e0f2ff; /* 淺藍色 */
         color: #004080;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        cursor: pointer;
+    }
+    .card.unread-card:hover {
+        background-color: #d0eaff;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        transform: scale(1.03);
     }
 
-        .card.highlight-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-            background-color: #d0eaff; /* 更亮一點的藍 */
-        }
+    .card.upcoming-card {
+        background-color: #e8f5e9; /* 淡綠色 */
+        color: #805500;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card.upcoming-card:hover {
+        background-color: #ffecb3;
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        transform: scale(1.03);
+    }
 
-    .card.critical-assessment {
+    .card.overdue-card {
+        background-color: #fff8e1; /* 淡黃色 */
+        color: #1b5e20;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card.overdue-card:hover {
+        background-color: #c8e6c9;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        transform: scale(1.03);
+    }
+
+    .card.critical-card {
         background-color: #ffe4e1; /* 淡粉色 */
-        color: #800000; /* 深紅字體 */
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        color: #800000;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card.critical-card:hover {
+        background-color: #ffb6b6;
+        box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+        transform: scale(1.03);
     }
 
-        .card.critical-assessment:hover {
-            background-color: #ffb6b6; /* hover 時更紅一些 */
-            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
-            transform: scale(1.03);
-        }
 
 </style>
