@@ -56,17 +56,31 @@ namespace WebApplication_Dianthus.Controllers.Api
         [HttpGet("report/{reportId}")]
         public async Task<IActionResult> GetByReportId(int reportId)
         {
-            var items = await _service.GetByReportIdAsync(reportId);
-            return Ok(items);
+            try
+            {
+                var items = await _service.GetByReportIdAsync(reportId);
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"伺服器錯誤: {ex.Message}");
+            }
         }
 
         // 依 Id 讀取
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _service.GetByIdAsync(id);
-            if (item == null) return NotFound();
-            return Ok(item);
+            try
+            {
+                var item = await _service.GetByIdAsync(id);
+                if (item == null) return NotFound();
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"伺服器錯誤: {ex.Message}");
+            }
         }
     }
 }

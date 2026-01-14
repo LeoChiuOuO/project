@@ -324,8 +324,6 @@
     $(document).ready(function () {
         const reportId = getReportIdFromUrl();
 
-        loadTrackingTimeline(reportId);
-
         $.ajax({
             url: `/api/report/${reportId}`,
             type: 'GET',
@@ -600,6 +598,36 @@
 
         // 頁面載入時先載入紀錄
         loadRecords();
+        loadTrackingTimeline();
+
+        async function loadTrackingTimeline() {
+            try {
+                const res = await fetch(`/api/trackingtimeline/report/${reportId}`);
+                if (!res.ok) throw new Error("載入失敗");
+
+                const items = await res.json();
+                document.getElementById("timelineList").innerHTML = ""; // 清空列表
+
+                items.forEach(item => renderTimelineItem(item));
+            } catch (err) {
+                alert("載入追蹤時間軸失敗：" + err.message);
+            }
+        }
+
+        function renderTimelineItem(item) {
+            const li = document.createElement("li");
+            li.dataset.id = item.id;
+
+            li.innerHTML = `
+                <a data-id="${item.currentUserId}">${item.name}</a>
+                <a class="float-right">${item.trackingDate ? item.trackingDate.split("T")[0] : ""}</a>
+                <p>${item.status}</p>
+                <p>${item.content ?? ""}</p>
+                <button class="btn btn-sm btn-link edit-btn">編輯</button>
+            `;
+
+            document.getElementById("timelineList").appendChild(li);
+        }
 
         async function loadRecords() {
             const res = await fetch(`/api/consultrecord/${reportId}`);
@@ -674,9 +702,6 @@
                 toggleBtn.textContent = "▼ 展開";
             }
         });
-
-
-
         // 新增紀錄
         remarkBtn.addEventListener("click", async function () {
             const content = remarkInput.value.trim();
@@ -869,35 +894,6 @@
             }
             window.close();
         }
-    }
-
-    async function loadTrackingTimeline(reportId) {
-        try {
-            const res = await fetch(`/api/trackingtimeline/report/${reportId}`);
-            if (!res.ok) throw new Error("載入失敗");
-
-            const items = await res.json();
-            document.getElementById("timelineList").innerHTML = ""; // 清空列表
-
-            items.forEach(item => renderTimelineItem(item));
-        } catch (err) {
-            alert("載入追蹤時間軸失敗：" + err.message);
-        }
-    }
-
-    function renderTimelineItem(item) {
-        const li = document.createElement("li");
-        li.dataset.id = item.id;
-
-        li.innerHTML = `
-            <a data-id="${item.currentUserId}">${item.name}</a>
-            <a class="float-right">${item.trackingDate ? item.trackingDate.split("T")[0] : ""}</a>
-            <p>${item.status}</p>
-            <p>${item.content ?? ""}</p>
-            <button class="btn btn-sm btn-link edit-btn">編輯</button>
-        `;
-
-        document.getElementById("timelineList").appendChild(li);
     }
     
 </script>
