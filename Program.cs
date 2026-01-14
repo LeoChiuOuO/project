@@ -53,6 +53,7 @@ builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IPartitionRepository, PartitionRepository>();
 builder.Services.AddScoped<IConsultRecordRepository, ConsultRecordRepository>();
 builder.Services.AddScoped<TrackingTimelineRepository, TrackingTimelineRepository>();
+builder.Services.AddScoped<IChiehRepository, ChiehRepository>();
 
 builder.Services.AddTransient<ExcelExporter>();
 // 註冊 Service
@@ -69,6 +70,7 @@ builder.Services.AddScoped<IUserRoleService, userRoleService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IPartitionService, PartitionService>();
 builder.Services.AddScoped<IConsultRecordService, ConsultRecordService>();
+builder.Services.AddHostedService<ChiehBackgroundService>();
 
 builder.Services.AddAutoMapper(typeof(ReportProfile));
 builder.Services.AddControllersWithViews();
