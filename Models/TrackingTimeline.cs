@@ -11,7 +11,7 @@ namespace WebApplication_Dianthus.Models
         public int ReportId { get; set; }
 
         [Column("current_user_id")]
-        public int CurrentUserId { get; set; }
+        public int CurrentUserId { get; set; } = 0;
 
         [Column("name")]
         public string Name { get; set; } = string.Empty;

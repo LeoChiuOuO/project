@@ -108,8 +108,8 @@
                             <input type="text" id="DiseaseCategoryBSItem" />
                         </div>
                         <div>
-                            <label for="notificationStatusSelect">Confirm檢體類別：</label>
-                            <select id="notificationStatusSelect" name="notificationStatus">
+                            <label for="confirmSpecimenTypeSelect">Confirm檢體類別：</label>
+                            <select id="confirmSpecimenTypeSelect" name="confirmSpecimenType">
                                 <option value="" disabled selected>請選擇</option>
                                 <option value="羊水">羊水</option>
                                 <option value="絨毛">絨毛</option>
@@ -153,9 +153,9 @@
                             <label>通知狀態：</label>
                             <select id="notificationStatusSelect" name="notificationStatus">
                                 <option value="" disabled selected>請選擇</option>
-                                <option value="已追蹤">已追蹤</option>
-                                <option value="待追蹤">待追蹤</option>
-                                <option value="不需追蹤">不需追蹤</option>
+                                <option value="已通知">已通知</option>
+                                <option value="待通知">待通知</option>
+                                <option value="不需通知">不需通知</option>
                             </select>
                         </div>
                         <div>
@@ -401,16 +401,16 @@
             const dateStr = $('#confirmSubmissionTimeInput').val(); // '2025-10-20'
             const fullDate = dateStr ? dateStr + 'T00:00:00' : null;
             const updated = {
-                id: reportId,
-                notificationStatus: $('#notificationStatusSelect').val(),
-                trackingStatus: $('#trackingStatusSelect').val(),
-                notificationCircumstances: $('#notificationCircumstancesInput').val(),
-                confirmSpecimenSubmissionTime: fullDate,
-                confirmSpecimenType: $('#confirmSpecimenTypeSelect').val(),
-                confirmTheTestReportResults: $('#confirmReportResultInput').val(),
-                referralInstitution: $('#referralInstitutionInput').val(),
-                referringPhysician: $('#referringPhysicianInput').val(),
-                remark: $('#remarkIcon').val()
+                Id: reportId,
+                NotificationStatus: $('#notificationStatusSelect').val(),
+                TrackingStatus: $('#trackingStatusSelect').val(),
+                NotificationCircumstances: $('#notificationCircumstancesInput').val(),
+                ConfirmSpecimenSubmissionTime: fullDate,
+                ConfirmSpecimenType: $('#confirmSpecimenTypeSelect').val(),
+                ConfirmTheTestReportResults: $('#confirmReportResultInput').val(),
+                ReferralInstitution: $('#referralInstitutionInput').val(),
+                ReferringPhysician: $('#referringPhysicianInput').val(),
+                Remark: $('#remarkIcon').val()
             };
             $.ajax({
                 url: `/api/report/${reportId}`,
